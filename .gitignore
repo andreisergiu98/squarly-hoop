@@ -1,0 +1,8 @@
+/*
+!.gitignore
+!LICENSE.md
+!README.md
+!CMakeLists.txt
+!src/
+!res/
+!cmake_modules/

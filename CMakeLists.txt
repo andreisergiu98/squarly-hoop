@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.3)
+project(sfmlGame)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "/home/andrei/Projects/Clion/sfmlGame/bin")
+
+set(SOURCE_FILES src/Game.cpp src/Game.h src/LoadSettings.cpp src/LoadSettings.h src/Debug/Debug.h src/Debug/Debug.inl src/Debug/Debug.cpp
+        src/Player.cpp src/Player.h src/TextureManager.cpp src/TextureManager.h src/Bullet.cpp src/Bullet.h src/Enemy.cpp src/Enemy.h src/EntityManager.cpp
+        src/EntityManager.h src/Explosion.cpp src/Explosion.h src/Utils.h src/Utils.cpp src/ShootingPaterns.h src/ShootingPaterns.cpp)
+
+set(EXECUTABLE_NAME "sfmlGame")
+
+add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
+
+# Detect and add SFML
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+find_package(SFML 2 REQUIRED system window graphics network audio)
+if (SFML_FOUND)
+    include_directories(${SFML_INCLUDE_DIR})
+    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
+endif ()
