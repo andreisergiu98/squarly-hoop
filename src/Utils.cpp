@@ -18,6 +18,7 @@
 //
 ////////////////////////////////////////////////////////////
 
+#include <tgmath.h>
 #include "Utils.h"
 
 std::string intToStr(int a) {
@@ -26,4 +27,22 @@ std::string intToStr(int a) {
     std::string str = ss.str();
 
     return str;
+}
+
+
+float distance(sf::Vector2f a, sf::Vector2f b) {
+    float dist = (float) sqrt((b.x - a.x) * (b.x - a.x) +
+                              (b.y - a.y) * (b.y - a.y));
+    return dist;
+}
+
+sf::Vector2f calcVelocity(sf::Vector2f a, sf::Vector2f b) {
+    sf::Vector2f velocity;
+
+    float dist = distance(a, b);
+
+    velocity.x = (b.x - a.x) / dist;
+    velocity.y = (b.y - a.y) / dist;
+
+    return velocity;
 }

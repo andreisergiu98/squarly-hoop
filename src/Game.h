@@ -23,12 +23,13 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "Debug/Debug.h"
+#include "debug/Debug.h"
 #include "Player.h"
 #include "EntityManager.h"
+#include "menu/Menu.h"
 
 enum GameState {
-    PLAYING, MENU, GAMEOVER
+    INGAME, INMENU, GAMEOVER
 };
 
 class Game {
@@ -41,11 +42,19 @@ public:
 private:
     void loop();
 
-    void render();
+    void renderGame();
 
     void process();
 
-    void update();
+    void menuHandler();
+
+    void updateGame();
+
+    void updateMenu();
+
+    void renderMenu();
+
+    void restart();
 
     std::shared_ptr<sf::RenderWindow> window;
 
@@ -60,6 +69,8 @@ private:
     sf::Sprite background;
 
     Player player;
+
+    Menu menu;
 
     EntityManager entities;
 };

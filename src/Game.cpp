@@ -36,7 +36,7 @@ Game::Game() {
 
     entities = EntityManager(windowBounds);
 
-    gameState = GameState::PLAYING;
+    gameState = GameState::INMENU;
 
     background.setTexture(texture.getTexture("../res/Textures/background.png"));
     background.setPosition(0, 0);
@@ -50,7 +50,7 @@ void Game::process() {
     frameTime = frameClock.restart();
 }
 
-void Game::update() {
+void Game::updateGame() {
     player.update(frameTime);
     player.updateMousePosition(sf::Mouse::getPosition(*window));
 
@@ -62,18 +62,14 @@ void Game::update() {
                       (sf::Uint8) (rand() % 255 + 0)));
 }
 
-void Game::render() {
-    window->clear();
-    window->draw(background);
+void Game::renderGame() {
     window->draw(entities);
     window->draw(player);
-    window->display();
 }
 
 void Game::loop() {
+    sf::Event event;
     while (window->isOpen()) {
-        sf::Event event;
-
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window->close();
@@ -84,22 +80,67 @@ void Game::loop() {
                 }
             }
         }
+        window->clear();
 
-        if (gameState == PLAYING) {
+        if (gameState == INGAME) {
             process();
-            update();
-            render();
+            updateGame();
+            renderGame();
         }
-        if (gameState == MENU) {
-            //menu.render();
+        if (gameState == INMENU) {
+            menuHandler();
+            updateMenu();
+            renderMenu();
         }
         if (gameState == GAMEOVER) {
             process();
-            update();
-            render();
-            //menu.retry...
+            menuHandler();
+            updateGame();
+            updateMenu();
+            renderGame();
+            renderMenu();
+        }
+
+        window->display();
+    }
+}
+
+void Game::menuHandler() {
+    if (gameState == INMENU) {
+        if (menu.isPressed(Buttons::PLAY)) {
+            restart();
+            gameState = INGAME;
+        }
+        if (menu.isPressed(Buttons::OPTIONS)) {
+            //...
+        }
+        if (menu.isPressed(Buttons::EXIT)) {
+            window->close();
         }
     }
+    else if (gameState == GAMEOVER) {
+        if (menu.isPressed(Buttons::RETRY)) {
+            restart();
+            gameState = INGAME;
+        }
+        if (menu.isPressed(Buttons::MENU)) {
+            gameState = INMENU;
+        }
+    }
+}
+
+void Game::updateMenu() {
+    menu.updateMousePosition(sf::Mouse::getPosition(*window));
+    menu.update();
+}
+
+void Game::renderMenu() {
+    window->draw(menu);
+}
+
+void Game::restart() {
+    entities.clear();
+    //...
 }
 
 void Game::start() {
@@ -113,3 +154,4 @@ int main() {
 
     return EXIT_SUCCESS;
 }
+

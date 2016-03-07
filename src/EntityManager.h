@@ -33,6 +33,8 @@ public:
 
     EntityManager(sf::FloatRect windowBounds);
 
+    void clear();
+
     void process();
 
     void update(sf::Time frameTime);

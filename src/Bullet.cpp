@@ -19,17 +19,14 @@
 ////////////////////////////////////////////////////////////
 
 #include "Bullet.h"
+#include "Utils.h"
 
-Bullet::Bullet(sf::Vector2f position, sf::Vector2i destination, float speed, sf::Texture &texture, int id) {
+Bullet::Bullet(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id) {
     form.setPosition(position);
     form.setSize(sf::Vector2f(11, 11));
     form.setTexture(&texture);
 
-    float dist = (float) sqrt((destination.x - position.x) * (destination.x - position.x) +
-                              (destination.y - position.y) * (destination.y - position.y));
-
-    velocity.x = (destination.x - position.x) / dist;
-    velocity.y = (destination.y - position.y) / dist;
+    velocity = calcVelocity(position, destination);
 
     velocity *= speed;
 

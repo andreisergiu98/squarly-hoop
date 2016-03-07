@@ -2,42 +2,59 @@
 //
 //  squarly-hoop
 //	Copyright (C) 2016  Pampu Andrei (aka. Woky) (andrei.sergiu98@gmail.com)
-//	
+//
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
 //	the Free Software Foundation, either version 3 of the License, or
 //	any later version.
-//	
+//
 //	This program is distributed in the hope that it will be useful,
 //	but WITHOUT ANY WARRANTY; without even the implied warranty of
 //	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //	GNU General Public License for more details.
-//	
+//
 //	You should have received a copy of the GNU General Public License
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////
-#ifndef SFMLGAME_TEXTURES_H
-#define SFMLGAME_TEXTURES_H
 
-#include <SFML/Graphics/Texture.hpp>
-#include "debug/Debug.h"
-#include <map>
+#ifndef SFMLGAME_MENU_H
+#define SFMLGAME_MENU_H
 
-class TextureManager {
+#include "Button.h"
+#include "../TextureManager.h"
+#include <SFML/Graphics.hpp>
+
+enum Buttons {
+    PLAY, OPTIONS, EXIT, RETRY, MENU
+};
+
+class Menu : public sf::Drawable {
 public:
-    TextureManager() { }
+    Menu();
 
-    sf::Texture &getTexture(const std::string &texLocation);
+    void updateMousePosition(sf::Vector2i);
 
-    void deleteTexture(sf::Texture &texture);
+    void update();
 
-    void deleteTexture(std::string texLocation);
+    bool isPressed(Buttons);
 
 private:
-    std::map<std::string, sf::Texture> textures;
-    Debug dbg;
+    Button play;
+    Button highscore;
+    Button exit;
+    Button retry;
+    Button menu;
+
+    TextureManager texture;
+
+    enum Status {
+        INMENU, GAMEOVER
+    };
+    Status status;
+
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };
 
 
-#endif //RPGGAME_TEXTURES_H
+#endif //SFMLGAME_MENU_H

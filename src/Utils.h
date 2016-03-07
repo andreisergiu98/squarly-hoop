@@ -22,8 +22,12 @@
 #define SFMLGAME_UTILS_H
 
 #include <sstream>
+#include <SFML/System/Vector2.hpp>
 
 std::string intToStr(int a);
 
+float distance(sf::Vector2f, sf::Vector2f);
+
+sf::Vector2f calcVelocity(sf::Vector2f, sf::Vector2f);
 
 #endif //SFMLGAME_UTILS_H

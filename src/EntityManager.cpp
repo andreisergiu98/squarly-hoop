@@ -28,20 +28,30 @@ EntityManager::EntityManager(sf::FloatRect windowBounds) {
 }
 
 void EntityManager::spawn() {
-    int nr = 0;
-    if (spawnClock.getElapsedTime().asMilliseconds() > 2000) {
-        nr = (unsigned short) (rand() % 3 + 1);
-        spawnClock.restart();
-    }
+    if (enemies.size() <= 1) {
+        int nr = 0;
+        if (spawnClock.getElapsedTime().asMilliseconds() > 200) {
+            nr = (unsigned short) (rand() % 3 + 1);
+            spawnClock.restart();
+        }
 
-    for (int i = 0; i < nr; i++) {
-        float x, y;
-        x = rand() % 900 + 0;
-        y = rand() % 100 + 31;
-        y = -y;
-        sf::Vector2f pos(x, y);
-        Enemy enemy(pos, texture, 100.f);
-        enemies.push_back(enemy);
+        enum Side {
+            left, right
+        };
+        Side side = left;
+
+        for (int i = 0; i < nr; i++) {
+            float x, y;
+            x = rand() % (int) (windowBounds.width - 20) + 20;
+            y = rand() % 80 + 0;
+            y -= 100;
+
+            sf::Vector2f dest(x, -2 * y);
+
+            sf::Vector2f pos(x, y);
+            Enemy enemy(pos, dest, texture, 100.f);
+            enemies.push_back(enemy);
+        }
     }
 }
 
@@ -85,6 +95,7 @@ void EntityManager::move() {
 }
 
 void EntityManager::clean() {
+
     for (auto it = enemies.begin(); it != enemies.end();) {
         if (it->getPosition().y > windowBounds.height + 31)
             it = enemies.erase(it);
@@ -184,6 +195,11 @@ void EntityManager::collision() {
 
     for (auto it = enemyBullets.begin(); it != enemyBullets.end();) {
         if (playerBounds.intersects(it->getGlobalBounds())) {
+            int t = rand() % 3 + 1;
+            Explosion expl(it->getPosition(), it->getSize(), texture.getTexture(
+                    "../res/Textures/explosion" + intToStr(it->getId()) + intToStr(t) + ".png"));
+            explosions.push_back(expl);
+
             it = enemyBullets.erase(it);
             isPlayerHit = true;
         }
@@ -200,4 +216,11 @@ void EntityManager::update(Player &player) {
         player.setHp(player.getHp() - 1);
         isPlayerHit = !isPlayerHit;
     }
+}
+
+void EntityManager::clear() {
+    enemies.clear();
+    enemyBullets.clear();
+    playerBullets.clear();
+    explosions.clear();
 }

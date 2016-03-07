@@ -21,7 +21,7 @@
 #include "Enemy.h"
 #include "Utils.h"
 
-Enemy::Enemy(sf::Vector2f position, TextureManager &texture, float speed) {
+Enemy::Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager &texture, float speed) {
     form.setPosition(position);
     form.setSize(sf::Vector2f(31, 31));
 
@@ -30,10 +30,13 @@ Enemy::Enemy(sf::Vector2f position, TextureManager &texture, float speed) {
     form.setTexture(&this->texture->getTexture("../res/Textures/player.png"));
     form.setOrigin(15.5, 15.5);
 
-    velocity.y += speed;
-
     id = 2;
     hp = 1;
+
+    this->destination = destination;
+
+    velocity = calcVelocity(position, destination);
+    velocity *= speed;
 }
 
 void Enemy::update(sf::Time frameTime) {
@@ -41,25 +44,31 @@ void Enemy::update(sf::Time frameTime) {
 }
 
 void Enemy::process() {
-    form.move(velocity * frameTime.asSeconds());
-    form.rotate(10);
+    Debug dbg;
+
+    dbg.print(getPosition().x, " ", getPosition().y, "\n");
+
+    if (getPosition().y < destination.y)
+        form.move(velocity * frameTime.asSeconds());
+
+    form.rotate(70);
 
     bullets.clear();
 
-    if (clock.getElapsedTime().asMilliseconds() > 500) {
+    if (clock.getElapsedTime().asMilliseconds() > 600) {
         shoot();
         clock.restart();
     }
 }
 
 void Enemy::shoot() {
-    int t = rand() % 6 + 1;
+    int color = rand() % 6 + 1;
 
     bullets.clear();
-    bullets = getBulletsPatern(ShootingPatern::SPREAD, form.getPosition(),
-                               sf::Vector2i(form.getPosition().x, form.getPosition().y + 400), 200,
-                               texture->getTexture(std::string("../res/Textures/bullet2" + intToStr(t) + ".png")),
-                               t);
+    bullets = getBulletsPatern(ShootingPatern::CIRCLE, getPosition(),
+                               sf::Vector2f(form.getPosition().x, form.getPosition().y + 400), 200,
+                               texture->getTexture(std::string("../res/Textures/bullet2" + intToStr(color) + ".png")),
+                               color);
 }
 
 void Enemy::draw(sf::RenderTarget &target, sf::RenderStates states) const {

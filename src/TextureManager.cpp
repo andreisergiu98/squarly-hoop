@@ -20,10 +20,6 @@
 
 #include "TextureManager.h"
 
-TextureManager::TextureManager() {
-
-}
-
 sf::Texture &TextureManager::getTexture(const std::string &texLocation) {
     for (auto it = textures.begin(); it != textures.end(); ++it) {
         if (texLocation == it->first) {

@@ -102,8 +102,8 @@ void Player::process() {
 void Player::shoot() {
     int t = rand() % 6 + 1;
 
-    bullets = getBulletsPatern(ShootingPatern::SPREAD, form.getPosition(),
-                               sf::Vector2i((int) form.getPosition().x, (int) (form.getPosition().y - 300)), 300.f,
+    bullets = getBulletsPatern(ShootingPatern::SPREAD2, form.getPosition(),
+                               sf::Vector2f(mousePosition.x, mousePosition.y), 300.f,
                                texture.getTexture(std::string("../res/Textures/bullet1" + intToStr(t) + ".png")), t);
 }
 
@@ -135,4 +135,8 @@ int Player::getHp() {
 
 void Player::setHp(int hp) {
     this->hp = hp;
+}
+
+float Player::getSpeed() {
+    return speed;
 }

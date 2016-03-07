@@ -24,19 +24,19 @@
 #include "Bullet.h"
 
 enum ShootingPatern {
-    SPREAD, SPREAD2, SPIRAL, STRAIGHT
+    SPREAD, SPREAD2, CIRCLE, STRAIGHT
 };
 
-std::vector<Bullet> getBulletsPatern(ShootingPatern patern, sf::Vector2f position, sf::Vector2i destination,
+std::vector<Bullet> getBulletsPatern(ShootingPatern patern, sf::Vector2f position, sf::Vector2f destination,
                                      float speed, sf::Texture &texture, int id);
 
-std::vector<Bullet> spread(sf::Vector2f position, sf::Vector2i destination, float speed, sf::Texture &texture, int id);
+std::vector<Bullet> spread(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id);
 
-std::vector<Bullet> spread2(sf::Vector2f position, sf::Vector2i destination, float speed, sf::Texture &texture, int id);
+std::vector<Bullet> spread2(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id);
 
-std::vector<Bullet> spiral(sf::Vector2f position, sf::Vector2i destination, float speed, sf::Texture &texture, int id);
+std::vector<Bullet> circle(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id);
 
-std::vector<Bullet> straight(sf::Vector2f position, sf::Vector2i destination, float speed, sf::Texture &texture,
+std::vector<Bullet> straight(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
                              int id);
 
 #endif //SFMLGAME_SHOOTINGPATERNS_H

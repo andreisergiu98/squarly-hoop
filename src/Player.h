@@ -36,7 +36,9 @@ public:
 
     void process();
 
-    void setSpeed(float speed);
+    float getSpeed();
+
+    void setSpeed(float);
 
     int getHp();
 
