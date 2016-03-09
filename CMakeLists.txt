@@ -7,7 +7,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "/home/andrei/Projects/Clion/sfmlGame/bin")
 
 set(SOURCE_FILES src/Game.cpp src/Game.h src/LoadSettings.cpp src/LoadSettings.h src/debug/Debug.h src/debug/Debug.inl src/debug/Debug.cpp
         src/Player.cpp src/Player.h src/TextureManager.cpp src/TextureManager.h src/Bullet.cpp src/Bullet.h src/Enemy.cpp src/Enemy.h src/EntityManager.cpp
-        src/EntityManager.h src/Explosion.cpp src/Explosion.h src/Utils.h src/Utils.cpp src/ShootingPaterns.h src/ShootingPaterns.cpp src/menu/Menu.cpp src/menu/Menu.h src/menu/Button.cpp src/menu/Button.h)
+        src/EntityManager.h src/Explosion.cpp src/Explosion.h src/Utils.h src/Utils.cpp src/ShootingPaterns.h src/ShootingPaterns.cpp src/menu/Menu.cpp
+        src/menu/Menu.h src/menu/Button.cpp src/menu/Button.h src/Score.cpp src/Score.h)
 
 set(EXECUTABLE_NAME "sfmlGame")
 

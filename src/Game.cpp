@@ -36,18 +36,16 @@ Game::Game() {
 
     entities = EntityManager(windowBounds);
 
-    gameState = GameState::INMENU;
+    gameState = GameState::INGAME;
 
-    background.setTexture(texture.getTexture("../res/Textures/background.png"));
+    background.setTexture(texture.getTexture("../res/Textures/background.jpg"));
     background.setPosition(0, 0);
-    background.setScale(0.7, 0.8);
+    background.setScale(0.5, 0.8);
 }
 
 void Game::process() {
     player.process();
     entities.process();
-
-    frameTime = frameClock.restart();
 }
 
 void Game::updateGame() {
@@ -63,8 +61,10 @@ void Game::updateGame() {
 }
 
 void Game::renderGame() {
+    window->draw(background);
     window->draw(entities);
     window->draw(player);
+    window->draw(score);
 }
 
 void Game::loop() {
@@ -80,6 +80,8 @@ void Game::loop() {
                 }
             }
         }
+        frameTime = frameClock.restart();
+
         window->clear();
 
         if (gameState == INGAME) {

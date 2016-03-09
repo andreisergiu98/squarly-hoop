@@ -33,9 +33,15 @@ Menu::Menu() {
                   texture.getTexture("../res/Textures/menu-hover.png"));
 
     status = INMENU;
+
+    background.setSize(sf::Vector2f(1000, 900));
+    background.setPosition(0, 0);
+    background.setFillColor(sf::Color(0, 0, 0, 150));
 }
 
 void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    target.draw(background);
+
     if (status == INMENU) {
         target.draw(play);
         target.draw(highscore);

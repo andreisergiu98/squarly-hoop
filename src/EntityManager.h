@@ -41,10 +41,10 @@ public:
 
     void update(Player &player);
 
+    void updateDifficulty(sf::Clock difficulty);
+
 private:
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-
-    void move();
 
     void spawn();
 

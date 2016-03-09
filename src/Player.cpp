@@ -35,7 +35,14 @@ Player::Player(sf::FloatRect windowBounds) {
 
     this->windowBounds = windowBounds;
 
-    hp = 5;
+    hp = 20;
+    for(int i = 0; i < hp; i++){
+        sf::RectangleShape rect;
+        rect.setPosition(5 + i*20, 880);
+        rect.setSize(sf::Vector2f(10, 10));
+        rect.setTexture(&texture.getTexture("../res/Textures/heart.png"));
+        hpBar.push_back(rect);
+    }
 }
 
 void Player::update(sf::Time frameTime) {
@@ -102,13 +109,9 @@ void Player::process() {
 void Player::shoot() {
     int t = rand() % 6 + 1;
 
-    bullets = getBulletsPatern(ShootingPatern::SPREAD2, form.getPosition(),
+    bullets = getBulletsPatern(ShootingPatern::SPREAD, form.getPosition(),
                                sf::Vector2f(mousePosition.x, mousePosition.y), 300.f,
                                texture.getTexture(std::string("../res/Textures/bullet1" + intToStr(t) + ".png")), t);
-}
-
-void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    target.draw(form);
 }
 
 void Player::updateMousePosition(sf::Vector2i mousePosition) {
@@ -139,4 +142,15 @@ void Player::setHp(int hp) {
 
 float Player::getSpeed() {
     return speed;
+}
+
+void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    for(int i = 0; i < hp; i++){
+        target.draw(hpBar[i]);
+    }
+    target.draw(form);
+}
+
+sf::Vector2f Player::getPosition() {
+    return form.getPosition();
 }

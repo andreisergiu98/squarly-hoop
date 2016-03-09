@@ -42,9 +42,33 @@ std::vector<Bullet> getBulletsPatern(ShootingPatern patern, sf::Vector2f positio
 std::vector<Bullet> spread(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id) {
     std::vector<Bullet> bullets;
 
-    Bullet bullet1(position, sf::Vector2f(destination.x - 150, destination.y), speed, texture, id);
-    Bullet bullet2(position, sf::Vector2f(destination.x, destination.y), speed, texture, id);
-    Bullet bullet3(position, sf::Vector2f(destination.x + 150, destination.y), speed, texture, id);
+    Bullet bullet1;
+    Bullet bullet3;
+    if (destination.y - position.y < 0) {
+        bullet1 = Bullet(position, sf::Vector2f(
+                                 (float) (cos(30 * pi / 180) * destination.x + sin(30 * pi / 180) * destination.y),
+                                 (float) (-sin(30 * pi / 180) * destination.x + cos(30 * pi / 180) * destination.y)),
+                         speed, texture,
+                         id);
+        bullet3 = Bullet(position, sf::Vector2f(
+                                 (float) (cos(-30 * pi / 180) * destination.x + sin(-30 * pi / 180) * destination.y),
+                                 (float) (-sin(-30 * pi / 180) * destination.x + cos(-30 * pi / 180) * destination.y)),
+                         speed, texture,
+                         id);
+    }
+    else {
+        bullet1 = Bullet(position, sf::Vector2f(
+                                 (float) (cos(30 * pi / 180) * destination.x - sin(30 * pi / 180) * destination.y),
+                                 (float) (sin(30 * pi / 180) * destination.x + cos(30 * pi / 180) * destination.y)),
+                         speed, texture,
+                         id);
+        bullet3 = Bullet(position, sf::Vector2f(
+                                 (float) (cos(-30 * pi / 180) * destination.x - sin(-30 * pi / 180) * destination.y),
+                                 (float) (sin(-30 * pi / 180) * destination.x + cos(-30 * pi / 180) * destination.y)),
+                         speed, texture,
+                         id);
+    }
+    Bullet bullet2(position, destination, speed, texture, id);
 
     bullets.push_back(bullet1);
     bullets.push_back(bullet2);
@@ -56,6 +80,7 @@ std::vector<Bullet> spread(sf::Vector2f position, sf::Vector2f destination, floa
 std::vector<Bullet> spread2(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
                             int id) {
     std::vector<Bullet> bullets;
+
 
     Bullet bullet1(position,
                    sf::Vector2f(position.x - (float) cos(90 * pi / 180), position.y - (float) sin(90 * pi / 180)),

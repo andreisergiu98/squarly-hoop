@@ -32,6 +32,8 @@ public:
 
     void update(sf::Time frameTime);
 
+    void updateTarget(sf::Vector2f target);
+
     std::vector<Bullet> getBullets();
 
     sf::Vector2f getPosition();
@@ -59,6 +61,8 @@ private:
 
     sf::Vector2f destination;
 
+    sf::Vector2f target;
+
     std::vector<Bullet> bullets;
 
     sf::Clock clock;
@@ -68,6 +72,8 @@ private:
     int hp;
 
     unsigned short int id;
+
+    float speed;
 
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };

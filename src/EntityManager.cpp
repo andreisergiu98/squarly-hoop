@@ -80,18 +80,20 @@ void EntityManager::update(sf::Time frameTime) {
     }
 }
 
-void EntityManager::move() {
-    for (auto it = enemies.begin(); it != enemies.end(); ++it) {
-        it->process();
+void EntityManager::update(Player &player) {
+    push_player_bullets(player.getBullets());
+    playerBounds = player.getGlobalBounds();
+    if (isPlayerHit) {
+        player.setHp(player.getHp() - 1);
+        isPlayerHit = !isPlayerHit;
     }
+    for(auto it = enemies.begin(); it != enemies.end(); ++it){
+        it->updateTarget(player.getPosition());
+    }
+}
 
-    for (auto it = enemyBullets.begin(); it != enemyBullets.end(); ++it) {
-        it->process();
-    }
+void EntityManager::updateDifficulty(sf::Clock difficulty) {
 
-    for (auto it = playerBullets.begin(); it != playerBullets.end(); ++it) {
-        it->process();
-    }
 }
 
 void EntityManager::clean() {
@@ -157,7 +159,17 @@ void EntityManager::draw(sf::RenderTarget &target, sf::RenderStates states) cons
 }
 
 void EntityManager::process() {
-    move();
+    for (auto it = enemies.begin(); it != enemies.end(); ++it) {
+        it->process();
+    }
+
+    for (auto it = enemyBullets.begin(); it != enemyBullets.end(); ++it) {
+        it->process();
+    }
+
+    for (auto it = playerBullets.begin(); it != playerBullets.end(); ++it) {
+        it->process();
+    }
 
     collision();
 }
@@ -209,18 +221,11 @@ void EntityManager::collision() {
     }
 }
 
-void EntityManager::update(Player &player) {
-    push_player_bullets(player.getBullets());
-    playerBounds = player.getGlobalBounds();
-    if (isPlayerHit) {
-        player.setHp(player.getHp() - 1);
-        isPlayerHit = !isPlayerHit;
-    }
-}
-
 void EntityManager::clear() {
     enemies.clear();
     enemyBullets.clear();
     playerBullets.clear();
     explosions.clear();
 }
+
+

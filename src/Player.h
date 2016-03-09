@@ -36,6 +36,8 @@ public:
 
     void process();
 
+    sf::Vector2f getPosition();
+
     float getSpeed();
 
     void setSpeed(float);
@@ -60,6 +62,8 @@ private:
     int hp;
 
     sf::RectangleShape form;
+
+    std::vector<sf::RectangleShape> hpBar;
 
     TextureManager texture;
 

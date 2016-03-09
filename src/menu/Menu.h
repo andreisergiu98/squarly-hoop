@@ -48,6 +48,8 @@ private:
 
     TextureManager texture;
 
+    sf::RectangleShape background;
+
     enum Status {
         INMENU, GAMEOVER
     };

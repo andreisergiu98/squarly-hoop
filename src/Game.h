@@ -27,6 +27,7 @@
 #include "Player.h"
 #include "EntityManager.h"
 #include "menu/Menu.h"
+#include "Score.h"
 
 enum GameState {
     INGAME, INMENU, GAMEOVER
@@ -70,9 +71,13 @@ private:
 
     Player player;
 
+    Score score;
+
     Menu menu;
 
     EntityManager entities;
+
+    float difficulty;
 };
 
 

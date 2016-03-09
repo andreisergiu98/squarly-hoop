@@ -37,6 +37,8 @@ Enemy::Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager &te
 
     velocity = calcVelocity(position, destination);
     velocity *= speed;
+
+    this->speed = speed;
 }
 
 void Enemy::update(sf::Time frameTime) {
@@ -44,10 +46,6 @@ void Enemy::update(sf::Time frameTime) {
 }
 
 void Enemy::process() {
-    Debug dbg;
-
-    dbg.print(getPosition().x, " ", getPosition().y, "\n");
-
     if (getPosition().y < destination.y)
         form.move(velocity * frameTime.asSeconds());
 
@@ -65,10 +63,8 @@ void Enemy::shoot() {
     int color = rand() % 6 + 1;
 
     bullets.clear();
-    bullets = getBulletsPatern(ShootingPatern::CIRCLE, getPosition(),
-                               sf::Vector2f(form.getPosition().x, form.getPosition().y + 400), 200,
-                               texture->getTexture(std::string("../res/Textures/bullet2" + intToStr(color) + ".png")),
-                               color);
+    bullets = getBulletsPatern(ShootingPatern::SPREAD, getPosition(), target, 200.f,
+                               texture->getTexture(std::string("../res/Textures/bullet2" + intToStr(color) + ".png")), color);
 }
 
 void Enemy::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -101,4 +97,8 @@ int Enemy::getHp() {
 
 void Enemy::setHp(int i) {
     hp = i;
+}
+
+void Enemy::updateTarget(sf::Vector2f target) {
+    this->target = target;
 }

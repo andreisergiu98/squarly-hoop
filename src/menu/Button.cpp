@@ -27,8 +27,8 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, sf::Texture &texNormal,
     mouse.width = 5;
     mouse.height = 5;
 
-    this->texNormal = &texNormal;
-    this->texMouseOver = &texMouseOver;
+    this->texNormal = std::unique_ptr<sf::Texture>(&texNormal);
+    this->texMouseOver = std::unique_ptr<sf::Texture>(&texMouseOver);
     status = NORMAL;
 }
 
@@ -39,13 +39,11 @@ void Button::updateMouse(sf::Vector2i mousePosition) {
 
 void Button::update() {
     if (status == NORMAL and form.getGlobalBounds().intersects(mouse)) {
-        form.setTexture(texMouseOver);
-       // form.setFillColor(sf::Color::Blue);
+        form.setTexture(texMouseOver.get());
         status = MOUSEOVER;
     }
     if (status == MOUSEOVER and !form.getGlobalBounds().intersects(mouse)) {
-        form.setTexture(texNormal);
-       // form.setFillColor(sf::Color::Red);
+        form.setTexture(texNormal.get());
         status = NORMAL;
     }
 }
