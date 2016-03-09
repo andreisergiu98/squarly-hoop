@@ -27,7 +27,7 @@ Enemy::Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager &te
 
     this->texture = &texture;
 
-    form.setTexture(&this->texture->getTexture("../res/Textures/player.png"));
+    form.setTexture(&this->texture->getTexture("../res/textures/player.png"));
     form.setOrigin(15.5, 15.5);
 
     id = 2;
@@ -64,7 +64,7 @@ void Enemy::shoot() {
 
     bullets.clear();
     bullets = getBulletsPatern(ShootingPatern::SPREAD, getPosition(), target, 200.f,
-                               texture->getTexture(std::string("../res/Textures/bullet2" + intToStr(color) + ".png")), color);
+                               texture->getTexture(std::string("../res/textures/bullet2" + intToStr(color) + ".png")), color);
 }
 
 void Enemy::draw(sf::RenderTarget &target, sf::RenderStates states) const {

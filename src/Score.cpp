@@ -28,11 +28,13 @@ Score::Score() {
     font.loadFromFile("../res/fonts/OpenSans-Bold.ttf");
 
     text.setFont(font);
+    score = 0;
 }
 
 
 void Score::setScore(int score) {
-    text.setString("Score: " + intToStr(score));
+    if(this->score != 0)
+        text.setString("Score: " + intToStr(score) + "00");
     this->score = score;
 }
 

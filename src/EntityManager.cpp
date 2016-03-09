@@ -25,6 +25,7 @@
 EntityManager::EntityManager(sf::FloatRect windowBounds) {
     this->windowBounds = windowBounds;
     isPlayerHit = false;
+    destroyedEnemies = 0;
 }
 
 void EntityManager::spawn() {
@@ -181,9 +182,9 @@ void EntityManager::collision() {
             if (it2->getGlobalBounds().intersects(it1->getGlobalBounds())) {
                 int t = rand() % 3 + 1;
                 Explosion expl1(it1->getPosition(), it1->getSize(), texture.getTexture(
-                        "../res/Textures/explosion" + intToStr(it1->getId()) + intToStr(t) + ".png"));
+                        "../res/textures/explosion" + intToStr(it1->getId()) + intToStr(t) + ".png"));
                 Explosion expl2(it2->getPosition(), it2->getSize(), texture.getTexture(
-                        "../res/Textures/explosion" + intToStr(it2->getId()) + intToStr(t) + ".png"));
+                        "../res/textures/explosion" + intToStr(it2->getId()) + intToStr(t) + ".png"));
                 explosions.push_back(expl1);
                 explosions.push_back(expl2);
 
@@ -196,9 +197,11 @@ void EntityManager::collision() {
         }
     }
 
+    destroyedEnemies = 0;
     for (auto it = enemies.begin(); it != enemies.end();) {
         if (it->getHp() <= 0) {
             it = enemies.erase(it);
+            destroyedEnemies++;
         }
         else {
             it++;
@@ -209,7 +212,7 @@ void EntityManager::collision() {
         if (playerBounds.intersects(it->getGlobalBounds())) {
             int t = rand() % 3 + 1;
             Explosion expl(it->getPosition(), it->getSize(), texture.getTexture(
-                    "../res/Textures/explosion" + intToStr(it->getId()) + intToStr(t) + ".png"));
+                    "../res/textures/explosion" + intToStr(it->getId()) + intToStr(t) + ".png"));
             explosions.push_back(expl);
 
             it = enemyBullets.erase(it);
@@ -229,3 +232,6 @@ void EntityManager::clear() {
 }
 
 
+int EntityManager::getDestroyedEnemies() {
+    return destroyedEnemies;
+}

@@ -38,7 +38,7 @@ Game::Game() {
 
     gameState = GameState::INGAME;
 
-    background.setTexture(texture.getTexture("../res/Textures/background.jpg"));
+    background.setTexture(texture.getTexture("../res/textures/background.jpg"));
     background.setPosition(0, 0);
     background.setScale(0.5, 0.8);
 }
@@ -54,6 +54,8 @@ void Game::updateGame() {
 
     entities.update(frameTime);
     entities.update(player);
+
+    score.setScore(score.getScore() + entities.getDestroyedEnemies());
 
     background.setColor(
             sf::Color((sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0),

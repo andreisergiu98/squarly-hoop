@@ -23,7 +23,7 @@
 #include "Utils.h"
 
 Player::Player(sf::FloatRect windowBounds) {
-    form.setTexture(&texture.getTexture("../res/Textures/player.png"));
+    form.setTexture(&texture.getTexture("../res/textures/player.png"));
     form.setPosition(200, 200);
     form.setSize(sf::Vector2f(31, 31));
     form.setOrigin(sf::Vector2f(15.5, 15.5));
@@ -40,7 +40,7 @@ Player::Player(sf::FloatRect windowBounds) {
         sf::RectangleShape rect;
         rect.setPosition(5 + i*20, 880);
         rect.setSize(sf::Vector2f(10, 10));
-        rect.setTexture(&texture.getTexture("../res/Textures/heart.png"));
+        rect.setTexture(&texture.getTexture("../res/textures/heart.png"));
         hpBar.push_back(rect);
     }
 }
@@ -111,7 +111,7 @@ void Player::shoot() {
 
     bullets = getBulletsPatern(ShootingPatern::SPREAD, form.getPosition(),
                                sf::Vector2f(mousePosition.x, mousePosition.y), 300.f,
-                               texture.getTexture(std::string("../res/Textures/bullet1" + intToStr(t) + ".png")), t);
+                               texture.getTexture(std::string("../res/textures/bullet1" + intToStr(t) + ".png")), t);
 }
 
 void Player::updateMousePosition(sf::Vector2i mousePosition) {

@@ -43,6 +43,8 @@ public:
 
     void updateDifficulty(sf::Clock difficulty);
 
+    int getDestroyedEnemies();
+
 private:
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
@@ -67,6 +69,8 @@ private:
     sf::FloatRect playerBounds;
 
     bool isPlayerHit;
+
+    int destroyedEnemies;
 
     TextureManager texture;
 };
