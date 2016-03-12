@@ -35,8 +35,8 @@ public:
 private:
     sf::RectangleShape form;
     sf::FloatRect mouse;
-    std::unique_ptr<sf::Texture> texNormal;
-    std::unique_ptr<sf::Texture> texMouseOver;
+    sf::Texture *texNormal;
+    sf::Texture *texMouseOver;
 
     enum Mouse{
         MOUSEOVER, NORMAL, ISPRESSED};

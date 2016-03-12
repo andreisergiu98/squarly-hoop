@@ -26,38 +26,62 @@ EntityManager::EntityManager(sf::FloatRect windowBounds) {
     this->windowBounds = windowBounds;
     isPlayerHit = false;
     destroyedEnemies = 0;
+    maxSpawnNumber = 3;
 }
 
 void EntityManager::spawn() {
-    if (enemies.size() <= 1) {
-        int nr = 0;
-        if (spawnClock.getElapsedTime().asMilliseconds() > 200) {
-            nr = (unsigned short) (rand() % 3 + 1);
-            spawnClock.restart();
-        }
+    updateSpawnLocations();
 
-        enum Side {
-            left, right
-        };
-        Side side = left;
+    enum spawnLocation {
+        left, right, center,
+        end
+    };
 
-        for (int i = 0; i < nr; i++) {
-            float x, y;
-            x = rand() % (int) (windowBounds.width - 20) + 20;
-            y = rand() % 80 + 0;
-            y -= 100;
+    spawnLocation loc = static_cast<spawnLocation >(rand() % end);
 
-            sf::Vector2f dest(x, -2 * y);
+    if (spawnLeft and loc == left) {
+        int x = rand() % 330 + 35;
+        int y = -(rand() % 60 + 35);
+        Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 300.f);
+        enemies.push_back(enemy);
+    }
 
-            sf::Vector2f pos(x, y);
-            Enemy enemy(pos, dest, texture, 100.f);
-            enemies.push_back(enemy);
-        }
+    else if (spawnCenter and loc == center) {
+        int x = rand() % 630 + 335;
+        int y = -(rand() % 60 + 35);
+        Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 300.f);
+        enemies.push_back(enemy);
+    }
+
+    else if (spawnRight and loc == right) {
+        int x = rand() % 960 + 635;
+        int y = -(rand() % 60 + 35);
+        Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 300.f);
+        enemies.push_back(enemy);
+    }
+
+    maxSpawnNumber = rand() % 2 + 1;
+}
+
+void EntityManager::updateSpawnLocations() {
+    spawnLeft = true;
+    spawnRight = true;
+    spawnCenter = true;
+
+    for(auto it = enemies.begin(); it != enemies.end(); ++it){
+        if(it->getPosition().x > 630)
+            spawnRight = false;
+        else if(it->getPosition().x > 330)
+            spawnCenter = false;
+        else if(it->getPosition().x > 30)
+            spawnLeft = false;
     }
 }
 
 void EntityManager::update(sf::Time frameTime) {
-    spawn();
+    if(enemies.size() <= maxSpawnNumber)
+        spawn();
+
     clean();
 
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
@@ -88,7 +112,7 @@ void EntityManager::update(Player &player) {
         player.setHp(player.getHp() - 1);
         isPlayerHit = !isPlayerHit;
     }
-    for(auto it = enemies.begin(); it != enemies.end(); ++it){
+    for (auto it = enemies.begin(); it != enemies.end(); ++it) {
         it->updateTarget(player.getPosition());
     }
 }
@@ -129,16 +153,6 @@ void EntityManager::clean() {
         else
             ++it;
     }
-}
-
-void EntityManager::push_player_bullets(std::vector<Bullet> bullets) {
-    for (auto it = bullets.begin(); it != bullets.end(); ++it)
-        playerBullets.push_back(*it);
-}
-
-void EntityManager::push_enemy_bullets(std::vector<Bullet> bullets) {
-    for (auto it = bullets.begin(); it != bullets.end(); ++it)
-        enemyBullets.push_back(*it);
 }
 
 void EntityManager::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -182,9 +196,9 @@ void EntityManager::collision() {
             if (it2->getGlobalBounds().intersects(it1->getGlobalBounds())) {
                 int t = rand() % 3 + 1;
                 Explosion expl1(it1->getPosition(), it1->getSize(), texture.getTexture(
-                        "../res/textures/explosion" + intToStr(it1->getId()) + intToStr(t) + ".png"));
+                        "../res/textures/explosion" + intToStr(it1->getColor()) + intToStr(t) + ".png"));
                 Explosion expl2(it2->getPosition(), it2->getSize(), texture.getTexture(
-                        "../res/textures/explosion" + intToStr(it2->getId()) + intToStr(t) + ".png"));
+                        "../res/textures/explosion" + intToStr(it2->getColor()) + intToStr(t) + ".png"));
                 explosions.push_back(expl1);
                 explosions.push_back(expl2);
 
@@ -212,7 +226,7 @@ void EntityManager::collision() {
         if (playerBounds.intersects(it->getGlobalBounds())) {
             int t = rand() % 3 + 1;
             Explosion expl(it->getPosition(), it->getSize(), texture.getTexture(
-                    "../res/textures/explosion" + intToStr(it->getId()) + intToStr(t) + ".png"));
+                    "../res/textures/explosion" + intToStr(it->getColor()) + intToStr(t) + ".png"));
             explosions.push_back(expl);
 
             it = enemyBullets.erase(it);
@@ -224,6 +238,16 @@ void EntityManager::collision() {
     }
 }
 
+void EntityManager::push_player_bullets(std::vector<Bullet> bullets) {
+    for (auto it = bullets.begin(); it != bullets.end(); ++it)
+        playerBullets.push_back(*it);
+}
+
+void EntityManager::push_enemy_bullets(std::vector<Bullet> bullets) {
+    for (auto it = bullets.begin(); it != bullets.end(); ++it)
+        enemyBullets.push_back(*it);
+}
+
 void EntityManager::clear() {
     enemies.clear();
     enemyBullets.clear();
@@ -233,4 +257,10 @@ void EntityManager::clear() {
 
 int EntityManager::getDestroyedEnemies() {
     return destroyedEnemies;
+}
+
+void EntityManager::updateBeat(bool beat, float freq) {
+    for (auto it = enemies.begin(); it != enemies.end();++it) {
+        it->updateBeat(beat, freq);
+    }
 }

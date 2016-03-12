@@ -27,6 +27,7 @@
 #include "Player.h"
 #include "EntityManager.h"
 #include "menu/Menu.h"
+#include "music/Music.h"
 #include "Score.h"
 
 enum GameState {
@@ -74,6 +75,8 @@ private:
     Score score;
 
     Menu menu;
+
+    Music music;
 
     EntityManager entities;
 

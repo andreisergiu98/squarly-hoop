@@ -37,6 +37,8 @@ public:
 
     void process();
 
+    void updateBeat(bool beat, float freq);
+
     void update(sf::Time frameTime);
 
     void update(Player &player);
@@ -54,6 +56,8 @@ private:
 
     void collision();
 
+    void updateSpawnLocations();
+
     void push_player_bullets(std::vector<Bullet>);
 
     void push_enemy_bullets(std::vector<Bullet>);
@@ -70,7 +74,11 @@ private:
 
     bool isPlayerHit;
 
+    bool spawnLeft, spawnRight, spawnCenter;
+
     int destroyedEnemies;
+
+    int maxSpawnNumber;
 
     TextureManager texture;
 };

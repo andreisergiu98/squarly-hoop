@@ -23,23 +23,41 @@
 
 #include "Bullet.h"
 
-enum ShootingPatern {
-    SPREAD, SPREAD2, CIRCLE, STRAIGHT
-};
+namespace EnemyPatterns {
+    enum Pattern {
+        SPREAD, SPREADMAX, CIRCLE, STRAIGHT
+    };
 
-std::vector<Bullet> getBulletsPatern(ShootingPatern patern, sf::Vector2f position, sf::Vector2f destination,
-                                     float speed, sf::Texture &texture, int color);
+    std::vector<Bullet> getBullets(Pattern pattern, sf::Vector2f position, sf::Vector2f destination,
+                                   float speed, sf::Texture &texture, int color);
 
-std::vector<Bullet> spread(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
-                           int color);
+    std::vector<Bullet> spread(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
+                               int color);
 
-std::vector<Bullet> spread2(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
-                            int color);
+    std::vector<Bullet> spread2(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
+                                int color);
 
-std::vector<Bullet> circle(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
-                           int color);
+    std::vector<Bullet> circle(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
+                               int color);
 
-std::vector<Bullet> straight(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
-                             int color);
+    std::vector<Bullet> straight(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
+                                 int color);
+
+}
+
+namespace PlayerPatterns{
+    enum Pattern{
+        SIMPLE, SPREAD, SPREADMAX
+    };
+
+    std::vector<Bullet> getBullets(Pattern pattern, sf::Vector2f position, float speed, sf::Texture &texture, int color);
+
+    std::vector<Bullet> simple(sf::Vector2f position, float speed, sf::Texture &texture, int color);
+
+    std::vector<Bullet> spread(sf::Vector2f position, float speed, sf::Texture &texture, int color);
+
+    std::vector<Bullet> spreadmax(sf::Vector2f position, float speed, sf::Texture &texture, int color);
+}
+
 
 #endif //SFMLGAME_SHOOTINGPATERNS_H

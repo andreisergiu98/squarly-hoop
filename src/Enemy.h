@@ -34,6 +34,8 @@ public:
 
     void updateTarget(sf::Vector2f target);
 
+    void updateBeat(bool beat, float freq);
+
     std::vector<Bullet> getBullets();
 
     sf::Vector2f getPosition();
@@ -48,7 +50,7 @@ public:
 
     void shoot();
 
-    unsigned short int getId();
+    unsigned short int getColor();
 
     sf::FloatRect getGlobalBounds();
 
@@ -66,6 +68,10 @@ private:
     std::vector<Bullet> bullets;
 
     sf::Clock clock;
+
+    bool beat = false;
+
+    float freq;
 
     TextureManager *texture;
     int c;

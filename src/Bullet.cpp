@@ -58,7 +58,7 @@ void Bullet::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     target.draw(form);
 }
 
-int Bullet::getId() {
+int Bullet::getColor() {
     return color;
 }
 

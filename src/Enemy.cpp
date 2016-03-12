@@ -30,7 +30,7 @@ Enemy::Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager &te
     form.setTexture(&this->texture->getTexture("../res/textures/player.png"));
     form.setOrigin(15.5, 15.5);
 
-    color = 2;
+    color = 5;
     hp = 1;
 
     this->destination = destination;
@@ -53,9 +53,10 @@ void Enemy::process() {
 
     bullets.clear();
 
-    if (clock.getElapsedTime().asMilliseconds() > 1000) {
+    if (beat) {
         shoot();
         clock.restart();
+        beat = false;
     }
 }
 
@@ -63,8 +64,18 @@ void Enemy::shoot() {
     int color = rand() % 6 + 1;
 
     bullets.clear();
-    bullets = getBulletsPatern(ShootingPatern::SPREAD, getPosition(), target, 200.f,
-                               texture->getTexture(std::string("../res/textures/bullet2" + intToStr(color) + ".png")), color);
+    if(freq < 4.f)
+    bullets = EnemyPatterns::getBullets(EnemyPatterns::Pattern::STRAIGHT, getPosition(), target, 200.f,
+                                        texture->getTexture(std::string("../res/textures/bullet2" + intToStr(color) + ".png")), color);
+
+    if(freq > 4.f and freq < 6.f){
+        bullets = EnemyPatterns::getBullets(EnemyPatterns::Pattern::SPREAD, getPosition(), target, 200.f,
+                                            texture->getTexture(std::string("../res/textures/bullet2" + intToStr(color) + ".png")), color);
+    }
+    if(freq > 6.f){
+        bullets = EnemyPatterns::getBullets(EnemyPatterns::Pattern::CIRCLE, getPosition(), target, 200.f,
+                                            texture->getTexture(std::string("../res/textures/bullet2" + intToStr(color) + ".png")), color);
+    }
 }
 
 void Enemy::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -83,7 +94,7 @@ sf::Vector2f Enemy::getPosition() {
     return form.getPosition();
 }
 
-unsigned short int Enemy::getId() {
+unsigned short int Enemy::getColor() {
     return color;
 }
 
@@ -101,4 +112,9 @@ void Enemy::setHp(int i) {
 
 void Enemy::updateTarget(sf::Vector2f target) {
     this->target = target;
+}
+
+void Enemy::updateBeat(bool beat, float freq) {
+    this->beat = beat;
+    this->freq = freq;
 }

@@ -41,6 +41,8 @@ Game::Game() {
     background.setTexture(texture.getTexture("../res/textures/background.jpg"));
     background.setPosition(0, 0);
     background.setScale(0.5, 0.8);
+
+    music.loadMusic((char *) "../res/music/music.mp3");
 }
 
 void Game::process() {
@@ -60,6 +62,8 @@ void Game::updateGame() {
     background.setColor(
             sf::Color((sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0),
                       (sf::Uint8) (rand() % 255 + 0)));
+    music.update();
+    entities.updateBeat(music.getBeat(), music.getFreq());
 }
 
 void Game::renderGame() {
@@ -113,6 +117,7 @@ void Game::menuHandler() {
     if (gameState == INMENU) {
         if (menu.isPressed(Buttons::PLAY)) {
             restart();
+            music.play();
             gameState = INGAME;
         }
         if (menu.isPressed(Buttons::OPTIONS)) {

@@ -8,7 +8,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "/home/andrei/Projects/Clion/sfmlGame/bin")
 set(SOURCE_FILES src/Game.cpp src/Game.h src/LoadSettings.cpp src/LoadSettings.h src/debug/Debug.h src/debug/Debug.inl src/debug/Debug.cpp
         src/Player.cpp src/Player.h src/TextureManager.cpp src/TextureManager.h src/Bullet.cpp src/Bullet.h src/Enemy.cpp src/Enemy.h src/EntityManager.cpp
         src/EntityManager.h src/Explosion.cpp src/Explosion.h src/Utils.h src/Utils.cpp src/ShootingPaterns.h src/ShootingPaterns.cpp src/menu/Menu.cpp
-        src/menu/Menu.h src/menu/Button.cpp src/menu/Button.h src/Score.cpp src/Score.h)
+        src/menu/Menu.h src/menu/Button.cpp src/menu/Button.h src/Score.cpp src/Score.h src/music/BeatDetector.cpp src/music/BeatDetector.h src/music/TimeStamp.cpp src/music/TimeStamp.h src/music/Music.cpp src/music/Music.h)
 
 set(EXECUTABLE_NAME "sfmlGame")
 
@@ -21,3 +21,7 @@ if (SFML_FOUND)
     include_directories(${SFML_INCLUDE_DIR})
     target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
 endif ()
+
+find_package(FMOD REQUIRED)
+include_directories(${FMOD_INCLUDE_DIRS})
+target_link_libraries(${EXECUTABLE_NAME} ${FMOD_LIBRARIES})

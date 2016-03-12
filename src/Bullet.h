@@ -38,7 +38,7 @@ public:
 
     sf::Vector2f getSize();
 
-    int getId();
+    int getColor();
 
     sf::FloatRect getGlobalBounds();
 
