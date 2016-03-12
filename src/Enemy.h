@@ -68,10 +68,10 @@ private:
     sf::Clock clock;
 
     TextureManager *texture;
-
+    int c;
     int hp;
 
-    unsigned short int id;
+    unsigned short int color;
 
     float speed;
 

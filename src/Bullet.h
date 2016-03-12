@@ -28,7 +28,7 @@ class Bullet : public sf::Drawable {
 public:
     Bullet() { }
 
-    Bullet(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id);
+    Bullet(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int color);
 
     void update(sf::Time frameTime);
 
@@ -49,7 +49,7 @@ private:
 
     sf::Time frameTime;
 
-    int id;
+    int color;
 
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };

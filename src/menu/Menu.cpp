@@ -21,16 +21,16 @@
 #include "Menu.h"
 
 Menu::Menu() {
-    play = Button(sf::Vector2f(400, 200), sf::Vector2f(200, 80), texture.getTexture("../res/Textures/play.png"),
-                  texture.getTexture("../res/Textures/play-hover.png"));
-    highscore = Button(sf::Vector2f(400, 350), sf::Vector2f(200, 80), texture.getTexture("../res/Textures/play.png"),
-                       texture.getTexture("../res/Textures/play-hover.png"));
-    exit = Button(sf::Vector2f(400, 500), sf::Vector2f(200, 80), texture.getTexture("../res/Textures/exit.png"),
-                  texture.getTexture("../res/Textures/exit-hover.png"));
-    retry = Button(sf::Vector2f(400, 600), sf::Vector2f(60, 20), texture.getTexture("../res/Textures/retry.png"),
-                   texture.getTexture("../res/Textures/retry-hover.png"));
-    menu = Button(sf::Vector2f(150, 280), sf::Vector2f(60, 20), texture.getTexture("../res/Textures/menu.png"),
-                  texture.getTexture("../res/Textures/menu-hover.png"));
+    play = Button(sf::Vector2f(400, 200), sf::Vector2f(200, 80), texture.getTexture("../res/textures/play.png"),
+                  texture.getTexture("../res/textures/play-hover.png"));
+    highscore = Button(sf::Vector2f(400, 350), sf::Vector2f(200, 80), texture.getTexture("../res/textures/play.png"),
+                       texture.getTexture("../res/textures/play-hover.png"));
+    exit = Button(sf::Vector2f(400, 500), sf::Vector2f(200, 80), texture.getTexture("../res/textures/exit.png"),
+                  texture.getTexture("../res/textures/exit-hover.png"));
+    retry = Button(sf::Vector2f(400, 600), sf::Vector2f(60, 20), texture.getTexture("../res/textures/retry.png"),
+                   texture.getTexture("../res/textures/retry-hover.png"));
+    menu = Button(sf::Vector2f(150, 280), sf::Vector2f(60, 20), texture.getTexture("../res/textures/menu.png"),
+                  texture.getTexture("../res/textures/menu-hover.png"));
 
     status = INMENU;
 

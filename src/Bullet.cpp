@@ -21,7 +21,7 @@
 #include "Bullet.h"
 #include "Utils.h"
 
-Bullet::Bullet(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id) {
+Bullet::Bullet(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int color) {
     form.setPosition(position);
     form.setSize(sf::Vector2f(11, 11));
     form.setTexture(&texture);
@@ -32,7 +32,7 @@ Bullet::Bullet(sf::Vector2f position, sf::Vector2f destination, float speed, sf:
 
     form.setOrigin(5.5, 5.5);
 
-    this->id = id;
+    this->color = color;
 }
 
 void Bullet::update(sf::Time frameTime) {
@@ -59,7 +59,7 @@ void Bullet::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 }
 
 int Bullet::getId() {
-    return id;
+    return color;
 }
 
 sf::Vector2f Bullet::getPosition() {

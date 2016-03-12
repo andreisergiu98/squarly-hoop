@@ -36,7 +36,7 @@ Game::Game() {
 
     entities = EntityManager(windowBounds);
 
-    gameState = GameState::INGAME;
+    gameState = GameState::INMENU;
 
     background.setTexture(texture.getTexture("../res/textures/background.jpg"));
     background.setPosition(0, 0);

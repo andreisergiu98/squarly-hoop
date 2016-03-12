@@ -40,6 +40,8 @@ private:
 
     sf::Clock fadeOut;
 
+    sf::Clock resize;
+
     int opacity;
 
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;

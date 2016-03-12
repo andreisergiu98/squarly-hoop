@@ -22,7 +22,7 @@
 
 Explosion::Explosion(sf::Vector2f position, sf::Vector2f size, sf::Texture &texture) {
     form.setPosition(position);
-    form.setSize(size);
+    form.setSize(sf::Vector2f(size.x + 5, size.y + 5));
     form.setTexture(&texture);
     form.setOrigin(size.x / 2, size.y / 2);
 
@@ -46,5 +46,7 @@ void Explosion::update() {
             opacity--;
         fadeOut.restart();
     }
+
+
     form.setFillColor(sf::Color(255, 255, 255, opacity));
 }

@@ -231,7 +231,6 @@ void EntityManager::clear() {
     explosions.clear();
 }
 
-
 int EntityManager::getDestroyedEnemies() {
     return destroyedEnemies;
 }

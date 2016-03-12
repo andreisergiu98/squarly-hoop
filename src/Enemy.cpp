@@ -30,7 +30,7 @@ Enemy::Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager &te
     form.setTexture(&this->texture->getTexture("../res/textures/player.png"));
     form.setOrigin(15.5, 15.5);
 
-    id = 2;
+    color = 2;
     hp = 1;
 
     this->destination = destination;
@@ -49,11 +49,11 @@ void Enemy::process() {
     if (getPosition().y < destination.y)
         form.move(velocity * frameTime.asSeconds());
 
-    form.rotate(70);
+    //form.rotate(20);
 
     bullets.clear();
 
-    if (clock.getElapsedTime().asMilliseconds() > 600) {
+    if (clock.getElapsedTime().asMilliseconds() > 1000) {
         shoot();
         clock.restart();
     }
@@ -84,7 +84,7 @@ sf::Vector2f Enemy::getPosition() {
 }
 
 unsigned short int Enemy::getId() {
-    return id;
+    return color;
 }
 
 sf::Vector2f Enemy::getSize() {

@@ -28,15 +28,18 @@ enum ShootingPatern {
 };
 
 std::vector<Bullet> getBulletsPatern(ShootingPatern patern, sf::Vector2f position, sf::Vector2f destination,
-                                     float speed, sf::Texture &texture, int id);
+                                     float speed, sf::Texture &texture, int color);
 
-std::vector<Bullet> spread(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id);
+std::vector<Bullet> spread(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
+                           int color);
 
-std::vector<Bullet> spread2(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id);
+std::vector<Bullet> spread2(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
+                            int color);
 
-std::vector<Bullet> circle(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int id);
+std::vector<Bullet> circle(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
+                           int color);
 
 std::vector<Bullet> straight(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
-                             int id);
+                             int color);
 
 #endif //SFMLGAME_SHOOTINGPATERNS_H
