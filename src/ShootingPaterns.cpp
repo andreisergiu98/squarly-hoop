@@ -112,10 +112,22 @@ namespace EnemyPatterns {
     std::vector<Bullet> simple(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
                                int color) {
         std::vector<Bullet> bullets;
-        Bullet bullet1(sf::Vector2f(position.x - 10, position.y), sf::Vector2f(destination.x - 10, destination.y),
+        sf::Transform rotation;
+        sf::Transform inverseRotation;
+
+        rotation.rotate((float) -0.7, position);
+        inverseRotation.rotate(0.7, position);
+
+        sf::Vector2f dest1 = rotation.transformPoint(destination);
+        sf::Vector2f dest2 = inverseRotation.transformPoint(destination);
+
+        rotation.rotate(0.7, dest1);
+        inverseRotation.rotate((float) -0.7, dest2);
+
+        Bullet bullet1(rotation.transformPoint(position), dest1,
                        speed,
                        texture, color);
-        Bullet bullet2(sf::Vector2f(position.x + 10, position.y), sf::Vector2f(destination.x + 10, destination.y),
+        Bullet bullet2(inverseRotation.transformPoint(position), dest2,
                        speed,
                        texture, color);
 
