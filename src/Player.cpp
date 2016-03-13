@@ -43,6 +43,8 @@ Player::Player(sf::FloatRect windowBounds) {
         rect.setTexture(&texture.getTexture("../res/textures/heart.png"));
         hpBar.push_back(rect);
     }
+
+    pattern = PlayerPatterns::Pattern::SIMPLE;
 }
 
 void Player::update(sf::Time frameTime) {
@@ -50,10 +52,6 @@ void Player::update(sf::Time frameTime) {
     for (auto it = bullets.begin(); it != bullets.end(); ++it) {
         it->update(frameTime);
     }
-}
-
-void Player::setSpeed(float speed) {
-    this->speed = speed;
 }
 
 void Player::process() {
@@ -70,6 +68,15 @@ void Player::process() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         velocity.x += speed;
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+        pattern = PlayerPatterns::SIMPLE;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+        pattern = PlayerPatterns::SPREAD;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+        pattern = PlayerPatterns::SPREADMAX;
+    }
 
     if (clock.getElapsedTime().asMilliseconds() >= 200 and hp > 0) {
         shoot();
@@ -105,12 +112,8 @@ void Player::process() {
 void Player::shoot() {
     int t = rand() % 6 + 1;
 
-    bullets = PlayerPatterns::getBullets(PlayerPatterns::Pattern::SIMPLE, form.getPosition(), 400.f, texture.getTexture(
+    bullets = PlayerPatterns::getBullets(pattern, form.getPosition(), 400.f, texture.getTexture(
                                                  std::string("../res/textures/bullet1" + intToStr(t) + ".png")), t);
-}
-
-void Player::updateMousePosition(sf::Vector2i mousePosition) {
-    this->mousePosition = mousePosition;
 }
 
 std::vector<Bullet> Player::getBullets() {
@@ -133,10 +136,6 @@ int Player::getHp() {
 
 void Player::setHp(int hp) {
     this->hp = hp;
-}
-
-float Player::getSpeed() {
-    return speed;
 }
 
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {

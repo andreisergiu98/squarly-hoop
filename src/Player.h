@@ -38,17 +38,11 @@ public:
 
     sf::Vector2f getPosition();
 
-    float getSpeed();
-
-    void setSpeed(float);
-
     int getHp();
 
     void reset();
 
     void setHp(int);
-
-    void updateMousePosition(sf::Vector2i mousePosition);
 
     sf::FloatRect getGlobalBounds();
 
@@ -75,7 +69,7 @@ private:
 
     sf::Time frameTime;
 
-    sf::Vector2i mousePosition;
+    PlayerPatterns::Pattern pattern;
 
     std::vector<Bullet> bullets;
 };

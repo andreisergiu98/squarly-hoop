@@ -56,7 +56,6 @@ void Game::process() {
 
 void Game::updateGame() {
     player.update(frameTime);
-    player.updateMousePosition(sf::Mouse::getPosition(*window));
 
     entities.update(frameTime);
     entities.update(player);

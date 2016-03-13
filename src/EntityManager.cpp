@@ -39,24 +39,29 @@ void EntityManager::spawn() {
 
     spawnLocation loc = static_cast<spawnLocation >(rand() % end);
 
-    if (spawnLeft and loc == left) {
-        int x = rand() % 330 + 35;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distribution(0, 300);
+    int val = distribution(gen);
+
+    if (spawnLeft) {
+        int x = val + 50;
         int y = -(rand() % 60 + 35);
-        Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 300.f);
+        Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 200.f);
         enemies.push_back(enemy);
     }
 
-    else if (spawnCenter and loc == center) {
-        int x = rand() % 630 + 335;
+    else if (spawnCenter) {
+        int x = val + 350;
         int y = -(rand() % 60 + 35);
-        Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 300.f);
+        Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 200.f);
         enemies.push_back(enemy);
     }
 
-    else if (spawnRight and loc == right) {
-        int x = rand() % 960 + 635;
+    else if (spawnRight) {
+        int x = val + 650;
         int y = -(rand() % 60 + 35);
-        Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 300.f);
+        Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 200.f);
         enemies.push_back(enemy);
     }
 
@@ -68,14 +73,19 @@ void EntityManager::updateSpawnLocations() {
     spawnRight = true;
     spawnCenter = true;
 
-    for(auto it = enemies.begin(); it != enemies.end(); ++it){
-        if(it->getPosition().x > 630)
+    for (auto it = enemies.begin(); it != enemies.end(); ++it) {
+        std::cout << it->getPosition().x << " ";
+        if (it->getPosition().x >= 650) {
             spawnRight = false;
-        else if(it->getPosition().x > 330)
+        }
+        else if (it->getPosition().x >= 350) {
             spawnCenter = false;
-        else if(it->getPosition().x > 30)
+        }
+        else if (it->getPosition().x >= 50) {
             spawnLeft = false;
+        }
     }
+    std::cout << std::endl;
 }
 
 void EntityManager::update(sf::Time frameTime) {
