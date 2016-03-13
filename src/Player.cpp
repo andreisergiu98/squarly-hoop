@@ -45,6 +45,10 @@ Player::Player(sf::FloatRect windowBounds) {
     }
 
     pattern = PlayerPatterns::Pattern::SIMPLE;
+    simplePattern = true;
+    spreadPattern = true;
+    spreadmaxPattern = true;
+
 }
 
 void Player::update(sf::Time frameTime) {
@@ -68,14 +72,48 @@ void Player::process() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         velocity.x += speed;
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
+        spreadPattern = true;
+        spreadmaxPattern = true;
+    }
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-        pattern = PlayerPatterns::SIMPLE;
+        if (simplePattern)
+            pattern = PlayerPatterns::SIMPLE;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
-        pattern = PlayerPatterns::SPREAD;
+        if (spreadPattern) {
+            pattern = PlayerPatterns::SPREAD;
+            timer.restart();
+            coolDown = 25;
+            spreadmaxPattern = false;
+            coolDownClock.restart();
+        }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
-        pattern = PlayerPatterns::SPREADMAX;
+        if (spreadmaxPattern) {
+            pattern = PlayerPatterns::SPREADMAX;
+            timer.restart();
+            coolDown = 40;
+            spreadPattern = false;
+            coolDownClock.restart();
+        }
+    }
+
+    if(!spreadmaxPattern or !spreadPattern){
+        //text.setString(intToStr((int) (coolDown - coolDownClock.getElapsedTime().asSeconds())));
+    }
+
+    if (timer.getElapsedTime().asSeconds() >= 10) {
+        spreadPattern = false;
+        spreadmaxPattern = false;
+        pattern = PlayerPatterns::Pattern::SIMPLE;
+        coolDownClock.restart();
+    }
+
+    if (coolDownClock.getElapsedTime().asSeconds() >= coolDown) {
+        spreadPattern = true;
+        spreadmaxPattern = true;
     }
 
     if (clock.getElapsedTime().asMilliseconds() >= 200 and hp > 0) {
@@ -106,14 +144,14 @@ void Player::process() {
         }
     }
 
-    form.rotate(60);
+    form.rotate(20);
 }
 
 void Player::shoot() {
     int t = rand() % 6 + 1;
 
     bullets = PlayerPatterns::getBullets(pattern, form.getPosition(), 400.f, texture.getTexture(
-                                                 std::string("../res/textures/bullet1" + intToStr(t) + ".png")), t);
+            std::string("../res/textures/bullet1" + intToStr(t) + ".png")), t);
 }
 
 std::vector<Bullet> Player::getBullets() {
@@ -143,6 +181,9 @@ void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
         target.draw(hpBar[i]);
     }
     target.draw(form);
+    if(!spreadmaxPattern or !spreadPattern){
+        //
+    }
 }
 
 sf::Vector2f Player::getPosition() {
@@ -151,5 +192,10 @@ sf::Vector2f Player::getPosition() {
 
 void Player::reset() {
     form.setPosition(480, 860);
+    coolDownClock.restart();
+    timer.restart();
+    coolDown = 0;
+    spreadPattern = true;
+    spreadmaxPattern = true;
     hp = 20;
 }

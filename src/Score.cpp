@@ -26,7 +26,6 @@ Score::Score() {
     text.setScale(0.4, 0.4);
     text.setString("Score: 0");
     font.loadFromFile("../res/fonts/OpenSans-Bold.ttf");
-
     text.setFont(font);
     score = 0;
 }

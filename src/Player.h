@@ -71,6 +71,14 @@ private:
 
     PlayerPatterns::Pattern pattern;
 
+    bool simplePattern, spreadPattern, spreadmaxPattern;
+
+    int coolDown;
+
+    sf::Clock coolDownClock;
+
+    sf::Clock timer;
+
     std::vector<Bullet> bullets;
 };
 

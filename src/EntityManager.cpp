@@ -205,12 +205,9 @@ void EntityManager::collision() {
         for (auto it2 = playerBullets.begin(); it2 != playerBullets.end();) {
             if (it2->getGlobalBounds().intersects(it1->getGlobalBounds())) {
                 int t = rand() % 3 + 1;
-                Explosion expl1(it1->getPosition(), it1->getSize(), texture.getTexture(
-                        "../res/textures/explosion" + intToStr(it1->getColor()) + intToStr(t) + ".png"));
-                Explosion expl2(it2->getPosition(), it2->getSize(), texture.getTexture(
+                Explosion expl(it2->getPosition(), it2->getSize(), texture.getTexture(
                         "../res/textures/explosion" + intToStr(it2->getColor()) + intToStr(t) + ".png"));
-                explosions.push_back(expl1);
-                explosions.push_back(expl2);
+                explosions.push_back(expl);
 
                 it2 = playerBullets.erase(it2);
                 it1->setHp(it1->getHp() - 1);
@@ -224,7 +221,12 @@ void EntityManager::collision() {
     destroyedEnemies = 0;
     for (auto it = enemies.begin(); it != enemies.end();) {
         if (it->getHp() <= 0) {
+            int t = rand() % 3 + 1;
+            Explosion expl(it->getPosition(), it->getSize(), texture.getTexture(
+                    "../res/textures/explosion" + intToStr(it->getColor()) + intToStr(t) + ".png"));
+            explosions.push_back(expl);
             it = enemies.erase(it);
+
             destroyedEnemies++;
         }
         else {
