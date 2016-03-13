@@ -29,13 +29,13 @@ namespace EnemyPatterns {
             return spread(position, destination, speed, texture, color);
         }
         if (pattern == SPREADMAX) {
-            return spread2(position, destination, speed, texture, color);
+            return spreadmax(position, destination, speed, texture, color);
         }
         if (pattern == CIRCLE) {
             return circle(position, destination, speed, texture, color);
         }
-        if (pattern == STRAIGHT) {
-            return straight(position, destination, speed, texture, color);
+        if (pattern == SIMPLE) {
+            return simple(position, destination, speed, texture, color);
         }
         return std::vector<Bullet>();
     }
@@ -51,9 +51,9 @@ namespace EnemyPatterns {
 
         bullets.push_back(bullet);
 
-        for (int i = 0; i <= 2; i++) {
-            rotation.rotate(6, position);
-            inverseRotation.rotate(-6, position);
+        for (int i = 0; i <= 1; i++) {
+            rotation.rotate(10, position);
+            inverseRotation.rotate(-10, position);
 
             Bullet bullet1 = Bullet(position, rotation.transformPoint(destination), speed, texture, color);
 
@@ -66,8 +66,8 @@ namespace EnemyPatterns {
         return bullets;
     }
 
-    std::vector<Bullet> spread2(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
-                                int color) {
+    std::vector<Bullet> spreadmax(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
+                                  int color) {
         std::vector<Bullet> bullets;
 
         sf::Transform rotation;
@@ -99,9 +99,9 @@ namespace EnemyPatterns {
         Bullet bullet = Bullet(position, destination, speed, texture, color);
         bullets.push_back(bullet);
 
-        for (int i = 0; i <= 360; i += 10) {
+        for (int i = 0; i <= 360; i += 20) {
             //sf::Vector2f dest(position.x + (float) cos(i * pi / 180), position.y + (float) sin(i * pi / 180));
-            rotation.rotate(10, position);
+            rotation.rotate(20, position);
             bullet = Bullet(position, rotation.transformPoint(destination), speed, texture, color);
             bullets.push_back(bullet);
         }
@@ -109,8 +109,8 @@ namespace EnemyPatterns {
         return bullets;
     }
 
-    std::vector<Bullet> straight(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
-                                 int color) {
+    std::vector<Bullet> simple(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture,
+                               int color) {
         std::vector<Bullet> bullets;
         Bullet bullet1(sf::Vector2f(position.x - 10, position.y), sf::Vector2f(destination.x - 10, destination.y),
                        speed,

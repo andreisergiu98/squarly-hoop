@@ -45,3 +45,8 @@ int Score::getScore() {
 void Score::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     target.draw(text);
 }
+
+void Score::reset() {
+    text.setString("Score: 0");
+    score = 0;
+}

@@ -414,10 +414,7 @@ void BeatDetector::setStarted(bool areWeStarted)
 {
 	started = areWeStarted;
 
-	if (started)
-		songChannel1->setPaused(false);
-	else
-		songChannel1->setPaused(true);
+	songChannel1->setPaused(!started);
 }
 
 
@@ -498,4 +495,55 @@ TimeStamp* BeatDetector::getSongLength()
 
 float BeatDetector::getFreq() {
 	return freq;
+}
+
+void BeatDetector::loadNewSong(int sSize, char *audioString) {
+	//Take in Aruguments
+	sampleSize = sSize;
+	songString = audioString;
+
+	areWePlaying = true;
+	specFlux = 0.0f;
+	timeBetween = 0;
+	initialTime = clock();
+	currentTime = 0;
+	currentSeconds = 0;
+	lastSeconds = 0;
+	currentMillis = 0;
+	currentMinutes = 0;
+	median = 0.0f;
+	smoothMedian = 0.0f;
+	beatThreshold = 0.6f;
+	thresholdSmoother = 0.6f;
+	started = false;
+	lastBeatRegistered = new TimeStamp();
+	timeToDelay = 0;
+
+	previousFFT = new float[sampleSize / 2 + 1];
+	for (int i = 0; i < sampleSize / 2; i++)
+	{
+		previousFFT[i] = 0;
+	}
+
+	audio->getLength(&seconds, FMOD_TIMEUNIT_MS);
+	audio->getDefaults(&sampleRate, 0, 0, 0);
+	seconds = ((seconds + 500) / 1000);
+	minutes = seconds / 60;
+	fullSeconds = seconds;
+	seconds = seconds - (minutes * 60);
+
+	audio->release();
+
+	FMODErrorCheck(system->createStream(songString, FMOD_SOFTWARE, 0, &audio));
+
+	FMODErrorCheck(system->playSound(FMOD_CHANNEL_FREE, audio, true, &songChannel1));
+
+
+	hzRange = (sampleRate / 2) / static_cast<float>(sampleSize);
+	songChannel1->setChannelGroup(channelMusic);
+	songChannel1->setPaused(true);
+
+	std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
+	std::cout << "Sample Rate: " << sampleRate << std::endl;
+	std::cout << "Freq Range: " << hzRange << std::endl;
 }

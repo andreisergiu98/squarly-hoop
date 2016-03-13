@@ -24,7 +24,7 @@
 
 Player::Player(sf::FloatRect windowBounds) {
     form.setTexture(&texture.getTexture("../res/textures/player.png"));
-    form.setPosition(200, 200);
+    form.setPosition(480, 860);
     form.setSize(sf::Vector2f(31, 31));
     form.setOrigin(sf::Vector2f(15.5, 15.5));
 
@@ -71,7 +71,7 @@ void Player::process() {
         velocity.x += speed;
 
 
-    if (clock.getElapsedTime().asMilliseconds() >= 200) {
+    if (clock.getElapsedTime().asMilliseconds() >= 200 and hp > 0) {
         shoot();
         clock.restart();
     }
@@ -100,10 +100,6 @@ void Player::process() {
     }
 
     form.rotate(60);
-
-    for (auto it = bullets.begin(); it != bullets.end(); ++it) {
-        it->process();
-    }
 }
 
 void Player::shoot() {
@@ -152,4 +148,9 @@ void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
 sf::Vector2f Player::getPosition() {
     return form.getPosition();
+}
+
+void Player::reset() {
+    form.setPosition(480, 860);
+    hp = 20;
 }

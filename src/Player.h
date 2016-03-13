@@ -44,6 +44,8 @@ public:
 
     int getHp();
 
+    void reset();
+
     void setHp(int);
 
     void updateMousePosition(sf::Vector2i mousePosition);

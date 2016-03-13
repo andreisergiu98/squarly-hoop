@@ -19,6 +19,7 @@ public:
 	void loadSystem();
 	~BeatDetector();
 	void updateTime();
+	void loadNewSong(int, char*);
 	float* getCurrentSpectrum();
 	float calculateFluxAndSmoothing(float*);
 	void update();

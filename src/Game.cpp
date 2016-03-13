@@ -42,12 +42,16 @@ Game::Game() {
     background.setPosition(0, 0);
     background.setScale(0.5, 0.8);
 
-    music.loadMusic((char *) "../res/music/music.mp3");
+    music.loadPlaylist("playlist");
+    loadTextures();
 }
 
 void Game::process() {
     player.process();
     entities.process();
+    if (player.getHp() <= 0) {
+        gameState = GameState::GAMEOVER;
+    }
 }
 
 void Game::updateGame() {
@@ -60,8 +64,10 @@ void Game::updateGame() {
     score.setScore(score.getScore() + entities.getDestroyedEnemies());
 
     background.setColor(
-            sf::Color((sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0),
+            sf::Color((sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0),
+                      (sf::Uint8) (rand() % 255 + 0),
                       (sf::Uint8) (rand() % 255 + 0)));
+
     music.update();
     entities.updateBeat(music.getBeat(), music.getFreq());
 }
@@ -80,13 +86,19 @@ void Game::loop() {
             if (event.type == sf::Event::Closed)
                 window->close();
 
-            if (event.type == sf::Event::KeyPressed) {
+            if (event.type == sf::Event::KeyReleased) {
                 if (event.key.code == sf::Keyboard::Escape) {
                     window->close();
                 }
             }
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::P) {
+                music.next();
+            }
         }
         frameTime = frameClock.restart();
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
+            player.setHp(0);
 
         window->clear();
 
@@ -115,19 +127,18 @@ void Game::loop() {
 
 void Game::menuHandler() {
     if (gameState == INMENU) {
+        menu.setState(Status::INMAINMENU);
         if (menu.isPressed(Buttons::PLAY)) {
             restart();
             music.play();
             gameState = INGAME;
-        }
-        if (menu.isPressed(Buttons::OPTIONS)) {
-            //...
         }
         if (menu.isPressed(Buttons::EXIT)) {
             window->close();
         }
     }
     else if (gameState == GAMEOVER) {
+        menu.setState(Status::INRETRYMENU);
         if (menu.isPressed(Buttons::RETRY)) {
             restart();
             gameState = INGAME;
@@ -149,7 +160,9 @@ void Game::renderMenu() {
 
 void Game::restart() {
     entities.clear();
-    //...
+    player.reset();
+    score.reset();
+    music.restart();
 }
 
 void Game::start() {
@@ -164,3 +177,6 @@ int main() {
     return EXIT_SUCCESS;
 }
 
+void Game::loadTextures() {
+    //
+}

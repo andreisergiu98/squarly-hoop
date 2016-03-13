@@ -26,7 +26,11 @@
 #include <SFML/Graphics.hpp>
 
 enum Buttons {
-    PLAY, OPTIONS, EXIT, RETRY, MENU
+    PLAY, EXIT, RETRY, MENU, RESUME
+};
+
+enum Status {
+    INMAINMENU, INRETRYMENU
 };
 
 class Menu : public sf::Drawable {
@@ -39,9 +43,10 @@ public:
 
     bool isPressed(Buttons);
 
+    void setState(Status status);
+
 private:
     Button play;
-    Button highscore;
     Button exit;
     Button retry;
     Button menu;
@@ -49,10 +54,6 @@ private:
     TextureManager texture;
 
     sf::RectangleShape background;
-
-    enum Status {
-        INMENU, GAMEOVER
-    };
     Status status;
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;

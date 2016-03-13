@@ -31,11 +31,11 @@ sf::Texture &TextureManager::getTexture(const std::string &texLocation) {
 
     if (texture.loadFromFile(texLocation)) {
         textures[texLocation] = texture;
-        dbg.print("DEBUG_MESSAGE: loading image: ", texLocation, "\n");
+        std::cout << "DEBUG_MESSAGE: loading image: " << texLocation << "\n";
         return textures[texLocation];
     }
 
-    dbg.print("GAME_ERROR: Image: \"", texLocation, "\" was not found. It is filled with an empty image.\n");
+    std::cout << "GAME_ERROR: Image: \"" << texLocation << "\" was not found. It is filled with an empty image.\n";
 
     textures[texLocation] = texture;
 

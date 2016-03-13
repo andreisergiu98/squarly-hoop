@@ -21,8 +21,8 @@
 #define SFMLGAME_TEXTURES_H
 
 #include <SFML/Graphics/Texture.hpp>
-#include "debug/Debug.h"
 #include <map>
+#include <iostream>
 
 class TextureManager {
 public:
@@ -36,7 +36,6 @@ public:
 
 private:
     std::map<std::string, sf::Texture> textures;
-    Debug dbg;
 };
 
 

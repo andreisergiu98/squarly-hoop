@@ -30,6 +30,8 @@ public:
 
     void setScore(int);
 
+    void reset();
+
     int getScore();
 
 private:

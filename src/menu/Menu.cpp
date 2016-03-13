@@ -21,18 +21,16 @@
 #include "Menu.h"
 
 Menu::Menu() {
-    play = Button(sf::Vector2f(400, 200), sf::Vector2f(200, 80), texture.getTexture("../res/textures/play.png"),
+    play = Button(sf::Vector2f(400, 250), sf::Vector2f(200, 80), texture.getTexture("../res/textures/play.png"),
                   texture.getTexture("../res/textures/play-hover.png"));
-    highscore = Button(sf::Vector2f(400, 350), sf::Vector2f(200, 80), texture.getTexture("../res/textures/play.png"),
-                       texture.getTexture("../res/textures/play-hover.png"));
-    exit = Button(sf::Vector2f(400, 500), sf::Vector2f(200, 80), texture.getTexture("../res/textures/exit.png"),
+    exit = Button(sf::Vector2f(400, 650), sf::Vector2f(200, 80), texture.getTexture("../res/textures/exit.png"),
                   texture.getTexture("../res/textures/exit-hover.png"));
-    retry = Button(sf::Vector2f(400, 600), sf::Vector2f(60, 20), texture.getTexture("../res/textures/retry.png"),
+    retry = Button(sf::Vector2f(400, 250), sf::Vector2f(200, 80), texture.getTexture("../res/textures/retry.png"),
                    texture.getTexture("../res/textures/retry-hover.png"));
-    menu = Button(sf::Vector2f(150, 280), sf::Vector2f(60, 20), texture.getTexture("../res/textures/menu.png"),
+    menu = Button(sf::Vector2f(400, 450), sf::Vector2f(200, 80), texture.getTexture("../res/textures/menu.png"),
                   texture.getTexture("../res/textures/menu-hover.png"));
 
-    status = INMENU;
+    status = INMAINMENU;
 
     background.setSize(sf::Vector2f(1000, 900));
     background.setPosition(0, 0);
@@ -42,20 +40,19 @@ Menu::Menu() {
 void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     target.draw(background);
 
-    if (status == INMENU) {
+    if (status == INMAINMENU) {
         target.draw(play);
-        target.draw(highscore);
         target.draw(exit);
     }
-    if (status == GAMEOVER) {
+    if (status == INRETRYMENU) {
         target.draw(retry);
         target.draw(menu);
     }
+
 }
 
 void Menu::updateMousePosition(sf::Vector2i i) {
     play.updateMouse(i);
-    highscore.updateMouse(i);
     exit.updateMouse(i);
     retry.updateMouse(i);
     menu.updateMouse(i);
@@ -63,7 +60,6 @@ void Menu::updateMousePosition(sf::Vector2i i) {
 
 void Menu::update() {
     play.update();
-    highscore.update();
     exit.update();
     retry.update();
     menu.update();
@@ -71,9 +67,6 @@ void Menu::update() {
 
 bool Menu::isPressed(Buttons buttons) {
     if (buttons == PLAY) {
-        return play.isPressed();
-    }
-    if (buttons == OPTIONS) {
         return play.isPressed();
     }
     if (buttons == EXIT) {
@@ -85,4 +78,8 @@ bool Menu::isPressed(Buttons buttons) {
     if (buttons == MENU) {
         return menu.isPressed();
     }
+}
+
+void Menu::setState(Status status) {
+    this->status = status;
 }

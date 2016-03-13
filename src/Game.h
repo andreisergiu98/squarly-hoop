@@ -23,7 +23,6 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "debug/Debug.h"
 #include "Player.h"
 #include "EntityManager.h"
 #include "menu/Menu.h"
@@ -49,6 +48,8 @@ private:
     void process();
 
     void menuHandler();
+
+    void loadTextures();
 
     void updateGame();
 
