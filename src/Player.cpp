@@ -24,31 +24,32 @@
 
 Player::Player(sf::FloatRect windowBounds) {
     form.setTexture(&texture.getTexture("../res/textures/player.png"));
-    form.setPosition(480, 860);
+    form.setPosition(480, windowBounds.height - 40);
     form.setSize(sf::Vector2f(31, 31));
     form.setOrigin(sf::Vector2f(15.5, 15.5));
-
-    windowBounds.top += form.getSize().x;
-    windowBounds.left += form.getSize().y;
-    windowBounds.width -= 2 * form.getSize().x + 5;
-    windowBounds.height -= 2 * form.getSize().y + 5;
 
     this->windowBounds = windowBounds;
 
     hp = 20;
     for (int i = 0; i < hp; i++) {
         sf::RectangleShape rect;
-        rect.setPosition(5 + i * 20, 880);
+        rect.setPosition(5 + i * 20, windowBounds.height - 20);
         rect.setSize(sf::Vector2f(10, 10));
         rect.setTexture(&texture.getTexture("../res/textures/heart.png"));
         hpBar.push_back(rect);
     }
 
     pattern = PlayerPatterns::Pattern::SIMPLE;
-    simplePattern = true;
-    spreadPattern = true;
-    spreadmaxPattern = true;
+    charged = true;
 
+
+    coolDownSec = new sf::Text;
+    font = new sf::Font;
+    coolDownSec->setPosition(940, windowBounds.height - 20);
+    coolDownSec->setScale(0.4, 0.4);
+    coolDownSec->setString("Charged");
+    font->loadFromFile("../res/fonts/OpenSans-Bold.ttf");
+    coolDownSec->setFont(*font);
 }
 
 void Player::update(sf::Time frameTime) {
@@ -63,88 +64,96 @@ void Player::process() {
 
     bullets.clear();
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) or sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         velocity.y -= speed;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) or sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         velocity.y += speed;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) or sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         velocity.x -= speed;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) or sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         velocity.x += speed;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
-        spreadPattern = true;
-        spreadmaxPattern = true;
+        charged = true;
+        coolDownClock.restart();
+        timer.restart();
+        coolDownSec->setPosition(940, windowBounds.height - 20);
+        coolDownSec->setString("Charged");
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+        setHp(20);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-        if (simplePattern)
-            pattern = PlayerPatterns::SIMPLE;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
-        if (spreadPattern) {
+        if (charged) {
             pattern = PlayerPatterns::SPREAD;
+            charged = false;
+            coolDown = 36;
             timer.restart();
-            coolDown = 25;
-            spreadmaxPattern = false;
             coolDownClock.restart();
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
-        if (spreadmaxPattern) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+        if (charged) {
             pattern = PlayerPatterns::SPREADMAX;
+            charged = false;
+            coolDown = 51;
             timer.restart();
-            coolDown = 40;
-            spreadPattern = false;
             coolDownClock.restart();
         }
     }
 
-    if(!spreadmaxPattern or !spreadPattern){
-        //text.setString(intToStr((int) (coolDown - coolDownClock.getElapsedTime().asSeconds())));
+    if (!charged) {
+        coolDownSec->setPosition(910, windowBounds.height - 20);
+        coolDownSec->setString("Cooldown : " + intToStr((int) (coolDown - coolDownClock.getElapsedTime().asSeconds())));
     }
 
     if (timer.getElapsedTime().asSeconds() >= 10) {
-        spreadPattern = false;
-        spreadmaxPattern = false;
         pattern = PlayerPatterns::Pattern::SIMPLE;
-        coolDownClock.restart();
     }
 
     if (coolDownClock.getElapsedTime().asSeconds() >= coolDown) {
-        spreadPattern = true;
-        spreadmaxPattern = true;
+        coolDownSec->setPosition(940, windowBounds.height - 20);
+        coolDownSec->setString("Charged");
+        charged = true;
     }
 
-    if (clock.getElapsedTime().asMilliseconds() >= 200 and hp > 0) {
+    if (clock.getElapsedTime().asMilliseconds() >= 200 && hp > 0) {
         shoot();
         clock.restart();
     }
 
-    if (velocity.x != 0.f and velocity.y != 0.f)
+    if (velocity.x != 0.f && velocity.y != 0.f)
         velocity /= std::sqrt(2.f);
 
     form.move(velocity * frameTime.asSeconds());
 
-    if (!getGlobalBounds().intersects(windowBounds)) {
+    int xMin = 15, xMax = windowBounds.width - 15, yMin = 15, yMax = windowBounds.height - 35;
+
+    if (form.getPosition().x < xMin || form.getPosition().x > xMax || form.getPosition().y < yMin ||
+        form.getPosition().y > yMax) {
         form.move(-velocity * frameTime.asSeconds());
 
-        if (velocity.x != 0.f and velocity.y != 0.f) {
+        if (velocity.x != 0.f && velocity.y != 0.f) {
             velocity *= std::sqrt(2.f);
 
             form.move(sf::Vector2f(velocity.x, 0) * frameTime.asSeconds());
-            if (!getGlobalBounds().intersects(windowBounds)) {
+            if (form.getPosition().x < xMin || form.getPosition().x > xMax || form.getPosition().y < yMin ||
+                form.getPosition().y > yMax) {
                 form.move(-sf::Vector2f(velocity.x, 0) * frameTime.asSeconds());
             }
 
             form.move(sf::Vector2f(0, velocity.y) * frameTime.asSeconds());
-            if (!getGlobalBounds().intersects(windowBounds)) {
+            if (form.getPosition().x < xMin || form.getPosition().x > xMax || form.getPosition().y < yMin ||
+                form.getPosition().y > yMax) {
                 form.move(-sf::Vector2f(0, velocity.y) * frameTime.asSeconds());
             }
         }
     }
 
     form.rotate(20);
+
 }
 
 void Player::shoot() {
@@ -177,13 +186,11 @@ void Player::setHp(int hp) {
 }
 
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    target.draw(form);
     for (int i = 0; i < hp; i++) {
         target.draw(hpBar[i]);
     }
-    target.draw(form);
-    if(!spreadmaxPattern or !spreadPattern){
-        //
-    }
+    target.draw(*coolDownSec);
 }
 
 sf::Vector2f Player::getPosition() {
@@ -191,11 +198,10 @@ sf::Vector2f Player::getPosition() {
 }
 
 void Player::reset() {
-    form.setPosition(480, 860);
+    form.setPosition(480, windowBounds.height - 40);
     coolDownClock.restart();
     timer.restart();
     coolDown = 0;
-    spreadPattern = true;
-    spreadmaxPattern = true;
+    charged = true;
     hp = 20;
 }

@@ -71,7 +71,11 @@ private:
 
     PlayerPatterns::Pattern pattern;
 
-    bool simplePattern, spreadPattern, spreadmaxPattern;
+    sf::Text *coolDownSec;
+
+    sf::Font *font;
+
+    bool charged;
 
     int coolDown;
 
