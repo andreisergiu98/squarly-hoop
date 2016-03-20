@@ -65,17 +65,23 @@ void Enemy::shoot() {
     int color = rand() % 6 + 1;
 
     bullets.clear();
-    if(freq < 4.f)
-    bullets = EnemyPatterns::getBullets(EnemyPatterns::Pattern::SIMPLE, getPosition(), target, 200.f,
-                                        texture->getTexture(std::string("../res/textures/bullet2" + intToStr(color) + ".png")), color);
+    if (freq < 4.f)
+        bullets = EnemyPatterns::getBullets(EnemyPatterns::Pattern::SIMPLE, getPosition(), target, 200.f,
+                                            texture->getTexture(
+                                                    std::string("../res/textures/bullet2" + intToStr(color) + ".png")),
+                                            color);
 
-    if(freq > 4.f and freq < 6.f){
+    if (freq > 4.f && freq < 6.f) {
         bullets = EnemyPatterns::getBullets(EnemyPatterns::Pattern::SPREAD, getPosition(), target, 200.f,
-                                            texture->getTexture(std::string("../res/textures/bullet2" + intToStr(color) + ".png")), color);
+                                            texture->getTexture(
+                                                    std::string("../res/textures/bullet2" + intToStr(color) + ".png")),
+                                            color);
     }
-    if(freq > 6.f){
+    if (freq > 6.f) {
         bullets = EnemyPatterns::getBullets(EnemyPatterns::Pattern::CIRCLE, getPosition(), target, 200.f,
-                                            texture->getTexture(std::string("../res/textures/bullet2" + intToStr(color) + ".png")), color);
+                                            texture->getTexture(
+                                                    std::string("../res/textures/bullet2" + intToStr(color) + ".png")),
+                                            color);
     }
 }
 

@@ -42,7 +42,7 @@ bool Explosion::destroy() {
 
 void Explosion::update() {
     if (fadeOut.getElapsedTime().asMilliseconds() >= 0.5) {
-        if(opacity)
+        if (opacity)
             opacity--;
         fadeOut.restart();
     }

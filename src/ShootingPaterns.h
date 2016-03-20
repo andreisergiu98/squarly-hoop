@@ -45,12 +45,13 @@ namespace EnemyPatterns {
 
 }
 
-namespace PlayerPatterns{
-    enum Pattern{
+namespace PlayerPatterns {
+    enum Pattern {
         SIMPLE, SPREAD, SPREADMAX
     };
 
-    std::vector<Bullet> getBullets(Pattern pattern, sf::Vector2f position, float speed, sf::Texture &texture, int color);
+    std::vector<Bullet> getBullets(Pattern pattern, sf::Vector2f position, float speed, sf::Texture &texture,
+                                   int color);
 
     std::vector<Bullet> simple(sf::Vector2f position, float speed, sf::Texture &texture, int color);
 

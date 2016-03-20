@@ -21,19 +21,23 @@
 #include "Score.h"
 #include "Utils.h"
 
-Score::Score() {
-    text.setPosition(3,860);
-    text.setScale(0.4, 0.4);
-    text.setString("Score: 0");
-    font.loadFromFile("../res/fonts/OpenSans-Bold.ttf");
-    text.setFont(font);
+Score::Score(sf::FloatRect windowBounds) {
+
+    text = new sf::Text;
+    font = new sf::Font;
+
+    text->setPosition(3, windowBounds.height - 40);
+    text->setScale(0.4, 0.4);
+    text->setString("Score: 0");
+    font->loadFromFile("../res/fonts/OpenSans-Bold.ttf");
+    text->setFont(*font);
     score = 0;
 }
 
 
 void Score::setScore(int score) {
-    if(this->score != 0)
-        text.setString("Score: " + intToStr(score) + "00");
+    if (this->score != 0)
+        text->setString("Score: " + intToStr(score) + "00");
     this->score = score;
 }
 
@@ -42,10 +46,10 @@ int Score::getScore() {
 }
 
 void Score::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    target.draw(text);
+    target.draw(*text);
 }
 
 void Score::reset() {
-    text.setString("Score: 0");
+    text->setString("Score: 0");
     score = 0;
 }

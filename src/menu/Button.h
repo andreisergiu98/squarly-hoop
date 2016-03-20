@@ -25,11 +25,14 @@
 
 class Button : public sf::Drawable {
 public:
-    Button(){}
+    Button() { }
+
     Button(sf::Vector2f position, sf::Vector2f size, sf::Texture &texNormal, sf::Texture &texMouseOver);
 
     void update();
+
     void updateMouse(sf::Vector2i);
+
     bool isPressed();
 
 private:
@@ -38,8 +41,9 @@ private:
     sf::Texture *texNormal;
     sf::Texture *texMouseOver;
 
-    enum Mouse{
-        MOUSEOVER, NORMAL, ISPRESSED};
+    enum Mouse {
+        MOUSEOVER, NORMAL, ISPRESSED
+    };
     Mouse status;
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;

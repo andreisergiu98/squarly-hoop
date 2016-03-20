@@ -38,18 +38,18 @@ void Button::updateMouse(sf::Vector2i mousePosition) {
 }
 
 void Button::update() {
-    if (status == NORMAL and form.getGlobalBounds().intersects(mouse)) {
+    if (status == NORMAL && form.getGlobalBounds().intersects(mouse)) {
         form.setTexture(texMouseOver);
         status = MOUSEOVER;
     }
-    if (status == MOUSEOVER and !form.getGlobalBounds().intersects(mouse)) {
+    if (status == MOUSEOVER && !form.getGlobalBounds().intersects(mouse)) {
         form.setTexture(texNormal);
         status = NORMAL;
     }
 }
 
 bool Button::isPressed() {
-    return status == MOUSEOVER and sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+    return status == MOUSEOVER && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 }
 
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const {

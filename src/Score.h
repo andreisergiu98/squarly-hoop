@@ -26,7 +26,9 @@
 
 class Score : public sf::Drawable {
 public:
-    Score();
+    Score() { }
+
+    Score(sf::FloatRect windowBounds);
 
     void setScore(int);
 
@@ -35,9 +37,9 @@ public:
     int getScore();
 
 private:
-    sf::Text text;
+    sf::Text *text;
 
-    sf::Font font;
+    sf::Font *font;
 
     int score;
 

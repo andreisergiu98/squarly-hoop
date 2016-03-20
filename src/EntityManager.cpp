@@ -74,7 +74,6 @@ void EntityManager::updateSpawnLocations() {
     spawnCenter = true;
 
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
-        std::cout << it->getPosition().x << " ";
         if (it->getPosition().x >= 650) {
             spawnRight = false;
         }
@@ -85,11 +84,10 @@ void EntityManager::updateSpawnLocations() {
             spawnLeft = false;
         }
     }
-    std::cout << std::endl;
 }
 
 void EntityManager::update(sf::Time frameTime) {
-    if(enemies.size() <= maxSpawnNumber)
+    if (enemies.size() <= maxSpawnNumber)
         spawn();
 
     clean();
@@ -272,7 +270,7 @@ int EntityManager::getDestroyedEnemies() {
 }
 
 void EntityManager::updateBeat(bool beat, float freq) {
-    for (auto it = enemies.begin(); it != enemies.end();++it) {
+    for (auto it = enemies.begin(); it != enemies.end(); ++it) {
         it->updateBeat(beat, freq);
     }
 }

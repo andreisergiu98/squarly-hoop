@@ -18,7 +18,7 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include <tgmath.h>
+#include <math.h>
 #include "Utils.h"
 
 std::string intToStr(int a) {

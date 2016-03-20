@@ -2,17 +2,17 @@
 //
 //  squarly-hoop
 //	Copyright (C) 2016  Pampu Andrei (aka. Woky) (andrei.sergiu98@gmail.com)
-//	
+//
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
 //	the Free Software Foundation, either version 3 of the License, or
 //	any later version.
-//	
+//
 //	This program is distributed in the hope that it will be useful,
 //	but WITHOUT ANY WARRANTY; without even the implied warranty of
 //	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //	GNU General Public License for more details.
-//	
+//
 //	You should have received a copy of the GNU General Public License
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
@@ -36,11 +36,13 @@ Game::Game() {
 
     entities = EntityManager(windowBounds);
 
+    score = Score(windowBounds);
+
     gameState = GameState::INMENU;
 
     background.setTexture(texture.getTexture("../res/textures/background.jpg"));
     background.setPosition(0, 0);
-    background.setScale(0.5, 0.8);
+    background.setScale(0.5, 0.84);
 
     music.loadPlaylist("playlist");
     loadTextures();
@@ -127,23 +129,33 @@ void Game::loop() {
 void Game::menuHandler() {
     if (gameState == INMENU) {
         menu.setState(Status::INMAINMENU);
-        if (menu.isPressed(Buttons::PLAY)) {
-            restart();
-            music.play();
-            gameState = INGAME;
-        }
-        if (menu.isPressed(Buttons::EXIT)) {
-            window->close();
+        if (clickSleep.getElapsedTime().asMilliseconds() > 500) {
+            if (menu.isPressed(Buttons::PLAY)) {
+                restart();
+                music.play();
+                gameState = INGAME;
+
+                clickSleep.restart();
+            }
+            if (menu.isPressed(Buttons::EXIT)) {
+                window->close();
+            }
         }
     }
     else if (gameState == GAMEOVER) {
         menu.setState(Status::INRETRYMENU);
-        if (menu.isPressed(Buttons::RETRY)) {
-            restart();
-            gameState = INGAME;
-        }
-        if (menu.isPressed(Buttons::MENU)) {
-            gameState = INMENU;
+        if (clickSleep.getElapsedTime().asMilliseconds() > 500) {
+            if (menu.isPressed(Buttons::RETRY)) {
+                restart();
+                gameState = INGAME;
+
+                clickSleep.restart();
+            }
+            if (menu.isPressed(Buttons::MENU)) {
+                gameState = INMENU;
+
+                clickSleep.restart();
+            }
         }
     }
 }
@@ -168,14 +180,14 @@ void Game::start() {
     loop();
 }
 
+void Game::loadTextures() {
+    //
+}
+
 int main() {
     Game game;
 
     game.start();
 
-    return EXIT_SUCCESS;
-}
-
-void Game::loadTextures() {
-    //
+    return 0;
 }

@@ -21,15 +21,11 @@
 #include "LoadSettings.h"
 
 std::shared_ptr<sf::RenderWindow> LoadSettings::set() {
-    // read();
+    read();
 
-    // if (resX == 0 || resY == 0 || bit == 0) {
-    //	 setDefault();
-    // }
-
-    resX = 1000;
-    resY = 900;
-    bit = 32;
+    if (resX == 0 || resY == 0 || bit == 0) {
+        setDefault();
+    }
 
     std::shared_ptr<sf::RenderWindow> initWindow(
             new sf::RenderWindow(sf::VideoMode(resX, resY, bit), "Squarly Hoop", sf::Style::Default));
