@@ -1,97 +1,91 @@
-/*
-	
-	Beat Detector for Games Design - P�draig O Connor
-	Final Year Project: Games Design and Development (LIT-Tipperary)
-	Project Commenced: Nov 4th 2014
-	Project Concluded: Mar 26th 2015
-
-	A program that, given a music file, will detect areas of high-frequency
-	in real time. These areas often manifest as Beats in a song, such as a Drum Snare
-	or Bass line.
-
-	This program was developed with Video Games in mind, and is akin to the operations
-	that occur in games such as "Vib Ribbon", "Audiosurf" and "Beat Hazzard". Please be
-	aware that this detector is not 100% accurate, due to the nature of music itself aswell
-	as parts of this program that could be improved on.
-
-*/
+////////////////////////////////////////////////////////////
+//
+//      Copyright (c) 2015 Padraig O Connor
+//
+//      Permission is hereby granted, free of charge, to any person obtaining a copy
+//      of this software and associated documentation files (the "Software"), to deal
+//      in the Software without restriction, including without limitation the rights
+//      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//      copies of the Software, and to permit persons to whom the Software is
+//      furnished to do so, subject to the following conditions:
+//      
+////////////////////////////////////////////////////////////  
 
 #include "BeatDetector.h"
 #include "string.h"
 
-BeatDetector* BeatDetector::instance = 0;
+BeatDetector *BeatDetector::instance = 0;
 
 
 //Call this function to create the "System" object that the detector will use
 //throughout its lifetime. Should only be called once per instance.
-void BeatDetector::loadSystem()
-{
-	system = fmodSetup();
+void BeatDetector::loadSystem() {
+    system = fmodSetup();
 }
 
 //Loads a song into memory given a sample size and file-path to an audio file.
 //The most commonly used and accurate Sample Size is 1024.
-void BeatDetector::LoadSong(int sSize, char* audioString)
-{
-	//Take in Aruguments
-	sampleSize = sSize;
-	songString = audioString;
+void BeatDetector::LoadSong(int sSize, char *audioString) {
+    //Take in Aruguments
+    sampleSize = sSize;
+    songString = audioString;
 
-	areWePlaying = true;
-	specFlux = 0.0f;
-	timeBetween = 0;
-	initialTime = clock();
-	currentTime = 0;
-	currentSeconds = 0;
-	lastSeconds = 0;
-	currentMillis = 0;
-	currentMinutes = 0;
-	median = 0.0f;
-	smoothMedian = 0.0f;
-	beatThreshold = 0.6f;
-	thresholdSmoother = 0.6f;
-	started = false;
-	lastBeatRegistered = new TimeStamp();
-	timeToDelay = 0;
+    areWePlaying = true;
+    specFlux = 0.0f;
+    timeBetween = 0;
+    initialTime = clock();
+    currentTime = 0;
+    currentSeconds = 0;
+    lastSeconds = 0;
+    currentMillis = 0;
+    currentMinutes = 0;
+    median = 0.0f;
+    smoothMedian = 0.0f;
+    beatThreshold = 0.6f;
+    thresholdSmoother = 0.6f;
+    started = false;
+    lastBeatRegistered = new TimeStamp();
+    timeToDelay = 0;
 
-	previousFFT = new float[sampleSize / 2 + 1];
-	for (int i = 0; i < sampleSize / 2; i++)
-	{
-		previousFFT[i] = 0;
-	}
+    previousFFT = new float[sampleSize / 2 + 1];
+    for (int i = 0; i < sampleSize / 2; i++) {
+        previousFFT[i] = 0;
+    }
 
-	//Brute force for testing
-	//songString = "Music/drums.wav";
+    //Brute force for testing
+    //songString = "Music/drums.wav";
 
-	//Create channel and audio
-	FMODErrorCheck(system->createChannelGroup(NULL, &channelMusic));
-	FMODErrorCheck(system->createStream(songString, FMOD_SOFTWARE, 0, &audio));
+    //Create channel and audio
+    FMODErrorCheck(FMOD_System_CreateChannelGroup(system, NULL, &channelMusic));
+    FMODErrorCheck(FMOD_System_CreateStream(system, songString, FMOD_SOFTWARE, 0, &audio));
 
-	audio->getLength(&seconds, FMOD_TIMEUNIT_MS);
-	audio->getDefaults(&sampleRate, 0, 0, 0);
-	seconds = ((seconds + 500) / 1000);
-	minutes = seconds / 60;
-	fullSeconds = seconds;
-	seconds = seconds - (minutes * 60);
+    FMOD_Sound_GetLength(audio, &seconds, FMOD_TIMEUNIT_MS);
+    FMOD_Sound_GetDefaults(audio, &sampleRate, 0, 0, 0);
 
-	FMODErrorCheck(system->playSound(FMOD_CHANNEL_FREE, audio, true, &songChannel1));
+    seconds = ((seconds + 500) / 1000);
+    minutes = seconds / 60;
+    fullSeconds = seconds;
+    seconds = seconds - (minutes * 60);
 
-	hzRange = (sampleRate / 2) / static_cast<float>(sampleSize);
-	songChannel1->setChannelGroup(channelMusic);
-	songChannel1->setPaused(true);
+    FMODErrorCheck(FMOD_System_PlaySound(system, FMOD_CHANNEL_FREE, audio, true, &songChannel1));
 
-	std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
-	std::cout << "Sample Rate: " << sampleRate << std::endl;
-	std::cout << "Freq Range: " << hzRange << std::endl;
-	//songChannel1->setVolume(0);
+    hzRange = (sampleRate / 2) / static_cast<float>(sampleSize);
+    FMOD_Channel_SetChannelGroup(songChannel1, channelMusic);
+    FMOD_Channel_SetPaused(songChannel1, true);
+    //songChannel1->setChannelGroup(channelMusic);
+    //songChannel1->setPaused(true);
+
+    std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
+    std::cout << "Sample Rate: " << sampleRate << std::endl;
+    std::cout << "Freq Range: " << hzRange << std::endl;
+    //songChannel1->setVolume(0);
 
 }
 
 
 //Deconstructor
-BeatDetector::~BeatDetector()
-{
-	delete system;
+BeatDetector::~BeatDetector() {
+    delete system;
 }
 
 
@@ -101,82 +95,79 @@ BeatDetector::~BeatDetector()
 //with the point in the music it plays. So, the obstacle will spawn before the song gets
 //to the beat detected point.
 //Use milliseconds to express the amount of delay time you want between playback and detection.
-void BeatDetector::loadSongToDelay(int milliseconds)
-{
-	delayedSong = true;
-	songChannel1->setVolume(0);
+void BeatDetector::loadSongToDelay(int milliseconds) {
+    delayedSong = true;
+    FMOD_Channel_SetVolume(songChannel1, 0);
+    //songChannel1->setVolume(0);
 
-	FMODErrorCheck(system->createStream(songString, FMOD_SOFTWARE, 0, &audio2));
+    FMODErrorCheck(FMOD_System_CreateStream(system, songString, FMOD_SOFTWARE, 0, &audio2));
 
-	//songChannel2 = new FMOD.Channel();
-	FMODErrorCheck(system->playSound(FMOD_CHANNEL_FREE, audio2, true, &songChannel2));
-	songChannel2->setChannelGroup(channelMusic);
-	timeToDelay = milliseconds;
+    //songChannel2 = new FMOD.Channel();
+    FMODErrorCheck(FMOD_System_PlaySound(system, FMOD_CHANNEL_FREE, audio2, true, &songChannel2));
+    FMOD_Channel_SetChannelGroup(songChannel2, channelMusic);
+    //songChannel2->setChannelGroup(channelMusic);
+    timeToDelay = milliseconds;
 }
 
 //Updates the timer and creates a "TimeStamp" object. This is used to detect where in the song
-//we are, so timekeeping is a necessity. 
-void BeatDetector::updateTime()
-{
-	currentTime = clock();
-	currentTime = currentTime - initialTime;
-	
+//we are, so timekeeping is a necessity.
+void BeatDetector::updateTime() {
+    currentTime = clock();
+    currentTime = currentTime - initialTime;
 
-	if (currentMinutes > 0)
-		currentSeconds = ((currentTime / 1000) - (60 * currentMinutes));
-	else
-		currentSeconds = (currentTime / 1000);
 
-	if (currentSeconds != lastSeconds)
-	{
-		currentMillis = 0;
-		lastSeconds = currentSeconds;
-	}
-	else
-	{
-		currentMillis++;
-	}
+    if (currentMinutes > 0)
+        currentSeconds = ((currentTime / 1000) - (60 * currentMinutes));
+    else
+        currentSeconds = (currentTime / 1000);
 
-	currentMinutes = ((currentTime / 1000) / 60);
+    if (currentSeconds != lastSeconds) {
+        currentMillis = 0;
+        lastSeconds = currentSeconds;
+    }
+    else {
+        currentMillis++;
+    }
 
-	if (timeToDelay != 0)
-	{
-		if (currentTime>timeToDelay)
-		{
-			//songChannel2.setChannelGroup(channelMusic);
-			songChannel2->setPaused(false);
-			timeToDelay = 0;
-		}
-	}
+    currentMinutes = ((currentTime / 1000) / 60);
 
-	currentTimeStamp = new TimeStamp(currentMinutes, currentSeconds, currentMillis);
+    if (timeToDelay != 0) {
+        if (currentTime > timeToDelay) {
+            //songChannel2.setChannelGroup(channelMusic);
+            FMOD_Channel_SetPaused(songChannel2, false);
+            //songChannel2->setPaused(false);
+            timeToDelay = 0;
+        }
+    }
+
+    currentTimeStamp = new TimeStamp(currentMinutes, currentSeconds, currentMillis);
 }
 
 
 //Gets the current frequency spectrum for the current frame of playback. This is gotten for both left
 //and right channels and then combined into one channel called tempSpec, which the function returns
-float* BeatDetector::getCurrentSpectrum()
-{
-	float *specLeft, *specRight, *tempSpec;
-	specLeft = new float[sampleSize];
-	specRight = new float[sampleSize];
-	tempSpec = new float[sampleSize / 2 + 1];
+float *BeatDetector::getCurrentSpectrum() {
+    float *specLeft, *specRight, *tempSpec;
+    specLeft = new float[sampleSize];
+    specRight = new float[sampleSize];
+    tempSpec = new float[sampleSize / 2 + 1];
 
-	//Get Spectrum of Song Channel for left and right
-	songChannel1->getSpectrum(specLeft, sampleSize, 0, FMOD_DSP_FFT_WINDOW_HAMMING);
-	songChannel1->getSpectrum(specRight, sampleSize, 1, FMOD_DSP_FFT_WINDOW_HAMMING);
+    //Get Spectrum of Song Channel for left and right
 
-	//Average spectrum for stereo song channel, Divided by 2 cause Nyquist
-	for (int i = 0; i < sampleSize / 2; i++)
-	{
-		tempSpec[i] = (specLeft[i] + specRight[i]);
-		//std::cout << specStereo[i] << std::endl;
-	}
 
-	delete[] specLeft;
-	delete[] specRight;
+    FMOD_Channel_GetSpectrum(songChannel1, specLeft, sampleSize, 0, FMOD_DSP_FFT_WINDOW_HAMMING);
+    FMOD_Channel_GetSpectrum(songChannel1, specRight, sampleSize, 1, FMOD_DSP_FFT_WINDOW_HAMMING);
 
-	return tempSpec;
+    //Average spectrum for stereo song channel, Divided by 2 cause Nyquist
+    for (int i = 0; i < sampleSize / 2; i++) {
+        tempSpec[i] = (specLeft[i] + specRight[i]);
+        //std::cout << specStereo[i] << std::endl;
+    }
+
+    delete[] specLeft;
+    delete[] specRight;
+
+    return tempSpec;
 }
 
 //This function calculates a Spectral Flux based
@@ -186,67 +177,59 @@ float* BeatDetector::getCurrentSpectrum()
 //smoother list that calculates a smoothing average based on beats detected.
 //This function therefore maintains an adaptive threshold and returns the
 //current threshold this tick/frame.
-float BeatDetector::calculateFluxAndSmoothing(float* currentSpectrum)
-{
-	specFlux = 0.0;
+float BeatDetector::calculateFluxAndSmoothing(float *currentSpectrum) {
+    specFlux = 0.0;
 
-	//Calculate differences
-	for (int i = 0; i < sampleSize / 2; i++)
-	{
-		difference = currentSpectrum[i] - previousFFT[i];
+    //Calculate differences
+    for (int i = 0; i < sampleSize / 2; i++) {
+        difference = currentSpectrum[i] - previousFFT[i];
 
-		if (difference > 0) {
-			specFlux += difference;
-		}
-	}
+        if (difference > 0) {
+            specFlux += difference;
+        }
+    }
 
-	//Get our median for threshold
-	if (spectrumFluxes.size() > 0 && spectrumFluxes.size() < 10)
-	{
-		std::sort(spectrumFluxes.begin(), spectrumFluxes.end());
-		std::sort(smootherValues.begin(), smootherValues.end());
+    //Get our median for threshold
+    if (spectrumFluxes.size() > 0 && spectrumFluxes.size() < 10) {
+        std::sort(spectrumFluxes.begin(), spectrumFluxes.end());
+        std::sort(smootherValues.begin(), smootherValues.end());
 
-		if (spectrumFluxes.at(spectrumFluxes.size() / 2) > 0)
-		{
-			median = spectrumFluxes.at(spectrumFluxes.size() / 2);
-		}
+        if (spectrumFluxes.at(spectrumFluxes.size() / 2) > 0) {
+            median = spectrumFluxes.at(spectrumFluxes.size() / 2);
+        }
 
-		if (smootherValues.size() > 0 && smootherValues.size() < 5)
-		{
+        if (smootherValues.size() > 0 && smootherValues.size() < 5) {
 
-			if (smootherValues.at(smootherValues.size() / 2) > 0)
-			{
-				smoothMedian = smootherValues.at(smootherValues.size() / 2);
-			}
-		}
-		//std::cout << median << std::endl;
-	}
+            if (smootherValues.at(smootherValues.size() / 2) > 0) {
+                smoothMedian = smootherValues.at(smootherValues.size() / 2);
+            }
+        }
+        //std::cout << median << std::endl;
+    }
 
-	for (int i = 0; i < sampleSize / 2; i++)
-	{
-		spectrumFluxes.push_back(specFlux);
+    for (int i = 0; i < sampleSize / 2; i++) {
+        spectrumFluxes.push_back(specFlux);
 
-		if (spectrumFluxes.size() >= 10)
-		{
-			spectrumFluxes.erase(spectrumFluxes.begin());
-		}
-	}
+        if (spectrumFluxes.size() >= 10) {
+            spectrumFluxes.erase(spectrumFluxes.begin());
+        }
+    }
 
-	//Copy spectrum for next spectral flux calculation
-	for (int j = 0; j < sampleSize / 2; j++)
-		previousFFT[j] = currentSpectrum[j];
+    //Copy spectrum for next spectral flux calculation
+    for (int j = 0; j < sampleSize / 2; j++)
+        previousFFT[j] = currentSpectrum[j];
 
-	//Smoothing for different averages
-	if (smoothMedian > 1)
-		thresholdSmoother = 0.8f;
-	if (smoothMedian > 2 && smoothMedian < 4)
-		thresholdSmoother = 1.0f;
-	if (smoothMedian > 4 && smoothMedian < 6)
-		thresholdSmoother = 2.2f;
-	if (smoothMedian > 6)
-		thresholdSmoother = 2.4f;
+    //Smoothing for different averages
+    if (smoothMedian > 1)
+        thresholdSmoother = 0.8f;
+    if (smoothMedian > 2 && smoothMedian < 4)
+        thresholdSmoother = 1.0f;
+    if (smoothMedian > 4 && smoothMedian < 6)
+        thresholdSmoother = 2.2f;
+    if (smoothMedian > 6)
+        thresholdSmoother = 2.4f;
 
-	return thresholdSmoother + median;
+    return thresholdSmoother + median;
 }
 
 
@@ -256,294 +239,273 @@ float BeatDetector::calculateFluxAndSmoothing(float* currentSpectrum)
 //This function also does functions such as update the smoothing median list, create a
 //timestamp object, update the lastBeatRegistered and checks to see if the song
 //is still playing
-void BeatDetector::update()
-{
-		
-		if (started)
-		{
-			float* specStereo;
+void BeatDetector::update() {
 
-			updateTime();
+    if (started) {
+        float *specStereo;
 
-			specStereo = getCurrentSpectrum();
+        updateTime();
 
-			beatThreshold = calculateFluxAndSmoothing(specStereo);
+        specStereo = getCurrentSpectrum();
 
-			//Beat detected
-			if (specFlux > beatThreshold && (clock() - timeBetween) > 350)
-			{
-				smootherValues.push_back(specFlux);
+        beatThreshold = calculateFluxAndSmoothing(specStereo);
 
-				if (smootherValues.size() >= 5)
-				{
-					smootherValues.erase(smootherValues.begin());
-				}
+        //Beat detected
+        if (specFlux > beatThreshold && (clock() - timeBetween) > 350) {
+            smootherValues.push_back(specFlux);
 
-				timeBetween = clock();
+            if (smootherValues.size() >= 5) {
+                smootherValues.erase(smootherValues.begin());
+            }
 
-				TimeStamp* t = new TimeStamp(currentMinutes, currentSeconds, currentMillis, specFlux);
-				//std::cout << "BEAT AT: " << t->getMinutes() << ":" << t->getSeconds() << ":" << t->getMilliseconds() << " -- BEAT FREQ: " << t->getFrequency() << " -- THRESHOLD: " << beatThreshold << std::endl;
-				lastBeatRegistered = t;
-				freq = t->getFrequency();
-			}
-			else if ((clock() - timeBetween) > 5000)
-			{
-				if (thresholdSmoother>0.4f)
-					thresholdSmoother -= 0.4f;
+            timeBetween = clock();
 
-				timeBetween = clock();
-			}
+            TimeStamp *t = new TimeStamp(currentMinutes, currentSeconds, currentMillis, specFlux);
+            //std::cout << "BEAT AT: " << t->getMinutes() << ":" << t->getSeconds() << ":" << t->getMilliseconds() << " -- BEAT FREQ: " << t->getFrequency() << " -- THRESHOLD: " << beatThreshold << std::endl;
+            lastBeatRegistered = t;
+            freq = t->getFrequency();
+        }
+        else if ((clock() - timeBetween) > 5000) {
+            if (thresholdSmoother > 0.4f)
+                thresholdSmoother -= 0.4f;
 
-			if (!delayedSong)
-				songChannel1->isPlaying(&areWePlaying);
-			else
-				songChannel2->isPlaying(&areWePlaying);
+            timeBetween = clock();
+        }
 
-			delete[] specStereo;
-		}
-		else
-		{
-			std::cin >> test;
+        if (!delayedSong)
+            FMOD_Channel_IsPlaying(songChannel1, &areWePlaying);
+        else
+            FMOD_Channel_IsPlaying(songChannel2, &areWePlaying);
 
-			if (test == 1)
-				setStarted(true);
-		}
-		
+        delete[] specStereo;
+    }
+    else {
+        std::cin >> test;
+
+        if (test == 1)
+            setStarted(true);
+    }
+
 }
 
 
 //This function is called by the loadSystem function above. It sets up FMOD for the rest of
 //the program, like an "init" of sorts. Most of this code is boilerplate that is used in
 //every FMOD application.
-FMOD::System * BeatDetector::fmodSetup()
-{
-	FMOD::System *system;
-	FMOD_RESULT result;
-	unsigned int version;
-	int numDrivers;
-	FMOD_SPEAKERMODE speakerMode;
-	FMOD_CAPS caps;
-	char name[256];
+FMOD_SYSTEM *BeatDetector::fmodSetup() {
+    FMOD_SYSTEM *system;
+    FMOD_RESULT result;
+    unsigned int version;
+    int numDrivers;
+    FMOD_SPEAKERMODE speakerMode;
+    FMOD_CAPS caps;
+    char name[256];
 
-	// Create FMOD interface object
-	result = FMOD::System_Create(&system);
-	FMODErrorCheck(result);
+    // Create FMOD interface object
+    result = FMOD_System_Create(&system);
+    FMODErrorCheck(result);
 
-	// Check version
-	result = system->getVersion(&version);
-	FMODErrorCheck(result);
+    // Check version
+    result = FMOD_System_GetVersion(system, &version);
+    FMODErrorCheck(result);
 
-	if (version < FMOD_VERSION)
-	{
-		std::cout << "Error! You are using an old version of FMOD " << version << ". This program requires " << FMOD_VERSION << std::endl;    return 0;
-	}
+    if (version < FMOD_VERSION) {
+        std::cout << "Error! You are using an old version of FMOD " << version << ". This program requires " <<
+        FMOD_VERSION << std::endl;
+        return 0;
+    }
 
-	//Check Sound Cards, if none, disable sound
-	result = system->getNumDrivers(&numDrivers);
-	FMODErrorCheck(result);
+    //Check Sound Cards, if none, disable sound
+    result = FMOD_System_GetNumDrivers(system, &numDrivers);
+    FMODErrorCheck(result);
 
-	if (numDrivers == 0)
-	{
-		result = system->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
-		FMODErrorCheck(result);
-	}
-	// At least one sound card
-	else
-	{
-		// Get the capabilities of the default (0) sound card
-		result = system->getDriverCaps(0, &caps, 0, &speakerMode);
-		FMODErrorCheck(result);
+    if (numDrivers == 0) {
+        result = FMOD_System_SetOutput(system, FMOD_OUTPUTTYPE_NOSOUND);
+        FMODErrorCheck(result);
+    }
+        // At least one sound card
+    else {
+        // Get the capabilities of the default (0) sound card
+        result = FMOD_System_GetDriverCaps(system, 0, &caps, 0, &speakerMode);
+        FMODErrorCheck(result);
 
-		// Set the speaker mode to match that in Control Panel
-		result = system->setSpeakerMode(speakerMode);
-		FMODErrorCheck(result);
+        // Set the speaker mode to match that in Control Panel
+        result = FMOD_System_SetSpeakerMode(system, speakerMode);
+        FMODErrorCheck(result);
 
-		// Increase buffer size if user has Acceleration slider set to off
-		if (caps & FMOD_CAPS_HARDWARE_EMULATED)
-		{
-			result = system->setDSPBufferSize(1024, 10);
-			FMODErrorCheck(result);
-		}
-		// Get name of driver
-		result = system->getDriverInfo(0, name, 256, 0);
-		FMODErrorCheck(result);
+        // Increase buffer size if user has Acceleration slider set to off
+        if (caps & FMOD_CAPS_HARDWARE_EMULATED) {
+            result = FMOD_System_SetDSPBufferSize(system, 1024, 10);
+            FMODErrorCheck(result);
+        }
+        // Get name of driver
+        result = FMOD_System_GetDriverInfo(system, 0, name, 256, 0);
+        FMODErrorCheck(result);
 
-		// SigmaTel sound devices crackle for some reason if the format is PCM 16-bit.
-		// PCM floating point output seems to solve it.
-		if (strstr(name, "SigmaTel"))
-		{
-			result = system->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0, 0, FMOD_DSP_RESAMPLER_LINEAR);
-			FMODErrorCheck(result);
-		}
-	}
+        // SigmaTel sound devices crackle for some reason if the format is PCM 16-bit.
+        // PCM floating point output seems to solve it.
+        if (strstr(name, "SigmaTel")) {
+            result = FMOD_System_SetSoftwareFormat(system, 48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0, 0,
+                                                   FMOD_DSP_RESAMPLER_LINEAR);
+            FMODErrorCheck(result);
+        }
+    }
 
-	// Initialise FMOD
-	result = system->init(100, FMOD_INIT_NORMAL, 0);
+    // Initialise FMOD
+    result = FMOD_System_Init(system, 100, FMOD_INIT_NORMAL, 0);
 
-	// If the selected speaker mode isn't supported by this sound card, switch it back to stereo
-	if (result == FMOD_ERR_OUTPUT_CREATEBUFFER)
-	{
-		result = system->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
-		FMODErrorCheck(result);
+    // If the selected speaker mode isn't supported by this sound card, switch it back to stereo
+    if (result == FMOD_ERR_OUTPUT_CREATEBUFFER) {
+        result = FMOD_System_SetSpeakerMode(system, FMOD_SPEAKERMODE_STEREO);
+        FMODErrorCheck(result);
 
-		result = system->init(100, FMOD_INIT_NORMAL, 0);
-	}
+        result = FMOD_System_Init(system, 100, FMOD_INIT_NORMAL, 0);
+    }
 
-	FMODErrorCheck(result);
+    FMODErrorCheck(result);
 
-	return system;
+    return system;
 }
 
 
 //Simple error checking function that returns information about FMOD_RESULT objects
-void BeatDetector::FMODErrorCheck(FMOD_RESULT result)
-{
-	if (result != FMOD_OK)
-	{
-		int meh;
-		std::cout << "FMOD error! (" << result << ") " << FMOD_ErrorString(result) << std::endl;
-		std::cin >> meh;
-		exit(-1);
-	}
+void BeatDetector::FMODErrorCheck(FMOD_RESULT result) {
+    if (result != FMOD_OK) {
+        int meh;
+        std::cout << "FMOD error! (" << result << ") " << FMOD_ErrorString(result) << std::endl;
+        std::cin >> meh;
+        exit(-1);
+    }
 }
 
 
 //When a song is loaded it is initially paused, so this function
 //should be called with "false" as it's argument to begin the playback.
-void BeatDetector::setStarted(bool areWeStarted)
-{
-	started = areWeStarted;
+void BeatDetector::setStarted(FMOD_BOOL areWeStarted) {
+    started = areWeStarted;
 
-	songChannel1->setPaused(!started);
+    FMOD_Channel_SetPaused(songChannel1, !started);
+    //songChannel1->setPaused(!started);
 }
 
 
 //Returns the last beat detected by the detection code. This function will be the main
 //interface for gameplay programmers to tell when a beat has occured.
-TimeStamp* BeatDetector::getLastBeat()
-{
-	return lastBeatRegistered;
+TimeStamp *BeatDetector::getLastBeat() {
+    return lastBeatRegistered;
 }
 
 
 //Checks if song is playing or not
-bool BeatDetector::isPlaying()
-{
-	return areWePlaying;
+bool BeatDetector::isPlaying() {
+    return areWePlaying;
 }
 
 //Returns the system object for use outside of this class
-FMOD::System* BeatDetector::getSystem()
-{
-	return system;
+FMOD_SYSTEM *BeatDetector::getSystem() {
+    return system;
 }
 
 //Returns the song name retrieved by the file name or title
-char* BeatDetector::getSongName()
-{
-	audio->getName(songName, 50);
+char *BeatDetector::getSongName() {
+    FMOD_Sound_GetName(audio, songName, 50);
 
-	return songName;
+    return songName;
 }
 
 //Returns the song name retrieved by the tag "Artist".
 //Some additional checks must be made here to ensure no
 //garbage data is allowed through. If there is no data in the
 //artist tag, garbage is returned, so I have coded around that.
-char* BeatDetector::getArtistName()
-{
-	char* title;
-	audio->getTag(NULL, 0, &tag);
+char *BeatDetector::getArtistName() {
+    char *title;
+    FMOD_Sound_GetTag(audio, NULL, 0, &tag);
 
-	audio->getTag("ARTIST", 0, &tag);
-	title = (char*)tag.data;
+    FMOD_Sound_GetTag(audio, "ARTIST", 0, &tag);
+    title = (char *) tag.data;
 
 
-	if (title && strcmp(title, "major_brand") != 0 && stringValid(title))
-		return title;
-	else
-		return "none";
+    if (title && strcmp(title, "major_brand") != 0 && stringValid(title))
+        return title;
+    else
+        return "none";
 }
 
 //Ensures that a string is comprised of alphanumeric values and appropriate
 //characters
-bool BeatDetector::stringValid(const std::string &str)
-{
-	return find_if(str.begin(), str.end(),
-		[](char c) { return !(isalnum(c) || (c == ' ')); }) == str.end();
+bool BeatDetector::stringValid(const std::string &str) {
+    return find_if(str.begin(), str.end(),
+                   [](char c) { return !(isalnum(c) || (c == ' ')); }) == str.end();
 }
 
 
 //Returns the current time in seconds the song has reached
-int BeatDetector::getTime()
-{
-	//std::cout << "FullSecs: " << fullSeconds;
-	return fullSeconds;
+int BeatDetector::getTime() {
+    //std::cout << "FullSecs: " << fullSeconds;
+    return fullSeconds;
 }
 
 //Returns the current TimeStamp the song has reached
-TimeStamp* BeatDetector::getCurrentTime()
-{
-	return currentTimeStamp;
+TimeStamp *BeatDetector::getCurrentTime() {
+    return currentTimeStamp;
 }
 
 //Returns the full length of the song that was loaded in
-TimeStamp* BeatDetector::getSongLength()
-{
-	return new TimeStamp(minutes,seconds,0);
+TimeStamp *BeatDetector::getSongLength() {
+    return new TimeStamp(minutes, seconds, 0);
 }
 
 float BeatDetector::getFreq() {
-	return freq;
+    return freq;
 }
 
 void BeatDetector::loadNewSong(int sSize, char *audioString) {
-	//Take in Aruguments
-	sampleSize = sSize;
-	songString = audioString;
+    //Take in Aruguments
+    sampleSize = sSize;
+    songString = audioString;
 
-	areWePlaying = true;
-	specFlux = 0.0f;
-	timeBetween = 0;
-	initialTime = clock();
-	currentTime = 0;
-	currentSeconds = 0;
-	lastSeconds = 0;
-	currentMillis = 0;
-	currentMinutes = 0;
-	median = 0.0f;
-	smoothMedian = 0.0f;
-	beatThreshold = 0.6f;
-	thresholdSmoother = 0.6f;
-	started = false;
-	lastBeatRegistered = new TimeStamp();
-	timeToDelay = 0;
+    areWePlaying = true;
+    specFlux = 0.0f;
+    timeBetween = 0;
+    initialTime = clock();
+    currentTime = 0;
+    currentSeconds = 0;
+    lastSeconds = 0;
+    currentMillis = 0;
+    currentMinutes = 0;
+    median = 0.0f;
+    smoothMedian = 0.0f;
+    beatThreshold = 0.6f;
+    thresholdSmoother = 0.6f;
+    started = false;
+    lastBeatRegistered = new TimeStamp();
+    timeToDelay = 0;
 
-	previousFFT = new float[sampleSize / 2 + 1];
-	for (int i = 0; i < sampleSize / 2; i++)
-	{
-		previousFFT[i] = 0;
-	}
+    previousFFT = new float[sampleSize / 2 + 1];
+    for (int i = 0; i < sampleSize / 2; i++) {
+        previousFFT[i] = 0;
+    }
 
-	audio->getLength(&seconds, FMOD_TIMEUNIT_MS);
-	audio->getDefaults(&sampleRate, 0, 0, 0);
-	seconds = ((seconds + 500) / 1000);
-	minutes = seconds / 60;
-	fullSeconds = seconds;
-	seconds = seconds - (minutes * 60);
+    FMOD_Sound_GetLength(audio, &seconds, FMOD_TIMEUNIT_MS);
+    FMOD_Sound_GetDefaults(audio, &sampleRate, 0, 0, 0);
+    seconds = ((seconds + 500) / 1000);
+    minutes = seconds / 60;
+    fullSeconds = seconds;
+    seconds = seconds - (minutes * 60);
 
-	audio->release();
+    FMOD_Sound_Release(audio);
+    //audio->release();
 
-	FMODErrorCheck(system->createStream(songString, FMOD_SOFTWARE, 0, &audio));
+    FMODErrorCheck(FMOD_System_CreateStream(system, songString, FMOD_SOFTWARE, 0, &audio));
 
-	FMODErrorCheck(system->playSound(FMOD_CHANNEL_FREE, audio, true, &songChannel1));
+    FMODErrorCheck(FMOD_System_PlaySound(system, FMOD_CHANNEL_FREE, audio, true, &songChannel1));
 
 
-	hzRange = (sampleRate / 2) / static_cast<float>(sampleSize);
-	songChannel1->setChannelGroup(channelMusic);
-	songChannel1->setPaused(true);
+    hzRange = (sampleRate / 2) / static_cast<float>(sampleSize);
+    FMOD_Channel_SetChannelGroup(songChannel1, channelMusic);
+    FMOD_Channel_SetPaused(songChannel1, true);
 
-	std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
-	std::cout << "Sample Rate: " << sampleRate << std::endl;
-	std::cout << "Freq Range: " << hzRange << std::endl;
+    std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
+    std::cout << "Sample Rate: " << sampleRate << std::endl;
+    std::cout << "Freq Range: " << hzRange << std::endl;
 }
