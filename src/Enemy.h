@@ -28,7 +28,7 @@
 
 class Enemy : public sf::Drawable {
 public:
-    Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager &texture, float speed);
+    Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager *texture, float speed);
 
     void update(sf::Time frameTime);
 

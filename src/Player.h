@@ -30,7 +30,7 @@ class Player : public sf::Drawable {
 public:
     Player() { }
 
-    Player(sf::FloatRect windowBounds);
+    Player(sf::FloatRect windowBounds, TextureManager *textureManager);
 
     void update(sf::Time frameTime);
 
@@ -61,7 +61,7 @@ private:
 
     std::vector<sf::RectangleShape> hpBar;
 
-    TextureManager texture;
+    TextureManager *texture;
 
     sf::FloatRect windowBounds;
 

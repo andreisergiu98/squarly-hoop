@@ -31,7 +31,7 @@ class EntityManager : public sf::Drawable {
 public:
     EntityManager() { }
 
-    EntityManager(sf::FloatRect windowBounds);
+    EntityManager(sf::FloatRect windowBounds, TextureManager *textureManager);
 
     void clear();
 
@@ -62,8 +62,6 @@ private:
 
     void push_enemy_bullets(std::vector<Bullet>);
 
-    sf::Clock spawnClock;
-
     std::vector<Enemy> enemies;
     std::vector<Bullet> enemyBullets;
     std::vector<Bullet> playerBullets;
@@ -80,7 +78,7 @@ private:
 
     int maxSpawnNumber;
 
-    TextureManager texture;
+    TextureManager *texture;
 };
 
 

@@ -22,7 +22,8 @@
 #include "EntityManager.h"
 #include "Utils.h"
 
-EntityManager::EntityManager(sf::FloatRect windowBounds) {
+EntityManager::EntityManager(sf::FloatRect windowBounds, TextureManager *textureManager) {
+    texture = textureManager;
     this->windowBounds = windowBounds;
     isPlayerHit = false;
     destroyedEnemies = 0;
@@ -203,7 +204,7 @@ void EntityManager::collision() {
         for (auto it2 = playerBullets.begin(); it2 != playerBullets.end();) {
             if (it2->getGlobalBounds().intersects(it1->getGlobalBounds())) {
                 int t = rand() % 3 + 1;
-                Explosion expl(it2->getPosition(), it2->getSize(), texture.getTexture(
+                Explosion expl(it2->getPosition(), it2->getSize(), texture->getTexture(
                         "../res/textures/explosion" + intToStr(it2->getColor()) + intToStr(t) + ".png"));
                 explosions.push_back(expl);
 
@@ -220,7 +221,7 @@ void EntityManager::collision() {
     for (auto it = enemies.begin(); it != enemies.end();) {
         if (it->getHp() <= 0) {
             int t = rand() % 3 + 1;
-            Explosion expl(it->getPosition(), it->getSize(), texture.getTexture(
+            Explosion expl(it->getPosition(), it->getSize(), texture->getTexture(
                     "../res/textures/explosion" + intToStr(it->getColor()) + intToStr(t) + ".png"));
             explosions.push_back(expl);
             it = enemies.erase(it);
@@ -235,7 +236,7 @@ void EntityManager::collision() {
     for (auto it = enemyBullets.begin(); it != enemyBullets.end();) {
         if (playerBounds.intersects(it->getGlobalBounds())) {
             int t = rand() % 3 + 1;
-            Explosion expl(it->getPosition(), it->getSize(), texture.getTexture(
+            Explosion expl(it->getPosition(), it->getSize(), texture->getTexture(
                     "../res/textures/explosion" + intToStr(it->getColor()) + intToStr(t) + ".png"));
             explosions.push_back(expl);
 

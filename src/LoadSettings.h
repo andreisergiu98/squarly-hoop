@@ -24,12 +24,14 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <fstream>
+#include "DebugHelper.h"
 
 using namespace std;
 
 class LoadSettings {
 
 public:
+    LoadSettings();
     std::shared_ptr<sf::RenderWindow> set();
 
 private:
@@ -37,13 +39,15 @@ private:
 
     void setDefault();
 
-    unsigned short int resX, resY, bit;
+    sf::VideoMode res;
+
+    sf::ContextSettings contextSettings;
 
     bool vsync;
 
-    int AA;
-
     string windowMode;
+
+    DebugHelper debug;
 };
 
 

@@ -32,9 +32,13 @@ Game::Game() {
     windowBounds.width = window->getSize().x;
     windowBounds.height = window->getSize().y;
 
-    player = Player(windowBounds);
+    loadTextures();
 
-    entities = EntityManager(windowBounds);
+    menu = Menu(windowBounds, &texture);
+
+    player = Player(windowBounds, &texture);
+
+    entities = EntityManager(windowBounds, &texture);
 
     score = Score(windowBounds);
 
@@ -45,7 +49,6 @@ Game::Game() {
     background.setScale(0.5, 0.84);
 
     music.loadPlaylist("playlist");
-    loadTextures();
 }
 
 void Game::process() {
@@ -181,7 +184,36 @@ void Game::start() {
 }
 
 void Game::loadTextures() {
-    //
+    std::vector<string> texList = {
+            "../res/textures/play.png", "../res/textures/play-hover.png",
+            "../res/textures/exit.png", "../res/textures/exit-hover.png",
+            "../res/textures/retry.png", "../res/textures/retry-hover.png",
+            "../res/textures/menu.png", "../res/textures/menu-hover.png",
+            "../res/textures/heart.png", "../res/textures/background.jpg",
+            "../res/textures/bullet11.png", "../res/textures/bullet12.png",
+            "../res/textures/bullet13.png", "../res/textures/bullet14.png",
+            "../res/textures/bullet15.png", "../res/textures/bullet16.png",
+            "../res/textures/bullet21.png", "../res/textures/bullet22.png",
+            "../res/textures/bullet23.png", "../res/textures/bullet24.png",
+            "../res/textures/bullet25.png", "../res/textures/bullet26.png",
+            "../res/textures/enemy1.png", "../res/textures/enemy2.png",
+            "../res/textures/enemy3.png", "../res/textures/enemy4.png",
+            "../res/textures/enemy5.png", "../res/textures/enemy6.png",
+            "../res/textures/explosion11.png", "../res/textures/explosion12.png",
+            "../res/textures/explosion13.png", "../res/textures/explosion21.png",
+            "../res/textures/explosion22.png", "../res/textures/explosion23.png",
+            "../res/textures/explosion31.png", "../res/textures/explosion32.png",
+            "../res/textures/explosion33.png", "../res/textures/explosion41.png",
+            "../res/textures/explosion42.png", "../res/textures/explosion43.png",
+            "../res/textures/explosion51.png", "../res/textures/explosion52.png",
+            "../res/textures/explosion53.png", "../res/textures/explosion61.png",
+            "../res/textures/explosion62.png", "../res/textures/explosion63.png",
+            "../res/textures/player.png",
+    };
+
+    for (int i = 0; i < texList.size(); i++) {
+        texture.getTexture(texList[i]);
+    }
 }
 
 int main() {

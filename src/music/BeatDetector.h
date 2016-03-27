@@ -26,6 +26,7 @@
 #include "fmod_errors.h"
 #include "TimeStamp.h"
 #include <iostream>
+#include "../DebugHelper.h"
 
 class BeatDetector {
 public:
@@ -136,6 +137,8 @@ private:
     float thresholdSmoother;
 
     float freq;
+
+    DebugHelper debug;
 };
 
 #endif

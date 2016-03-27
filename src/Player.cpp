@@ -22,8 +22,10 @@
 #include "Player.h"
 #include "Utils.h"
 
-Player::Player(sf::FloatRect windowBounds) {
-    form.setTexture(&texture.getTexture("../res/textures/player.png"));
+Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
+    texture = textureManager;
+
+    form.setTexture(&texture->getTexture("../res/textures/player.png"));
     form.setPosition(480, windowBounds.height - 40);
     form.setSize(sf::Vector2f(31, 31));
     form.setOrigin(sf::Vector2f(15.5, 15.5));
@@ -35,13 +37,12 @@ Player::Player(sf::FloatRect windowBounds) {
         sf::RectangleShape rect;
         rect.setPosition(5 + i * 20, windowBounds.height - 20);
         rect.setSize(sf::Vector2f(10, 10));
-        rect.setTexture(&texture.getTexture("../res/textures/heart.png"));
+        rect.setTexture(&texture->getTexture("../res/textures/heart.png"));
         hpBar.push_back(rect);
     }
 
     pattern = PlayerPatterns::Pattern::SIMPLE;
     charged = true;
-
 
     coolDownSec = new sf::Text;
     font = new sf::Font;
@@ -129,7 +130,7 @@ void Player::process() {
 
     form.move(velocity * frameTime.asSeconds());
 
-    int xMin = 15, xMax = windowBounds.width - 15, yMin = 15, yMax = windowBounds.height - 35;
+    int xMin = 15, xMax = (int) (windowBounds.width - 15), yMin = 15, yMax = (int) (windowBounds.height - 35);
 
     if (form.getPosition().x < xMin || form.getPosition().x > xMax || form.getPosition().y < yMin ||
         form.getPosition().y > yMax) {
@@ -159,7 +160,7 @@ void Player::process() {
 void Player::shoot() {
     int t = rand() % 6 + 1;
 
-    bullets = PlayerPatterns::getBullets(pattern, form.getPosition(), 400.f, texture.getTexture(
+    bullets = PlayerPatterns::getBullets(pattern, form.getPosition(), 400.f, texture->getTexture(
             std::string("../res/textures/bullet1" + intToStr(t) + ".png")), t);
 }
 
@@ -185,14 +186,6 @@ void Player::setHp(int hp) {
     this->hp = hp;
 }
 
-void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    target.draw(form);
-    for (int i = 0; i < hp; i++) {
-        target.draw(hpBar[i]);
-    }
-    target.draw(*coolDownSec);
-}
-
 sf::Vector2f Player::getPosition() {
     return form.getPosition();
 }
@@ -204,4 +197,12 @@ void Player::reset() {
     coolDown = 0;
     charged = true;
     hp = 20;
+}
+
+void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    target.draw(form);
+    for (int i = 0; i < hp; i++) {
+        target.draw(hpBar[i]);
+    }
+    target.draw(*coolDownSec);
 }

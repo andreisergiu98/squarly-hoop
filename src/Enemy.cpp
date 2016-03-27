@@ -21,11 +21,11 @@
 #include "Enemy.h"
 #include "Utils.h"
 
-Enemy::Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager &texture, float speed) {
+Enemy::Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager *texture, float speed) {
     form.setPosition(position);
     form.setSize(sf::Vector2f(31, 31));
 
-    this->texture = &texture;
+    this->texture = texture;
 
     color = rand() % 6 + 1;
 

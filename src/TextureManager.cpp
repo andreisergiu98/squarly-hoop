@@ -28,6 +28,7 @@ sf::Texture &TextureManager::getTexture(const std::string &texLocation) {
     }
 
     sf::Texture texture;
+    texture.setSmooth(true);
 
     if (texture.loadFromFile(texLocation)) {
         textures[texLocation] = texture;

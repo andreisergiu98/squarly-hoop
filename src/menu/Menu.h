@@ -37,6 +37,8 @@ class Menu : public sf::Drawable {
 public:
     Menu();
 
+    Menu(sf::FloatRect windowBOunds, TextureManager *textureManager);
+
     void updateMousePosition(sf::Vector2i);
 
     void update();
@@ -51,7 +53,7 @@ private:
     Button retry;
     Button menu;
 
-    TextureManager texture;
+    TextureManager *texture;
 
     sf::RectangleShape background;
     Status status;

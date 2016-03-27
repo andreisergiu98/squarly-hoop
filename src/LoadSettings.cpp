@@ -21,53 +21,106 @@
 #include "LoadSettings.h"
 
 std::shared_ptr<sf::RenderWindow> LoadSettings::set() {
-    read();
-
-    if (resX == 0 || resY == 0 || bit == 0) {
+    if (!std::ifstream("settings")) {
+        debug.print("settings not found", "");
         setDefault();
     }
 
-    std::shared_ptr<sf::RenderWindow> initWindow(
-            new sf::RenderWindow(sf::VideoMode(resX, resY, bit), "Squarly Hoop", sf::Style::Default));
+    read();
 
+    if (windowMode == "fullscreen") {
+        std::shared_ptr<sf::RenderWindow> initWindow(
+                new sf::RenderWindow(res, "Squarly Hoop", sf::Style::Fullscreen, contextSettings));
+        initWindow->setVerticalSyncEnabled(vsync);
+
+        return initWindow;
+    }
+    if (windowMode == "windowed") {
+        std::shared_ptr<sf::RenderWindow> initWindow(
+                new sf::RenderWindow(res, "Squarly Hoop", sf::Style::Close, contextSettings));
+        initWindow->setVerticalSyncEnabled(vsync);
+
+        return initWindow;
+    }
+
+    std::shared_ptr<sf::RenderWindow> initWindow(
+            new sf::RenderWindow(res, "Squarly Hoop", sf::Style::Titlebar, contextSettings));
     initWindow->setVerticalSyncEnabled(vsync);
 
     return initWindow;
+
 }
 
 ifstream readFromFile("settings");
 
 void LoadSettings::read() {
-    string line;
 
-    readFromFile >> line;
-    if (line == "resolution") {
-        readFromFile >> resX >> resY >> bit;
+    debug.print("loading settings", "");
+
+    while (!readFromFile.eof()) {
+        string line;
+
+        readFromFile >> line;
+        if (line == "resolution") {
+            readFromFile >> res.width >> res.height;
+            debug.print("set", line, res.width, res.height);
+        }
+        else if (line == "windowmode") {
+            readFromFile >> windowMode;
+            debug.print("set", line, windowMode);
+        }
+        else if (line == "vsync") {
+            string value;
+            readFromFile >> value;
+            vsync = value == "true";
+            debug.print("set", line, vsync);
+        }
+        else if (line == "antialiasing") {
+            readFromFile >> contextSettings.antialiasingLevel;
+            debug.print("set", line, contextSettings.antialiasingLevel);
+        }
+        else if (line == "depthbits") {
+            readFromFile >> contextSettings.depthBits;
+            debug.print("set", line, contextSettings.depthBits);
+        }
+        else if (line == "stencilbits") {
+            readFromFile >> contextSettings.stencilBits;
+            debug.print("set", line, contextSettings.stencilBits);
+        }
+        else if (line == "openGLmajorVersion") {
+            readFromFile >> contextSettings.majorVersion;
+            debug.print("set", line, contextSettings.majorVersion);
+        }
+        else if (line == "openGLminorVersion") {
+            readFromFile >> contextSettings.minorVersion;
+            debug.print("set", line, contextSettings.minorVersion);
+        }
     }
 
-    readFromFile >> line;
-    if (line == "vsync") {
-        string value;
-        readFromFile >> value;
-
-        vsync = value == "true";
-    }
-
-    readFromFile >> line;
-    if (line == "antialiasing") {
-        readFromFile >> AA;
-    }
-
-    readFromFile >> line;
-    if (line == "window_mode") {
-        readFromFile >> windowMode;
-    }
+    debug.print("settings loaded", "");
 }
 
 void LoadSettings::setDefault() {
-    ofstream writeToFile("settings");
-    writeToFile << "resolution 800 600 32" << endl << "vsync true" << endl << "antialiasing 0" << endl <<
-    "window_mode fullscreen";
+    debug.print("loading default settings", "");
 
-    read();
+    ofstream writeToFile("settings");
+
+    writeToFile << "resolution 1000 900\n"
+            "windowmode fullscreen\n"
+            "vsync true\n"
+            "antialiasing 8\n"
+            "depthbits 24\n"
+            "stencilbits 8\n"
+            "openGLmajorVersion 4\n"
+            "openGLminorVersion 5";
+
 }
+
+LoadSettings::LoadSettings() {
+    res = sf::VideoMode(1000, 900, 32);
+    contextSettings.depthBits = 24;
+    contextSettings.stencilBits = 8;
+    contextSettings.antialiasingLevel = 8;
+}
+
+

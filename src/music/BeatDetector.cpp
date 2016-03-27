@@ -78,11 +78,12 @@ void BeatDetector::LoadSong(int sSize, char *audioString) {
     //songChannel1->setChannelGroup(channelMusic);
     //songChannel1->setPaused(true);
 
-    std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
-    std::cout << "Sample Rate: " << sampleRate << std::endl;
-    std::cout << "Freq Range: " << hzRange << std::endl;
+    //std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
+    //std::cout << "Sample Rate: " << sampleRate << std::endl;
+    //std::cout << "Freq Range: " << hzRange << std::endl;
     //songChannel1->setVolume(0);
 
+    debug.print("loading song:", audioString);
 }
 
 
@@ -508,7 +509,9 @@ void BeatDetector::loadNewSong(int sSize, char *audioString) {
     FMOD_Channel_SetChannelGroup(songChannel1, channelMusic);
     FMOD_Channel_SetPaused(songChannel1, true);
 
-    std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
-    std::cout << "Sample Rate: " << sampleRate << std::endl;
-    std::cout << "Freq Range: " << hzRange << std::endl;
+    //std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
+    //std::cout << "Sample Rate: " << sampleRate << std::endl;
+    //std::cout << "Freq Range: " << hzRange << std::endl;
+
+    debug.print("loading song:", audioString);
 }

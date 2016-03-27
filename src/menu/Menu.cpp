@@ -21,14 +21,19 @@
 #include "Menu.h"
 
 Menu::Menu() {
-    play = Button(sf::Vector2f(400, 250), sf::Vector2f(200, 80), texture.getTexture("../res/textures/play.png"),
-                  texture.getTexture("../res/textures/play-hover.png"));
-    exit = Button(sf::Vector2f(400, 450), sf::Vector2f(200, 80), texture.getTexture("../res/textures/exit.png"),
-                  texture.getTexture("../res/textures/exit-hover.png"));
-    retry = Button(sf::Vector2f(400, 250), sf::Vector2f(200, 80), texture.getTexture("../res/textures/retry.png"),
-                   texture.getTexture("../res/textures/retry-hover.png"));
-    menu = Button(sf::Vector2f(400, 450), sf::Vector2f(200, 80), texture.getTexture("../res/textures/menu.png"),
-                  texture.getTexture("../res/textures/menu-hover.png"));
+}
+
+Menu::Menu(sf::FloatRect windowBounds, TextureManager *textureManager) {
+    texture = textureManager;
+
+    play = Button(sf::Vector2f(400, 250), sf::Vector2f(200, 80), texture->getTexture("../res/textures/play.png"),
+                  texture->getTexture("../res/textures/play-hover.png"));
+    exit = Button(sf::Vector2f(400, 450), sf::Vector2f(200, 80), texture->getTexture("../res/textures/exit.png"),
+                  texture->getTexture("../res/textures/exit-hover.png"));
+    retry = Button(sf::Vector2f(400, 250), sf::Vector2f(200, 80), texture->getTexture("../res/textures/retry.png"),
+                   texture->getTexture("../res/textures/retry-hover.png"));
+    menu = Button(sf::Vector2f(400, 450), sf::Vector2f(200, 80), texture->getTexture("../res/textures/menu.png"),
+                  texture->getTexture("../res/textures/menu-hover.png"));
 
     status = INMAINMENU;
 
@@ -83,3 +88,6 @@ bool Menu::isPressed(Buttons buttons) {
 void Menu::setState(Status status) {
     this->status = status;
 }
+
+
+
