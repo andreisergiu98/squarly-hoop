@@ -75,15 +75,8 @@ void BeatDetector::LoadSong(int sSize, char *audioString) {
     hzRange = (sampleRate / 2) / static_cast<float>(sampleSize);
     FMOD_Channel_SetChannelGroup(songChannel1, channelMusic);
     FMOD_Channel_SetPaused(songChannel1, true);
-    //songChannel1->setChannelGroup(channelMusic);
-    //songChannel1->setPaused(true);
 
-    //std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
-    //std::cout << "Sample Rate: " << sampleRate << std::endl;
-    //std::cout << "Freq Range: " << hzRange << std::endl;
-    //songChannel1->setVolume(0);
-
-    debug.print("loading song:", audioString);
+    debug.print("loading sound:", audioString);
 }
 
 
@@ -102,14 +95,11 @@ BeatDetector::~BeatDetector() {
 void BeatDetector::loadSongToDelay(int milliseconds) {
     delayedSong = true;
     FMOD_Channel_SetVolume(songChannel1, 0);
-    //songChannel1->setVolume(0);
 
     FMODErrorCheck(FMOD_System_CreateStream(system, songString, FMOD_SOFTWARE, 0, &audio2));
 
-    //songChannel2 = new FMOD.Channel();
     FMODErrorCheck(FMOD_System_PlaySound(system, FMOD_CHANNEL_FREE, audio2, true, &songChannel2));
     FMOD_Channel_SetChannelGroup(songChannel2, channelMusic);
-    //songChannel2->setChannelGroup(channelMusic);
     timeToDelay = milliseconds;
 }
 
@@ -137,9 +127,7 @@ void BeatDetector::updateTime() {
 
     if (timeToDelay != 0) {
         if (currentTime > timeToDelay) {
-            //songChannel2.setChannelGroup(channelMusic);
             FMOD_Channel_SetPaused(songChannel2, false);
-            //songChannel2->setPaused(false);
             timeToDelay = 0;
         }
     }
@@ -165,7 +153,6 @@ float *BeatDetector::getCurrentSpectrum() {
     //Average spectrum for stereo song channel, Divided by 2 cause Nyquist
     for (int i = 0; i < sampleSize / 2; i++) {
         tempSpec[i] = (specLeft[i] + specRight[i]);
-        //std::cout << specStereo[i] << std::endl;
     }
 
     delete[] specLeft;
@@ -208,7 +195,6 @@ float BeatDetector::calculateFluxAndSmoothing(float *currentSpectrum) {
                 smoothMedian = smootherValues.at(smootherValues.size() / 2);
             }
         }
-        //std::cout << median << std::endl;
     }
 
     for (int i = 0; i < sampleSize / 2; i++) {
@@ -389,7 +375,6 @@ void BeatDetector::setStarted(FMOD_BOOL areWeStarted) {
     started = areWeStarted;
 
     FMOD_Channel_SetPaused(songChannel1, !started);
-    //songChannel1->setPaused(!started);
 }
 
 
@@ -445,7 +430,6 @@ bool BeatDetector::stringValid(const std::string &str) {
 
 //Returns the current time in seconds the song has reached
 int BeatDetector::getTime() {
-    //std::cout << "FullSecs: " << fullSeconds;
     return fullSeconds;
 }
 
@@ -498,7 +482,6 @@ void BeatDetector::loadNewSong(int sSize, char *audioString) {
     seconds = seconds - (minutes * 60);
 
     FMOD_Sound_Release(audio);
-    //audio->release();
 
     FMODErrorCheck(FMOD_System_CreateStream(system, songString, FMOD_SOFTWARE, 0, &audio));
 
@@ -509,9 +492,8 @@ void BeatDetector::loadNewSong(int sSize, char *audioString) {
     FMOD_Channel_SetChannelGroup(songChannel1, channelMusic);
     FMOD_Channel_SetPaused(songChannel1, true);
 
-    //std::cout << "Song Length: " << minutes << ":" << seconds << std::endl;
-    //std::cout << "Sample Rate: " << sampleRate << std::endl;
-    //std::cout << "Freq Range: " << hzRange << std::endl;
-
-    debug.print("loading song:", audioString);
+    debug.print("loading sound:", audioString);
 }
+
+
+

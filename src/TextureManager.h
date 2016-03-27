@@ -23,7 +23,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include <map>
-#include <iostream>
+#include "DebugHelper.h"
 
 class TextureManager {
 public:
@@ -35,8 +35,13 @@ public:
 
     void deleteTexture(std::string texLocation);
 
+    void setSmoothTextures(bool smth);
 private:
     std::map<std::string, sf::Texture> textures;
+
+    bool smoothTextures;
+
+    DebugHelper debug;
 };
 
 

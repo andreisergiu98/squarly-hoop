@@ -29,7 +29,6 @@ std::string intToStr(int a) {
     return str;
 }
 
-
 float distance(sf::Vector2f a, sf::Vector2f b) {
     float dist = (float) sqrt((b.x - a.x) * (b.x - a.x) +
                               (b.y - a.y) * (b.y - a.y));

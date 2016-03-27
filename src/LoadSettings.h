@@ -32,11 +32,12 @@ class LoadSettings {
 
 public:
     LoadSettings();
-    std::shared_ptr<sf::RenderWindow> set();
+
+    std::shared_ptr<sf::RenderWindow> load();
+
+    bool smoothTextures();
 
 private:
-    void read();
-
     void setDefault();
 
     sf::VideoMode res;
@@ -44,6 +45,8 @@ private:
     sf::ContextSettings contextSettings;
 
     bool vsync;
+
+    bool smooth;
 
     string windowMode;
 

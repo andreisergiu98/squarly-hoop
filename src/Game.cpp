@@ -24,16 +24,16 @@
 Game::Game() {
     LoadSettings settings;
 
-    window = settings.set();
+    window = settings.load();
     window->setMouseCursorVisible(false);
+    texture.setSmoothTextures(settings.smoothTextures());
+    loadTextures();
 
     sf::FloatRect windowBounds;
     windowBounds.left = 0;
     windowBounds.top = 0;
     windowBounds.width = window->getSize().x;
     windowBounds.height = window->getSize().y;
-
-    loadTextures();
 
     menu = Menu(windowBounds, &texture);
 

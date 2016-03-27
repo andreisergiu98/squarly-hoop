@@ -75,7 +75,6 @@ public:
 
     float getFreq();
 
-
     //Singelton
     static BeatDetector *Instance() {
         if (instance == 0) {

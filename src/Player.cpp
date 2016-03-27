@@ -170,10 +170,10 @@ std::vector<Bullet> Player::getBullets() {
 
 sf::FloatRect Player::getGlobalBounds() {
     sf::FloatRect boundingBox = form.getGlobalBounds();
-    boundingBox.top += 9;
-    boundingBox.left += 9;
-    boundingBox.height -= 20;
-    boundingBox.width -= 20;
+    boundingBox.top += 15;
+    boundingBox.left += 15;
+    boundingBox.height -= 30;
+    boundingBox.width -= 30;
 
     return boundingBox;
 }

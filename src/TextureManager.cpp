@@ -28,15 +28,13 @@ sf::Texture &TextureManager::getTexture(const std::string &texLocation) {
     }
 
     sf::Texture texture;
-    texture.setSmooth(true);
+    texture.setSmooth(smoothTextures);
 
     if (texture.loadFromFile(texLocation)) {
         textures[texLocation] = texture;
-        std::cout << "DEBUG_MESSAGE: loading image: " << texLocation << "\n";
+        debug.print("loading image", texLocation);
         return textures[texLocation];
     }
-
-    std::cout << "GAME_ERROR: Image: \"" << texLocation << "\" was not found. It is filled with an empty image.\n";
 
     textures[texLocation] = texture;
 
@@ -46,6 +44,7 @@ sf::Texture &TextureManager::getTexture(const std::string &texLocation) {
 void TextureManager::deleteTexture(sf::Texture &texture) {
     for (auto it = textures.begin(); it != textures.end(); ++it) {
         if (&texture == &it->second) {
+            debug.print("deleting image", it->first);
             textures.erase(it);
         }
     }
@@ -54,6 +53,17 @@ void TextureManager::deleteTexture(sf::Texture &texture) {
 void TextureManager::deleteTexture(std::string texLocation) {
     auto it = textures.find(texLocation);
     if (it != textures.end()) {
+        debug.print("deleting image", texLocation);
         textures.erase(it);
     }
 }
+
+void TextureManager::setSmoothTextures(bool smth) {
+    smoothTextures = smth;
+
+    for (auto it = textures.begin(); it != textures.end(); ++it) {
+        it->second.setSmooth(smoothTextures);
+    }
+}
+
+

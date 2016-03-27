@@ -58,12 +58,21 @@ float Music::getFreq() {
 
 
 void Music::loadPlaylist(std::string location) {
+    if (!std::ifstream("playlist")) {
+        debug.print("error playlist not found", "");
+        return;
+    }
+
     std::ifstream fin(location);
 
     while (fin) {
         std::string a;
         getline(fin, a);
         playlist.push_back(a);
+    }
+
+    if (!playlist.size()) {
+        debug.print("error empty playlist", "");
     }
 
     loadMusic((std::string("../res/music/" + playlist[0])));
@@ -77,7 +86,6 @@ void Music::next() {
     char *cstr = &location[0u];
     BeatDetector::Instance()->loadNewSong(1024, cstr);
     play();
-
 }
 
 void Music::restart() {
@@ -86,3 +94,13 @@ void Music::restart() {
     BeatDetector::Instance()->loadNewSong(1024, cstr);
     play();
 }
+
+
+
+
+
+
+
+
+
+
