@@ -44,7 +44,7 @@ std::shared_ptr<sf::RenderWindow> LoadSettings::set() {
     }
 
     std::shared_ptr<sf::RenderWindow> initWindow(
-            new sf::RenderWindow(res, "Squarly Hoop", sf::Style::Titlebar, contextSettings));
+            new sf::RenderWindow(res, "Squarly Hoop", sf::Style::Default, contextSettings));
     initWindow->setVerticalSyncEnabled(vsync);
 
     return initWindow;
@@ -106,13 +106,11 @@ void LoadSettings::setDefault() {
     ofstream writeToFile("settings");
 
     writeToFile << "resolution 1000 900\n"
-            "windowmode fullscreen\n"
+            "windowmode windowed\n"
             "vsync true\n"
             "antialiasing 8\n"
             "depthbits 24\n"
-            "stencilbits 8\n"
-            "openGLmajorVersion 4\n"
-            "openGLminorVersion 5";
+            "stencilbits 8\n";
 
 }
 

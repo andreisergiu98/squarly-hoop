@@ -31,7 +31,7 @@ public:
 
     void update();
 
-    void updateMouse(sf::Vector2i);
+    void updateMouse(sf::FloatRect mouse);
 
     bool isPressed();
 
@@ -42,7 +42,7 @@ private:
     sf::Texture *texMouseOver;
 
     enum Mouse {
-        MOUSEOVER, NORMAL, ISPRESSED
+        MOUSEOVER, NORMAL
     };
     Mouse status;
 

@@ -43,8 +43,6 @@ public:
 
     void update(Player &player);
 
-    void updateDifficulty(sf::Clock difficulty);
-
     int getDestroyedEnemies();
 
 private:

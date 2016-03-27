@@ -33,35 +33,28 @@ EntityManager::EntityManager(sf::FloatRect windowBounds, TextureManager *texture
 void EntityManager::spawn() {
     updateSpawnLocations();
 
-    enum spawnLocation {
-        left, right, center,
-        end
-    };
-
-    spawnLocation loc = static_cast<spawnLocation >(rand() % end);
-
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> distribution(0, 300);
+    std::uniform_int_distribution<int> distribution(50 , windowBounds.width / 3.f - 50);
     int val = distribution(gen);
 
     if (spawnLeft) {
-        int x = val + 50;
-        int y = -(rand() % 60 + 35);
+        float x = val;
+        float y = -(rand() % 60 + 35);
         Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 200.f);
         enemies.push_back(enemy);
     }
 
     else if (spawnCenter) {
-        int x = val + 350;
-        int y = -(rand() % 60 + 35);
+        float x = val + windowBounds.width / 3.f;
+        float y = -(rand() % 60 + 35);
         Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 200.f);
         enemies.push_back(enemy);
     }
 
     else if (spawnRight) {
-        int x = val + 650;
-        int y = -(rand() % 60 + 35);
+        float x = val + windowBounds.width / 3.f * 2.f;
+        float y = -(rand() % 60 + 35);
         Enemy enemy(sf::Vector2f(x, y), sf::Vector2f(x, -y), texture, 200.f);
         enemies.push_back(enemy);
     }
@@ -75,13 +68,13 @@ void EntityManager::updateSpawnLocations() {
     spawnCenter = true;
 
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
-        if (it->getPosition().x >= 650) {
+        if (it->getPosition().x >= windowBounds.width / 3.f * 2.f) {
             spawnRight = false;
         }
-        else if (it->getPosition().x >= 350) {
+        else if (it->getPosition().x >= windowBounds.width / 3.f) {
             spawnCenter = false;
         }
-        else if (it->getPosition().x >= 50) {
+        else if (it->getPosition().x >= 0) {
             spawnLeft = false;
         }
     }
@@ -124,10 +117,6 @@ void EntityManager::update(Player &player) {
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
         it->updateTarget(player.getPosition());
     }
-}
-
-void EntityManager::updateDifficulty(sf::Clock difficulty) {
-
 }
 
 void EntityManager::clean() {

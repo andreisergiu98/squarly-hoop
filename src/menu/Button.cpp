@@ -24,17 +24,14 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, sf::Texture &texNormal,
     form.setPosition(position);
     form.setSize(size);
     form.setTexture(&texNormal);
-    mouse.width = 5;
-    mouse.height = 5;
 
     this->texNormal = &texNormal;
     this->texMouseOver = &texMouseOver;
     status = NORMAL;
 }
 
-void Button::updateMouse(sf::Vector2i mousePosition) {
-    mouse.top = mousePosition.y;
-    mouse.left = mousePosition.x;
+void Button::updateMouse(sf::FloatRect mouse) {
+    this->mouse = mouse;
 }
 
 void Button::update() {

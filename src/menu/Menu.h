@@ -39,7 +39,7 @@ public:
 
     Menu(sf::FloatRect windowBOunds, TextureManager *textureManager);
 
-    void updateMousePosition(sf::Vector2i);
+    void updateMousePosition(sf::FloatRect mouse);
 
     void update();
 

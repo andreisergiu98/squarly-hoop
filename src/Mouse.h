@@ -18,28 +18,25 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include "DebugHelper.h"
+#ifndef SFMLGAME_MOUSE_H
+#define SFMLGAME_MOUSE_H
 
-template<typename T>
-void DebugHelper::print(T data) {
-    cout << data << ' ';
-}
+#include <SFML/Graphics.hpp>
 
-template<typename T, typename... Args>
-void DebugHelper::print(T t, Args... args) {
-    if(dbgmsg) {
-        cout << "DEBUG_MESSAGE: ";
-        dbgmsg = !dbgmsg;
-    }
+class Mouse : public  sf::Drawable{
 
-    cout << t << ' ';
+public:
+    Mouse(){}
+    Mouse(sf::Texture *texture);
 
-    print(args...);
+    void update(sf::Vector2i pos);
+    sf::FloatRect getGlobalBounds();
 
-    if(!dbgmsg) {
+private:
+    sf::RectangleShape form;
 
-        cout << endl;
+    virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+};
 
-        dbgmsg = !dbgmsg;
-    }
-}
+
+#endif //SFMLGAME_MOUSE_H

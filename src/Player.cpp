@@ -28,7 +28,7 @@ Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
     form.setTexture(&texture->getTexture("../res/textures/player.png"));
     form.setPosition(480, windowBounds.height - 40);
     form.setSize(sf::Vector2f(31, 31));
-    form.setOrigin(sf::Vector2f(15.5, 15.5));
+    form.setOrigin(sf::Vector2f(form.getSize().x / 2.f, form.getSize().y / 2.f));
 
     this->windowBounds = windowBounds;
 
@@ -46,7 +46,7 @@ Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
 
     coolDownSec = new sf::Text;
     font = new sf::Font;
-    coolDownSec->setPosition(940, windowBounds.height - 20);
+    coolDownSec->setPosition(windowBounds.width - 60, windowBounds.height - 20);
     coolDownSec->setScale(0.4, 0.4);
     coolDownSec->setString("Charged");
     font->loadFromFile("../res/fonts/OpenSans-Bold.ttf");
@@ -78,7 +78,7 @@ void Player::process() {
         charged = true;
         coolDownClock.restart();
         timer.restart();
-        coolDownSec->setPosition(940, windowBounds.height - 20);
+        coolDownSec->setPosition(windowBounds.width - 60, windowBounds.height - 20);
         coolDownSec->setString("Charged");
     }
 
@@ -106,7 +106,7 @@ void Player::process() {
     }
 
     if (!charged) {
-        coolDownSec->setPosition(910, windowBounds.height - 20);
+        coolDownSec->setPosition(windowBounds.width - 90, windowBounds.height - 20);
         coolDownSec->setString("Cooldown : " + intToStr((int) (coolDown - coolDownClock.getElapsedTime().asSeconds())));
     }
 
@@ -115,7 +115,7 @@ void Player::process() {
     }
 
     if (coolDownClock.getElapsedTime().asSeconds() >= coolDown) {
-        coolDownSec->setPosition(940, windowBounds.height - 20);
+        coolDownSec->setPosition(windowBounds.width - 60, windowBounds.height - 20);
         coolDownSec->setString("Charged");
         charged = true;
     }
@@ -191,7 +191,7 @@ sf::Vector2f Player::getPosition() {
 }
 
 void Player::reset() {
-    form.setPosition(480, windowBounds.height - 40);
+    form.setPosition(windowBounds.width / 2.f - 20, windowBounds.height - 40);
     coolDownClock.restart();
     timer.restart();
     coolDown = 0;

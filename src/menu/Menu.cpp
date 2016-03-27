@@ -26,18 +26,22 @@ Menu::Menu() {
 Menu::Menu(sf::FloatRect windowBounds, TextureManager *textureManager) {
     texture = textureManager;
 
-    play = Button(sf::Vector2f(400, 250), sf::Vector2f(200, 80), texture->getTexture("../res/textures/play.png"),
+    play = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 250), sf::Vector2f(200, 80),
+                  texture->getTexture("../res/textures/play.png"),
                   texture->getTexture("../res/textures/play-hover.png"));
-    exit = Button(sf::Vector2f(400, 450), sf::Vector2f(200, 80), texture->getTexture("../res/textures/exit.png"),
+    exit = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 450), sf::Vector2f(200, 80),
+                  texture->getTexture("../res/textures/exit.png"),
                   texture->getTexture("../res/textures/exit-hover.png"));
-    retry = Button(sf::Vector2f(400, 250), sf::Vector2f(200, 80), texture->getTexture("../res/textures/retry.png"),
+    retry = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 250), sf::Vector2f(200, 80),
+                   texture->getTexture("../res/textures/retry.png"),
                    texture->getTexture("../res/textures/retry-hover.png"));
-    menu = Button(sf::Vector2f(400, 450), sf::Vector2f(200, 80), texture->getTexture("../res/textures/menu.png"),
+    menu = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 450), sf::Vector2f(200, 80),
+                  texture->getTexture("../res/textures/menu.png"),
                   texture->getTexture("../res/textures/menu-hover.png"));
 
     status = INMAINMENU;
 
-    background.setSize(sf::Vector2f(1000, 900));
+    background.setSize(sf::Vector2f(windowBounds.width, windowBounds.height));
     background.setPosition(0, 0);
     background.setFillColor(sf::Color(0, 0, 0, 150));
 }
@@ -56,11 +60,11 @@ void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
 }
 
-void Menu::updateMousePosition(sf::Vector2i i) {
-    play.updateMouse(i);
-    exit.updateMouse(i);
-    retry.updateMouse(i);
-    menu.updateMouse(i);
+void Menu::updateMousePosition(sf::FloatRect mouse) {
+    play.updateMouse(mouse);
+    exit.updateMouse(mouse);
+    retry.updateMouse(mouse);
+    menu.updateMouse(mouse);
 }
 
 void Menu::update() {

@@ -25,6 +25,7 @@ Game::Game() {
     LoadSettings settings;
 
     window = settings.set();
+    window->setMouseCursorVisible(false);
 
     sf::FloatRect windowBounds;
     windowBounds.left = 0;
@@ -42,11 +43,13 @@ Game::Game() {
 
     score = Score(windowBounds);
 
+    mouse = Mouse(&texture.getTexture("../res/textures/cursor.png"));
+
     gameState = GameState::INMENU;
 
-    background.setTexture(texture.getTexture("../res/textures/background.jpg"));
+    background.setTexture(&texture.getTexture("../res/textures/background.jpg"));
     background.setPosition(0, 0);
-    background.setScale(0.5, 0.84);
+    background.setSize(sf::Vector2f(windowBounds.width, windowBounds.height - 20));
 
     music.loadPlaylist("playlist");
 }
@@ -67,7 +70,7 @@ void Game::updateGame() {
 
     score.setScore(score.getScore() + entities.getDestroyedEnemies());
 
-    background.setColor(
+    background.setFillColor(
             sf::Color((sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0),
                       (sf::Uint8) (rand() % 255 + 0),
                       (sf::Uint8) (rand() % 255 + 0)));
@@ -81,6 +84,51 @@ void Game::renderGame() {
     window->draw(entities);
     window->draw(player);
     window->draw(score);
+}
+
+void Game::menuHandler() {
+    if (gameState == INMENU) {
+        menu.setState(Status::INMAINMENU);
+        if (clickSleep.getElapsedTime().asMilliseconds() > 500) {
+            if (menu.isPressed(Buttons::PLAY)) {
+                restart();
+                music.play();
+                gameState = INGAME;
+
+                clickSleep.restart();
+            }
+            if (menu.isPressed(Buttons::EXIT)) {
+                window->close();
+            }
+        }
+    }
+    else if (gameState == GAMEOVER) {
+        menu.setState(Status::INRETRYMENU);
+        if (clickSleep.getElapsedTime().asMilliseconds() > 500) {
+            if (menu.isPressed(Buttons::RETRY)) {
+                restart();
+                gameState = INGAME;
+
+                clickSleep.restart();
+            }
+            if (menu.isPressed(Buttons::MENU)) {
+                gameState = INMENU;
+
+                clickSleep.restart();
+            }
+        }
+    }
+}
+
+void Game::updateMenu() {
+    mouse.update(sf::Mouse::getPosition(*window));
+    menu.updateMousePosition(mouse.getGlobalBounds());
+    menu.update();
+}
+
+void Game::renderMenu() {
+    window->draw(menu);
+    window->draw(mouse);
 }
 
 void Game::loop() {
@@ -129,49 +177,6 @@ void Game::loop() {
     }
 }
 
-void Game::menuHandler() {
-    if (gameState == INMENU) {
-        menu.setState(Status::INMAINMENU);
-        if (clickSleep.getElapsedTime().asMilliseconds() > 500) {
-            if (menu.isPressed(Buttons::PLAY)) {
-                restart();
-                music.play();
-                gameState = INGAME;
-
-                clickSleep.restart();
-            }
-            if (menu.isPressed(Buttons::EXIT)) {
-                window->close();
-            }
-        }
-    }
-    else if (gameState == GAMEOVER) {
-        menu.setState(Status::INRETRYMENU);
-        if (clickSleep.getElapsedTime().asMilliseconds() > 500) {
-            if (menu.isPressed(Buttons::RETRY)) {
-                restart();
-                gameState = INGAME;
-
-                clickSleep.restart();
-            }
-            if (menu.isPressed(Buttons::MENU)) {
-                gameState = INMENU;
-
-                clickSleep.restart();
-            }
-        }
-    }
-}
-
-void Game::updateMenu() {
-    menu.updateMousePosition(sf::Mouse::getPosition(*window));
-    menu.update();
-}
-
-void Game::renderMenu() {
-    window->draw(menu);
-}
-
 void Game::restart() {
     entities.clear();
     player.reset();
@@ -179,41 +184,39 @@ void Game::restart() {
     music.restart();
 }
 
-void Game::start() {
-    loop();
-}
-
 void Game::loadTextures() {
-    std::vector<string> texList = {
-            "../res/textures/play.png", "../res/textures/play-hover.png",
-            "../res/textures/exit.png", "../res/textures/exit-hover.png",
-            "../res/textures/retry.png", "../res/textures/retry-hover.png",
-            "../res/textures/menu.png", "../res/textures/menu-hover.png",
-            "../res/textures/heart.png", "../res/textures/background.jpg",
-            "../res/textures/bullet11.png", "../res/textures/bullet12.png",
-            "../res/textures/bullet13.png", "../res/textures/bullet14.png",
-            "../res/textures/bullet15.png", "../res/textures/bullet16.png",
-            "../res/textures/bullet21.png", "../res/textures/bullet22.png",
-            "../res/textures/bullet23.png", "../res/textures/bullet24.png",
-            "../res/textures/bullet25.png", "../res/textures/bullet26.png",
-            "../res/textures/enemy1.png", "../res/textures/enemy2.png",
-            "../res/textures/enemy3.png", "../res/textures/enemy4.png",
-            "../res/textures/enemy5.png", "../res/textures/enemy6.png",
-            "../res/textures/explosion11.png", "../res/textures/explosion12.png",
-            "../res/textures/explosion13.png", "../res/textures/explosion21.png",
-            "../res/textures/explosion22.png", "../res/textures/explosion23.png",
-            "../res/textures/explosion31.png", "../res/textures/explosion32.png",
-            "../res/textures/explosion33.png", "../res/textures/explosion41.png",
-            "../res/textures/explosion42.png", "../res/textures/explosion43.png",
-            "../res/textures/explosion51.png", "../res/textures/explosion52.png",
-            "../res/textures/explosion53.png", "../res/textures/explosion61.png",
-            "../res/textures/explosion62.png", "../res/textures/explosion63.png",
-            "../res/textures/player.png",
-    };
+    std::vector<string> texList = {"../res/textures/play.png", "../res/textures/play-hover.png",
+                                   "../res/textures/exit.png", "../res/textures/exit-hover.png",
+                                   "../res/textures/retry.png", "../res/textures/retry-hover.png",
+                                   "../res/textures/menu.png", "../res/textures/menu-hover.png",
+                                   "../res/textures/heart.png", "../res/textures/background.jpg",
+                                   "../res/textures/bullet11.png", "../res/textures/bullet12.png",
+                                   "../res/textures/bullet13.png", "../res/textures/bullet14.png",
+                                   "../res/textures/bullet15.png", "../res/textures/bullet16.png",
+                                   "../res/textures/bullet21.png", "../res/textures/bullet22.png",
+                                   "../res/textures/bullet23.png", "../res/textures/bullet24.png",
+                                   "../res/textures/bullet25.png", "../res/textures/bullet26.png",
+                                   "../res/textures/enemy1.png", "../res/textures/enemy2.png",
+                                   "../res/textures/enemy3.png", "../res/textures/enemy4.png",
+                                   "../res/textures/enemy5.png", "../res/textures/enemy6.png",
+                                   "../res/textures/explosion11.png", "../res/textures/explosion12.png",
+                                   "../res/textures/explosion13.png", "../res/textures/explosion21.png",
+                                   "../res/textures/explosion22.png", "../res/textures/explosion23.png",
+                                   "../res/textures/explosion31.png", "../res/textures/explosion32.png",
+                                   "../res/textures/explosion33.png", "../res/textures/explosion41.png",
+                                   "../res/textures/explosion42.png", "../res/textures/explosion43.png",
+                                   "../res/textures/explosion51.png", "../res/textures/explosion52.png",
+                                   "../res/textures/explosion53.png", "../res/textures/explosion61.png",
+                                   "../res/textures/explosion62.png", "../res/textures/explosion63.png",
+                                   "../res/textures/player.png", "../res/textures/cursor.png"};
 
     for (int i = 0; i < texList.size(); i++) {
         texture.getTexture(texList[i]);
     }
+}
+
+void Game::start() {
+    loop();
 }
 
 int main() {

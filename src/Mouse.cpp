@@ -18,28 +18,28 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include "DebugHelper.h"
+#include "Mouse.h"
 
-template<typename T>
-void DebugHelper::print(T data) {
-    cout << data << ' ';
+Mouse::Mouse(sf::Texture *texture) {
+    form.setSize(sf::Vector2f(15, 15));
+    form.setTexture(texture);
 }
 
-template<typename T, typename... Args>
-void DebugHelper::print(T t, Args... args) {
-    if(dbgmsg) {
-        cout << "DEBUG_MESSAGE: ";
-        dbgmsg = !dbgmsg;
-    }
-
-    cout << t << ' ';
-
-    print(args...);
-
-    if(!dbgmsg) {
-
-        cout << endl;
-
-        dbgmsg = !dbgmsg;
-    }
+void Mouse::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    target.draw(form);
 }
+
+void Mouse::update(sf::Vector2i pos) {
+    form.setPosition(sf::Vector2f(pos.x, pos.y));
+}
+
+sf::FloatRect Mouse::getGlobalBounds() {
+    return form.getGlobalBounds();
+}
+
+
+
+
+
+
+

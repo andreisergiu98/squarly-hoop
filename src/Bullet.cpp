@@ -30,7 +30,7 @@ Bullet::Bullet(sf::Vector2f position, sf::Vector2f destination, float speed, sf:
 
     velocity *= speed;
 
-    form.setOrigin(5.5, 5.5);
+    form.setOrigin(sf::Vector2f(form.getSize().x / 2.f, form.getSize().y / 2.f));
 
     this->color = color;
 }

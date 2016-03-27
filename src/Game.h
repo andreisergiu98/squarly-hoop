@@ -28,6 +28,7 @@
 #include "menu/Menu.h"
 #include "music/Music.h"
 #include "Score.h"
+#include "Mouse.h"
 
 enum GameState {
     INGAME, INMENU, GAMEOVER
@@ -69,7 +70,7 @@ private:
 
     TextureManager texture;
 
-    sf::Sprite background;
+    sf::RectangleShape background;
 
     Player player;
 
@@ -80,6 +81,8 @@ private:
     Music music;
 
     EntityManager entities;
+
+    Mouse mouse;
 
     sf::Clock clickSleep;
 };
