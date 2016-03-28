@@ -111,7 +111,7 @@ void EntityManager::update(Player &player) {
     push_player_bullets(player.getBullets());
     playerBounds = player.getGlobalBounds();
     if (isPlayerHit) {
-        player.setHp(player.getHp() - 1);
+        player.gotDamage();
         isPlayerHit = !isPlayerHit;
     }
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {

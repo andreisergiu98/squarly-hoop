@@ -23,10 +23,10 @@
 
 
 std::shared_ptr<sf::RenderWindow> LoadSettings::load() {
-    debug.print("loading settings", "");
+    Debug::print("loading settings", "");
 
     if (!std::ifstream("settings")) {
-        debug.print("settings not found", "");
+        Debug::print("settings not found", "");
         setDefault();
     }
 
@@ -38,44 +38,45 @@ std::shared_ptr<sf::RenderWindow> LoadSettings::load() {
         readFromFile >> line;
         if (line == "resolution") {
             readFromFile >> res.width >> res.height;
-            debug.print("set", line, res.width, res.height);
+            Debug::print("set", line, res.width, res.height);
         }
         else if (line == "windowmode") {
             readFromFile >> windowMode;
-            debug.print("set", line, windowMode);
+            Debug::print("set", line, windowMode);
         }
         else if (line == "vsync") {
             string value;
             readFromFile >> value;
             vsync = value == "true";
-            debug.print("set", line, value);
+            Debug::print("set", line, value);
         }
         else if (line == "smoothtextures") {
             string value;
             readFromFile >> value;
             smooth = value == "true";
-            debug.print("set", line, value);
+            Debug::print("set", line, value);
         }
         else if (line == "antialiasing") {
             readFromFile >> contextSettings.antialiasingLevel;
-            debug.print("set", line, contextSettings.antialiasingLevel);
+            Debug::print("set", line, contextSettings.antialiasingLevel);
         }
         else if (line == "depthbits") {
             readFromFile >> contextSettings.depthBits;
-            debug.print("set", line, contextSettings.depthBits);
+            Debug::print("set", line, contextSettings.depthBits);
         }
         else if (line == "stencilbits") {
             readFromFile >> contextSettings.stencilBits;
-            debug.print("set", line, contextSettings.stencilBits);
+            Debug::print("set", line, contextSettings.stencilBits);
         }
         else if (line == "openGL") {
             readFromFile >> contextSettings.majorVersion >> contextSettings.minorVersion;
-            debug.print("set", line, contextSettings.majorVersion);
-            debug.print("set", line, contextSettings.minorVersion);
+            Debug::print("set", line, contextSettings.majorVersion);
+            Debug::print("set", line, contextSettings.minorVersion);
         }
     }
+    readFromFile.close();
 
-    debug.print("settings loaded", "");
+    Debug::print("settings loaded", "");
 
     if (windowMode == "fullscreen") {
         std::shared_ptr<sf::RenderWindow> initWindow(
@@ -91,19 +92,24 @@ std::shared_ptr<sf::RenderWindow> LoadSettings::load() {
 
         return initWindow;
     }
+    if (windowMode == "none") {
+        std::shared_ptr<sf::RenderWindow> initWindow(
+                new sf::RenderWindow(res, "Squarly Hoop", sf::Style::None, contextSettings));
+        initWindow->setVerticalSyncEnabled(vsync);
+
+        return initWindow;
+    }
 
     std::shared_ptr<sf::RenderWindow> initWindow(
             new sf::RenderWindow(res, "Squarly Hoop", sf::Style::Default, contextSettings));
     initWindow->setVerticalSyncEnabled(vsync);
-
-    readFromFile.close();
 
     return initWindow;
 
 }
 
 void LoadSettings::setDefault() {
-    debug.print("loading default settings", "");
+    Debug::print("loading default settings", "");
 
     ofstream writeToFile("settings");
 

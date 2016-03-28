@@ -47,36 +47,59 @@ Game::Game() {
 
     gameState = GameState::INMENU;
 
-    background.setTexture(&texture.getTexture("../res/textures/background.jpg"));
-    background.setPosition(0, 0);
-    background.setSize(sf::Vector2f(windowBounds.width, windowBounds.height - 20));
+    background = Background(windowBounds, sf::Vector2f(1920, 3072),
+                            &texture.getTexture("../res/textures/background.png"),
+                            &texture.getTexture("../res/textures/background1.png"));
 
     music.loadPlaylist("playlist");
+
+    screenShaking = false;
 }
 
 void Game::process() {
     player.process();
     entities.process();
+    background.process();
+
     if (player.getHp() <= 0) {
         gameState = GameState::GAMEOVER;
+        highscore.update(score.getScore());
+        player.setPosition(sf::Vector2f(window->getSize().x / 2.f, 4000));
     }
 }
 
 void Game::updateGame() {
     player.update(frameTime);
-
     entities.update(frameTime);
     entities.update(player);
+    entities.updateBeat(music.getBeat(), music.getFreq());
+    background.update(frameTime);
+    music.update();
 
     score.setScore(score.getScore() + entities.getDestroyedEnemies());
 
-    background.setFillColor(
-            sf::Color((sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0),
-                      (sf::Uint8) (rand() % 255 + 0),
-                      (sf::Uint8) (rand() % 255 + 0)));
+    if (player.isDamaged()) {
+        screenShaking = true;
+        screenShackingTime.restart();
+    }
 
-    music.update();
-    entities.updateBeat(music.getBeat(), music.getFreq());
+    if (screenShackingTime.getElapsedTime().asMilliseconds() >= 500) {
+        screenShaking = false;
+    }
+
+    if(gameState == PAUSED){
+        screenShaking = false;
+    }
+
+    if (screenShaking) {
+        sf::View view(sf::FloatRect(rand() % 13, rand() % 13, window->getSize().x + rand() % 13,
+                                    window->getSize().y + rand() % 13));
+
+        window->setView(view);
+    }
+    else {
+        window->setView(sf::View(sf::FloatRect(0, 0, window->getSize().x, window->getSize().y)));
+    }
 }
 
 void Game::renderGame() {
@@ -94,7 +117,6 @@ void Game::menuHandler() {
                 restart();
                 music.start();
                 gameState = INGAME;
-
                 clickSleep.restart();
             }
             if (menu.isPressed(Buttons::EXIT)) {
@@ -108,12 +130,25 @@ void Game::menuHandler() {
             if (menu.isPressed(Buttons::RETRY)) {
                 restart();
                 gameState = INGAME;
-
                 clickSleep.restart();
             }
             if (menu.isPressed(Buttons::MENU)) {
                 gameState = INMENU;
-
+                clickSleep.restart();
+            }
+        }
+    }
+    else if (gameState == PAUSED) {
+        menu.setState(Status::INPAUSEMENU);
+        if (clickSleep.getElapsedTime().asMilliseconds() > 500) {
+            if (menu.isPressed(Buttons::RESUME)) {
+                gameState = INGAME;
+                music.resume();
+                clickSleep.restart();
+            }
+            if (menu.isPressed(Buttons::MENU)) {
+                gameState = INMENU;
+                music.resume();
                 clickSleep.restart();
             }
         }
@@ -129,28 +164,45 @@ void Game::updateMenu() {
 void Game::renderMenu() {
     window->draw(menu);
     window->draw(mouse);
+    window->draw(highscore);
 }
 
-void Game::loop() {
+void Game::inputProcess() {
     sf::Event event;
-    while (window->isOpen()) {
-        while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window->close();
+    while (window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed)
+            window->close();
 
-            if (event.type == sf::Event::KeyReleased) {
-                if (event.key.code == sf::Keyboard::Escape) {
+        if (event.type == sf::Event::LostFocus) {
+            if (gameState == INGAME) {
+                gameState = PAUSED;
+                music.pause();
+            }
+        }
+
+        if (event.type == sf::Event::KeyReleased) {
+            if (event.key.code == sf::Keyboard::Escape) {
+                if(gameState == INMENU){
                     window->close();
                 }
+
+                gameState = PAUSED;
+                music.pause();
             }
-            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::P) {
+            if (event.key.code == sf::Keyboard::P) {
                 music.next();
             }
         }
-        frameTime = frameClock.restart();
+    }
+    frameTime = frameClock.restart();
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
-            player.setHp(0);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
+        player.setHp(0);
+}
+
+void Game::loop() {
+    while (window->isOpen()) {
+        inputProcess();
 
         window->clear();
 
@@ -166,6 +218,13 @@ void Game::loop() {
         }
         if (gameState == GAMEOVER) {
             process();
+            menuHandler();
+            updateGame();
+            updateMenu();
+            renderGame();
+            renderMenu();
+        }
+        if (gameState == PAUSED) {
             menuHandler();
             updateGame();
             updateMenu();
@@ -189,7 +248,8 @@ void Game::loadTextures() {
                                    "../res/textures/exit.png", "../res/textures/exit-hover.png",
                                    "../res/textures/retry.png", "../res/textures/retry-hover.png",
                                    "../res/textures/menu.png", "../res/textures/menu-hover.png",
-                                   "../res/textures/heart.png", "../res/textures/background.jpg",
+                                   "../res/textures/heart.png", "../res/textures/background.png",
+                                   "../res/textures/background1.png","../res/textures/player.png",
                                    "../res/textures/bullet11.png", "../res/textures/bullet12.png",
                                    "../res/textures/bullet13.png", "../res/textures/bullet14.png",
                                    "../res/textures/bullet15.png", "../res/textures/bullet16.png",
@@ -208,7 +268,7 @@ void Game::loadTextures() {
                                    "../res/textures/explosion51.png", "../res/textures/explosion52.png",
                                    "../res/textures/explosion53.png", "../res/textures/explosion61.png",
                                    "../res/textures/explosion62.png", "../res/textures/explosion63.png",
-                                   "../res/textures/player.png", "../res/textures/cursor.png"};
+                                   "../res/textures/cursor.png"};
 
     for (int i = 0; i < texList.size(); i++) {
         texture.getTexture(texList[i]);

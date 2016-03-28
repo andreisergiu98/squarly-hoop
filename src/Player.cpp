@@ -28,11 +28,15 @@ Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
     form.setTexture(&texture->getTexture("../res/textures/player.png"));
     form.setPosition(480, windowBounds.height - 40);
     form.setSize(sf::Vector2f(31, 31));
-    form.setOrigin(sf::Vector2f(form.getSize().x / 2.f, form.getSize().y / 2.f));
+    form.setOrigin(sf::Vector2f(15.5, 15.5));
+
+    shield.setSize(sf::Vector2f(600, 600));
+    shield.setTexture(&texture->getTexture("../res/textures/shield.png"));
+    shield.setOrigin(300, 300);
 
     this->windowBounds = windowBounds;
 
-    hp = 20;
+    hp = 10;
     for (int i = 0; i < hp; i++) {
         sf::RectangleShape rect;
         rect.setPosition(5 + i * 20, windowBounds.height - 20);
@@ -51,6 +55,9 @@ Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
     coolDownSec->setString("Charged");
     font->loadFromFile("../res/fonts/OpenSans-Bold.ttf");
     coolDownSec->setFont(*font);
+
+    damaged = false;
+    shielded = false;
 }
 
 void Player::update(sf::Time frameTime) {
@@ -76,14 +83,14 @@ void Player::process() {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
         charged = true;
-        coolDownClock.restart();
+        abilitiesCooldown.restart();
         timer.restart();
         coolDownSec->setPosition(windowBounds.width - 60, windowBounds.height - 20);
         coolDownSec->setString("Charged");
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
-        setHp(20);
+        setHp(10);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
@@ -92,7 +99,7 @@ void Player::process() {
             charged = false;
             coolDown = 36;
             timer.restart();
-            coolDownClock.restart();
+            abilitiesCooldown.restart();
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
@@ -101,27 +108,30 @@ void Player::process() {
             charged = false;
             coolDown = 51;
             timer.restart();
-            coolDownClock.restart();
+            abilitiesCooldown.restart();
         }
     }
 
     if (!charged) {
         coolDownSec->setPosition(windowBounds.width - 90, windowBounds.height - 20);
-        coolDownSec->setString("Cooldown : " + intToStr((int) (coolDown - coolDownClock.getElapsedTime().asSeconds())));
+        coolDownSec->setString(
+                "Cooldown : " + intToStr((int) (coolDown - abilitiesCooldown.getElapsedTime().asSeconds())));
     }
 
     if (timer.getElapsedTime().asSeconds() >= 10) {
         pattern = PlayerPatterns::Pattern::SIMPLE;
     }
 
-    if (coolDownClock.getElapsedTime().asSeconds() >= coolDown) {
+    if (abilitiesCooldown.getElapsedTime().asSeconds() >= coolDown) {
         coolDownSec->setPosition(windowBounds.width - 60, windowBounds.height - 20);
         coolDownSec->setString("Charged");
         charged = true;
     }
 
     if (clock.getElapsedTime().asMilliseconds() >= 200 && hp > 0) {
-        shoot();
+        if (!shielded) {
+            shoot();
+        }
         clock.restart();
     }
 
@@ -153,8 +163,17 @@ void Player::process() {
         }
     }
 
-    form.rotate(20);
+    if (damageClock.getElapsedTime().asMilliseconds() > 500) {
+        damaged = false;
+    }
+    if (shieldCooldown.getElapsedTime().asMilliseconds() > 3000) {
+        shielded = false;
+    }
 
+    shield.setPosition(form.getPosition().x, form.getPosition().y);
+
+    form.rotate(20);
+    shield.rotate(5);
 }
 
 void Player::shoot() {
@@ -169,6 +188,16 @@ std::vector<Bullet> Player::getBullets() {
 }
 
 sf::FloatRect Player::getGlobalBounds() {
+    if (shielded) {
+        sf::FloatRect boundingBox = shield.getGlobalBounds();
+        boundingBox.top += 200;
+        boundingBox.left += 200;
+        boundingBox.height -= 400;
+        boundingBox.width -= 400;
+
+        return boundingBox;
+    }
+
     sf::FloatRect boundingBox = form.getGlobalBounds();
     boundingBox.top += 15;
     boundingBox.left += 15;
@@ -192,11 +221,30 @@ sf::Vector2f Player::getPosition() {
 
 void Player::reset() {
     form.setPosition(windowBounds.width / 2.f - 20, windowBounds.height - 40);
-    coolDownClock.restart();
+    abilitiesCooldown.restart();
     timer.restart();
     coolDown = 0;
     charged = true;
-    hp = 20;
+    hp = 10;
+}
+
+void Player::gotDamage() {
+    if (!shielded) {
+        hp--;
+        shielded = true;
+        shieldCooldown.restart();
+    }
+
+    damaged = true;
+    damageClock.restart();
+}
+
+bool Player::isDamaged() {
+    return damaged;
+}
+
+void Player::setPosition(sf::Vector2f pos) {
+    form.setPosition(pos);
 }
 
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -204,5 +252,12 @@ void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     for (int i = 0; i < hp; i++) {
         target.draw(hpBar[i]);
     }
+    if (shielded) {
+        target.draw(shield);
+    }
     target.draw(*coolDownSec);
 }
+
+
+
+

@@ -44,6 +44,12 @@ public:
 
     void setHp(int);
 
+    void setPosition(sf::Vector2f pos);
+
+    void gotDamage();
+
+    bool isDamaged();
+
     sf::FloatRect getGlobalBounds();
 
     std::vector<Bullet> getBullets();
@@ -65,6 +71,8 @@ private:
 
     sf::FloatRect windowBounds;
 
+    sf::RectangleShape shield;
+
     sf::Clock clock;
 
     sf::Time frameTime;
@@ -77,9 +85,17 @@ private:
 
     bool charged;
 
+    bool damaged;
+
+    bool shielded;
+
     int coolDown;
 
-    sf::Clock coolDownClock;
+    sf::Clock damageClock;
+
+    sf::Clock shieldCooldown;
+
+    sf::Clock abilitiesCooldown;
 
     sf::Clock timer;
 

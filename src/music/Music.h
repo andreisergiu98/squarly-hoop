@@ -54,8 +54,6 @@ private:
 
     std::vector<std::string> playlist;
 
-    DebugHelper debug;
-
     int currentSong;
 };
 

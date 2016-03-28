@@ -30,7 +30,7 @@ enum Buttons {
 };
 
 enum Status {
-    INMAINMENU, INRETRYMENU
+    INMAINMENU, INRETRYMENU, INPAUSEMENU
 };
 
 class Menu : public sf::Drawable {
@@ -51,6 +51,7 @@ private:
     Button play;
     Button exit;
     Button retry;
+    Button resume;
     Button menu;
 
     TextureManager *texture;

@@ -53,7 +53,6 @@ void BeatDetector::loadSong(int sSize, char *audioString) {
     started = false;
     lastBeatRegistered = new char;
     timeToDelay = 0;
-    paused = false;
 
     previousFFT = new float[sampleSize / 2 + 1];
     for (int i = 0; i < sampleSize / 2; i++) {
@@ -75,7 +74,7 @@ void BeatDetector::loadSong(int sSize, char *audioString) {
     FMOD_Channel_SetChannelGroup(songChannel1, channelMusic);
     FMOD_Channel_SetPaused(songChannel1, true);
 
-    debug.print("loading sound:", audioString);
+    Debug::print("loading sound:", audioString);
 }
 
 void BeatDetector::updateTime() {
@@ -279,7 +278,7 @@ FMOD_SYSTEM *BeatDetector::fmodSetup() {
 
 void BeatDetector::FMODErrorCheck(FMOD_RESULT result) {
     if (result != FMOD_OK) {
-        debug.print("FMOD ERROR:", result, FMOD_ErrorString(result));
+        Debug::print("FMOD ERROR:", result, FMOD_ErrorString(result));
         exit(-1);
     }
 }
@@ -303,7 +302,7 @@ float BeatDetector::getFreq() {
 }
 
 void BeatDetector::setPaused(FMOD_BOOL pause) {
-    FMOD_Channel_SetPaused(songChannel1,pause);
+    FMOD_Channel_SetPaused(songChannel1, pause);
 }
 
 

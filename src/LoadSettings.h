@@ -49,8 +49,6 @@ private:
     bool smooth;
 
     string windowMode;
-
-    DebugHelper debug;
 };
 
 

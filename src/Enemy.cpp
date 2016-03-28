@@ -30,7 +30,7 @@ Enemy::Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager *te
     color = rand() % 6 + 1;
 
     form.setTexture(&this->texture->getTexture("../res/textures/enemy" + intToStr(color) + ".png"));
-    form.setOrigin(sf::Vector2f(form.getSize().x / 2.f, form.getSize().y / 2.f));
+    form.setOrigin(sf::Vector2f(15.5, 15.));
 
     hp = rand() % 3 + 1;
 

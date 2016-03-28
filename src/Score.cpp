@@ -35,13 +35,13 @@ Score::Score(sf::FloatRect windowBounds) {
 }
 
 
-void Score::setScore(int score) {
+void Score::setScore(unsigned  int score) {
     if (this->score != 0)
         text->setString("Score: " + intToStr(score) + "00");
     this->score = score;
 }
 
-int Score::getScore() {
+unsigned int Score::getScore() {
     return score;
 }
 

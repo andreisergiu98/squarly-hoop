@@ -30,18 +30,18 @@ public:
 
     Score(sf::FloatRect windowBounds);
 
-    void setScore(int);
+    void setScore(unsigned int);
 
     void reset();
 
-    int getScore();
+    unsigned int getScore();
 
 private:
     sf::Text *text;
 
     sf::Font *font;
 
-    int score;
+    unsigned int score;
 
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };

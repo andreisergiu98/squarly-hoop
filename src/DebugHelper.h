@@ -25,16 +25,15 @@
 
 using namespace std;
 
-class DebugHelper {
-public:
+namespace Debug {
+
     template<typename T, typename... Args>
     void print(T t, Args... args);
 
-private:
     template<typename T>
     void print(T data);
 
-    bool dbgmsg = true;
+    static bool dbgmsg = true;
 };
 
 #include "DebugHelper.inl"

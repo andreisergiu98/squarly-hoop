@@ -21,12 +21,12 @@
 #include "DebugHelper.h"
 
 template<typename T>
-void DebugHelper::print(T data) {
+void Debug::print(T data) {
     cout << data << ' ';
 }
 
 template<typename T, typename... Args>
-void DebugHelper::print(T t, Args... args) {
+void Debug::print(T t, Args... args) {
     if(dbgmsg) {
         cout << "DEBUG_MESSAGE: ";
         dbgmsg = !dbgmsg;

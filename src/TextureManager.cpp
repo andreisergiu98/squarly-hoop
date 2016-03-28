@@ -32,7 +32,7 @@ sf::Texture &TextureManager::getTexture(const std::string &texLocation) {
 
     if (texture.loadFromFile(texLocation)) {
         textures[texLocation] = texture;
-        debug.print("loading image", texLocation);
+        Debug::print("loading image", texLocation);
         return textures[texLocation];
     }
 
@@ -44,7 +44,7 @@ sf::Texture &TextureManager::getTexture(const std::string &texLocation) {
 void TextureManager::deleteTexture(sf::Texture &texture) {
     for (auto it = textures.begin(); it != textures.end(); ++it) {
         if (&texture == &it->second) {
-            debug.print("deleting image", it->first);
+            Debug::print("deleting image", it->first);
             textures.erase(it);
         }
     }
@@ -53,7 +53,7 @@ void TextureManager::deleteTexture(sf::Texture &texture) {
 void TextureManager::deleteTexture(std::string texLocation) {
     auto it = textures.find(texLocation);
     if (it != textures.end()) {
-        debug.print("deleting image", texLocation);
+        Debug::print("deleting image", texLocation);
         textures.erase(it);
     }
 }

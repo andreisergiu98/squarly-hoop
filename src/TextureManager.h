@@ -40,8 +40,6 @@ private:
     std::map<std::string, sf::Texture> textures;
 
     bool smoothTextures;
-
-    DebugHelper debug;
 };
 
 

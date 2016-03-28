@@ -38,7 +38,7 @@ private:
 
     sf::Clock clock;
 
-    sf::Clock fadeOut;
+    sf::Clock effects;
 
     int opacity;
 

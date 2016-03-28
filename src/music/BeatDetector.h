@@ -108,10 +108,6 @@ private:
     float thresholdSmoother;
 
     float freq;
-
-    bool paused;
-
-    DebugHelper debug;
 };
 
 #endif

@@ -41,12 +41,18 @@ bool Explosion::destroy() {
 }
 
 void Explosion::update() {
-    if (fadeOut.getElapsedTime().asMilliseconds() >= 0.5) {
+    if (effects.getElapsedTime().asMilliseconds() >= 0.5) {
         if (opacity)
             opacity--;
-        fadeOut.restart();
+
+        if (form.getSize().x >= 0.f) {
+                sf::Vector2f grow = sf::Vector2f(-0.3f, -0.3f);
+                form.move(-grow / 2.f);
+                form.setSize(form.getSize() + grow);
+        }
+
+        effects.restart();
     }
 
-
-    form.setFillColor(sf::Color(255, 255, 255, opacity));
+    form.setFillColor(sf::Color(255, 255, 255, (sf::Uint8) opacity));
 }

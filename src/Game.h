@@ -29,9 +29,11 @@
 #include "music/Music.h"
 #include "Score.h"
 #include "Mouse.h"
+#include "Background.h"
+#include "Highscore.h"
 
 enum GameState {
-    INGAME, INMENU, GAMEOVER
+    INGAME, INMENU, GAMEOVER, PAUSED
 };
 
 class Game {
@@ -47,6 +49,8 @@ private:
     void renderGame();
 
     void process();
+
+    void inputProcess();
 
     void menuHandler();
 
@@ -70,7 +74,7 @@ private:
 
     TextureManager texture;
 
-    sf::RectangleShape background;
+    Background background;
 
     Player player;
 
@@ -80,9 +84,15 @@ private:
 
     Music music;
 
+    Highscore highscore;
+
     EntityManager entities;
 
     Mouse mouse;
+
+    bool screenShaking;
+
+    sf::Clock screenShackingTime;
 
     sf::Clock clickSleep;
 };

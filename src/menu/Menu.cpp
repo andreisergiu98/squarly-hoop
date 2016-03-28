@@ -29,13 +29,16 @@ Menu::Menu(sf::FloatRect windowBounds, TextureManager *textureManager) {
     play = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 250), sf::Vector2f(200, 80),
                   texture->getTexture("../res/textures/play.png"),
                   texture->getTexture("../res/textures/play-hover.png"));
-    exit = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 450), sf::Vector2f(200, 80),
+    exit = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 500), sf::Vector2f(200, 80),
                   texture->getTexture("../res/textures/exit.png"),
                   texture->getTexture("../res/textures/exit-hover.png"));
     retry = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 250), sf::Vector2f(200, 80),
                    texture->getTexture("../res/textures/retry.png"),
                    texture->getTexture("../res/textures/retry-hover.png"));
-    menu = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 450), sf::Vector2f(200, 80),
+    resume = Button(sf::Vector2f(windowBounds.width / 2.f - 105, 250), sf::Vector2f(220, 80),
+                    texture->getTexture("../res/textures/resume.png"),
+                    texture->getTexture("../res/textures/resume-hover.png"));
+    menu = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 500), sf::Vector2f(200, 80),
                   texture->getTexture("../res/textures/menu.png"),
                   texture->getTexture("../res/textures/menu-hover.png"));
 
@@ -57,13 +60,17 @@ void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const {
         target.draw(retry);
         target.draw(menu);
     }
-
+    if (status == INPAUSEMENU) {
+        target.draw(resume);
+        target.draw(menu);
+    }
 }
 
 void Menu::updateMousePosition(sf::FloatRect mouse) {
     play.updateMouse(mouse);
     exit.updateMouse(mouse);
     retry.updateMouse(mouse);
+    resume.updateMouse(mouse);
     menu.updateMouse(mouse);
 }
 
@@ -71,21 +78,25 @@ void Menu::update() {
     play.update();
     exit.update();
     retry.update();
+    resume.update();
     menu.update();
 }
 
-bool Menu::isPressed(Buttons buttons) {
-    if (buttons == PLAY) {
+bool Menu::isPressed(Buttons button) {
+    if (button == PLAY) {
         return play.isPressed();
     }
-    if (buttons == EXIT) {
+    else if (button == EXIT) {
         return exit.isPressed();
     }
-    if (buttons == RETRY) {
+    else if (button == RETRY) {
         return retry.isPressed();
     }
-    if (buttons == MENU) {
+    else if (button == MENU) {
         return menu.isPressed();
+    }
+    else if (button == RESUME) {
+        return resume.isPressed();
     }
 }
 
