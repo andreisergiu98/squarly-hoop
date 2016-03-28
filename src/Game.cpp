@@ -92,7 +92,7 @@ void Game::menuHandler() {
         if (clickSleep.getElapsedTime().asMilliseconds() > 500) {
             if (menu.isPressed(Buttons::PLAY)) {
                 restart();
-                music.play();
+                music.start();
                 gameState = INGAME;
 
                 clickSleep.restart();

@@ -29,26 +29,28 @@ class Music {
 public:
     Music();
 
-    void loadMusic(std::string location);
-
     void update();
 
     void next();
 
     void restart();
 
+    void resume();
+
+    void pause();
+
     bool getBeat();
 
     float getFreq();
 
-    void play();
+    void start();
 
     void loadPlaylist(std::string location);
 
 private:
     BeatDetector *beat = BeatDetector::Instance();
 
-    TimeStamp *localLastBeatOccured;
+    char *localLastBeatOccured;
 
     std::vector<std::string> playlist;
 

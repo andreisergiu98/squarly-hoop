@@ -26,12 +26,7 @@ Music::Music() {
     currentSong = 0;
 }
 
-void Music::loadMusic(std::string location) {
-    char *cstr = &location[0u];
-    BeatDetector::Instance()->LoadSong(1024, cstr);
-}
-
-void Music::play() {
+void Music::start() {
     beat->setStarted(true);
 }
 
@@ -42,7 +37,6 @@ void Music::update() {
         next();
     }
 }
-
 
 bool Music::getBeat() {
     if (localLastBeatOccured != BeatDetector::Instance()->getLastBeat()) {
@@ -74,8 +68,6 @@ void Music::loadPlaylist(std::string location) {
     if (!playlist.size()) {
         debug.print("error empty playlist", "");
     }
-
-    loadMusic((std::string("../res/music/" + playlist[0])));
 }
 
 void Music::next() {
@@ -84,16 +76,30 @@ void Music::next() {
         currentSong = 0;
     std::string location = std::string("../res/music/" + playlist[currentSong]);
     char *cstr = &location[0u];
-    BeatDetector::Instance()->loadNewSong(1024, cstr);
-    play();
+    BeatDetector::Instance()->loadSong(1024, cstr);
+    start();
 }
 
 void Music::restart() {
     std::string location = std::string("../res/music/" + playlist[0]);
     char *cstr = &location[0u];
-    BeatDetector::Instance()->loadNewSong(1024, cstr);
-    play();
+    BeatDetector::Instance()->loadSong(1024, cstr);
+    start();
 }
+
+void Music::pause() {
+    beat->setPaused(true);
+}
+
+void Music::resume() {
+    beat->setPaused(false);
+}
+
+
+
+
+
+
 
 
 
