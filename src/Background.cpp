@@ -45,8 +45,6 @@ void Background::process() {
     if (!second.getGlobalBounds().intersects(bounds)) {
         second.setPosition(sf::Vector2f(0, first.getPosition().y - length));
     }
-
-    colorUpdate();
 }
 
 void Background::update(sf::Time frameTime) {
@@ -59,10 +57,21 @@ void Background::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 }
 
 void Background::colorUpdate() {
-    sf::Color color((sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0), (sf::Uint8) (rand() % 255 + 0));
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distribution(0, 255);
+
+    int r = distribution(gen);
+    int g = distribution(gen);
+    int b = distribution(gen);
+
+    //sf::Color color(16, 218, 116);
+    sf::Color color(r, g, b);
 
     first.setFillColor(color);
     second.setFillColor(color);
+
+    Debug::print(r, g, b);
 }
 
 

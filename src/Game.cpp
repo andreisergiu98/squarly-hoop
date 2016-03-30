@@ -72,9 +72,16 @@ void Game::updateGame() {
     player.update(frameTime);
     entities.update(frameTime);
     entities.update(player);
-    entities.updateBeat(music.getBeat(), music.getFreq());
     background.update(frameTime);
     music.update();
+
+    bool beat = music.getBeat();
+
+    entities.updateBeat(beat, music.getFreq());
+
+    //if(beat){
+    background.colorUpdate();
+    //}
 
     score.setScore(score.getScore() + entities.getDestroyedEnemies());
 

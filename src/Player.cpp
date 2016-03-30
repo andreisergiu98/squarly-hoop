@@ -225,6 +225,7 @@ void Player::reset() {
     timer.restart();
     coolDown = 0;
     charged = true;
+    shielded = false;
     hp = 10;
 }
 
