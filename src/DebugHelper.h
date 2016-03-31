@@ -33,7 +33,8 @@ namespace Debug {
     template<typename T>
     void print(T data);
 
-    static bool dbgmsg = true;
+    static bool showMessage = true;
+    static bool solo = true;
 };
 
 #include "DebugHelper.inl"

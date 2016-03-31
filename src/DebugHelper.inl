@@ -22,24 +22,26 @@
 
 template<typename T>
 void Debug::print(T data) {
+    if (showMessage) {
+        cout << "DEBUG_MESSAGE: ";
+    }
     cout << data << ' ';
+    if (solo) {
+        cout << endl;
+    }
 }
 
 template<typename T, typename... Args>
 void Debug::print(T t, Args... args) {
-    if(dbgmsg) {
-        cout << "DEBUG_MESSAGE: ";
-        dbgmsg = !dbgmsg;
-    }
-
-    cout << t << ' ';
+    solo = false;
+    print(t);
+    showMessage = false;
 
     print(args...);
 
-    if(!dbgmsg) {
-
+    if (!showMessage) {
         cout << endl;
-
-        dbgmsg = !dbgmsg;
+        showMessage = true;
+        solo = true;
     }
 }

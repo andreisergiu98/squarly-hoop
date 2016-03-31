@@ -23,10 +23,10 @@
 
 
 std::shared_ptr<sf::RenderWindow> LoadSettings::load() {
-    Debug::print("loading settings", "");
+    Debug::print("loading settings");
 
     if (!std::ifstream("settings")) {
-        Debug::print("settings not found", "");
+        Debug::print("settings not found");
         setDefault();
     }
 
@@ -76,7 +76,7 @@ std::shared_ptr<sf::RenderWindow> LoadSettings::load() {
     }
     readFromFile.close();
 
-    Debug::print("settings loaded", "");
+    Debug::print("settings loaded");
 
     if (windowMode == "fullscreen") {
         std::shared_ptr<sf::RenderWindow> initWindow(
@@ -109,7 +109,7 @@ std::shared_ptr<sf::RenderWindow> LoadSettings::load() {
 }
 
 void LoadSettings::setDefault() {
-    Debug::print("loading default settings", "");
+    Debug::print("loading default settings");
 
     ofstream writeToFile("settings");
 
