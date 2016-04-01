@@ -62,12 +62,38 @@ Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
 
     damaged = false;
     shielded = false;
+
+    shootingSound->loadSound("../res/sounds/shoot.wav");
+    shootingSound->setVolume(0.2f);
 }
 
 void Player::update(sf::Time frameTime) {
     this->frameTime = frameTime;
     for (auto it = bullets.begin(); it != bullets.end(); ++it) {
         it->update(frameTime);
+    }
+
+    if (damageClock.getElapsedTime().asMilliseconds() > 300) {
+        damaged = false;
+    }
+    if (shieldCooldown.getElapsedTime().asMilliseconds() > 3000) {
+        shielded = false;
+    }
+
+    if (!charged) {
+        coolDownSec->setPosition(windowBounds.width - 90, windowBounds.height - 20);
+        coolDownSec->setString(
+                "Cooldown : " + utilities::intToStr((int) (coolDown - abilitiesCooldown.getElapsedTime().asSeconds())));
+    }
+
+    if (timer.getElapsedTime().asSeconds() >= 10) {
+        pattern = playerPatterns::Pattern::SIMPLE;
+    }
+
+    if (abilitiesCooldown.getElapsedTime().asSeconds() >= coolDown) {
+        coolDownSec->setPosition(windowBounds.width - 60, windowBounds.height - 20);
+        coolDownSec->setString("Charged");
+        charged = true;
     }
 }
 
@@ -116,29 +142,6 @@ void Player::process() {
         }
     }
 
-    if (!charged) {
-        coolDownSec->setPosition(windowBounds.width - 90, windowBounds.height - 20);
-        coolDownSec->setString(
-                "Cooldown : " + utilities::intToStr((int) (coolDown - abilitiesCooldown.getElapsedTime().asSeconds())));
-    }
-
-    if (timer.getElapsedTime().asSeconds() >= 10) {
-        pattern = playerPatterns::Pattern::SIMPLE;
-    }
-
-    if (abilitiesCooldown.getElapsedTime().asSeconds() >= coolDown) {
-        coolDownSec->setPosition(windowBounds.width - 60, windowBounds.height - 20);
-        coolDownSec->setString("Charged");
-        charged = true;
-    }
-
-    if (clock.getElapsedTime().asMilliseconds() >= 100 && hp > 0) {
-        if (!shielded) {
-            shoot();
-        }
-        clock.restart();
-    }
-
     if (velocity.x != 0.f && velocity.y != 0.f)
         velocity /= std::sqrt(2.f);
 
@@ -167,11 +170,12 @@ void Player::process() {
         }
     }
 
-    if (damageClock.getElapsedTime().asMilliseconds() > 500) {
-        damaged = false;
-    }
-    if (shieldCooldown.getElapsedTime().asMilliseconds() > 3000) {
-        shielded = false;
+    if (clock.getElapsedTime().asMilliseconds() >= 200 && hp > 0) {
+        if (!shielded) {
+            shoot();
+            shootingSound->play();
+        }
+        clock.restart();
     }
 
     core.setPosition(form.getPosition());

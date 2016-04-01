@@ -154,6 +154,9 @@ void Game::menuHandler() {
             }
         }
     }
+    else if (gameState == INGAME) {
+        menu.setState(Status::NONE);
+    }
 }
 
 void Game::updateMenu() {
@@ -247,10 +250,11 @@ void Game::restart() {
 void Game::loadTextures() {
     std::vector<string> texList = {"../res/textures/play.png", "../res/textures/play-hover.png",
                                    "../res/textures/exit.png", "../res/textures/exit-hover.png",
+                                   "../res/textures/resume.png", "../res/textures/resume-hover.png",
                                    "../res/textures/retry.png", "../res/textures/retry-hover.png",
                                    "../res/textures/menu.png", "../res/textures/menu-hover.png",
                                    "../res/textures/heart.png", "../res/textures/background.png",
-                                   "../res/textures/background1.png","../res/textures/player.png",
+                                   "../res/textures/background1.png", "../res/textures/player.png",
                                    "../res/textures/bullet11.png", "../res/textures/bullet12.png",
                                    "../res/textures/bullet13.png", "../res/textures/bullet14.png",
                                    "../res/textures/bullet15.png", "../res/textures/bullet16.png",

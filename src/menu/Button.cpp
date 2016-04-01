@@ -52,3 +52,9 @@ bool Button::isPressed() {
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     target.draw(form);
 }
+
+ButtonStatus Button::getStatus() {
+    return status;
+}
+
+

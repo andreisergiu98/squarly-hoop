@@ -23,6 +23,10 @@
 
 #include <SFML/Graphics.hpp>
 
+enum ButtonStatus {
+    MOUSEOVER, NORMAL
+};
+
 class Button : public sf::Drawable {
 public:
     Button() { }
@@ -35,16 +39,15 @@ public:
 
     bool isPressed();
 
+    ButtonStatus getStatus();
+
 private:
     sf::RectangleShape form;
     sf::FloatRect mouse;
     sf::Texture *texNormal;
     sf::Texture *texMouseOver;
 
-    enum Mouse {
-        MOUSEOVER, NORMAL
-    };
-    Mouse status;
+    ButtonStatus status;
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };

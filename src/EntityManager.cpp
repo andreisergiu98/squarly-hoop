@@ -28,6 +28,9 @@ EntityManager::EntityManager(sf::FloatRect windowBounds, TextureManager *texture
     isPlayerHit = false;
     destroyedEnemies = 0;
     maxSpawnNumber = 3;
+
+    explosionSound->loadSound("../res/sounds/explosion.wav");
+    explosionSound->setVolume(1.f);
 }
 
 void EntityManager::spawn() {
@@ -35,7 +38,7 @@ void EntityManager::spawn() {
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> distribution(50 , windowBounds.width / 3.f - 50);
+    std::uniform_int_distribution<int> distribution(50, (int) (windowBounds.width / 3.f - 50));
     int val = distribution(gen);
 
     if (spawnLeft) {
@@ -109,11 +112,11 @@ void EntityManager::update(sf::Time frameTime) {
 
 void EntityManager::update(Player &player) {
     push_player_bullets(player.getBullets());
-    playerBounds = player.getGlobalBounds();
     if (isPlayerHit) {
         player.gotDamage();
         isPlayerHit = !isPlayerHit;
     }
+    playerBounds = player.getGlobalBounds();
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
         it->updateTarget(player.getPosition());
     }
@@ -215,6 +218,7 @@ void EntityManager::collision() {
             explosions.push_back(expl);
             it = enemies.erase(it);
 
+            explosionSound->play();
             destroyedEnemies++;
         }
         else {

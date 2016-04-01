@@ -18,22 +18,24 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include "BeatDetector.h"
+#include "SoundController.h"
 #include "string.h"
 
-BeatDetector *BeatDetector::instance = 0;
+SoundController *SoundController::instance = 0;
 
-void BeatDetector::loadSystem() {
+void SoundController::loadSystem() {
     system = fmodSetup();
     FMODErrorCheck(FMOD_System_CreateChannelGroup(system, NULL, &channelMusic));
     FMOD_Channel_SetChannelGroup(songChannel1, channelMusic);
 }
 
-BeatDetector::~BeatDetector() {
-    delete system;
+SoundController::~SoundController() {
+    FMOD_System_Release(system);
+    FMOD_Sound_Release(audio);
+    FMOD_ChannelGroup_Release(channelMusic);
 }
 
-void BeatDetector::loadSong(int sSize, char *audioString) {
+void SoundController::loadSong(int sSize, char *audioString) {
     sampleSize = sSize;
     songString = audioString;
 
@@ -67,7 +69,7 @@ void BeatDetector::loadSong(int sSize, char *audioString) {
     debug::print("loading sound", audioString);
 }
 
-float *BeatDetector::getCurrentSpectrum() {
+float *SoundController::getCurrentSpectrum() {
     float *specLeft, *specRight, *tempSpec;
     specLeft = new float[sampleSize];
     specRight = new float[sampleSize];
@@ -86,7 +88,7 @@ float *BeatDetector::getCurrentSpectrum() {
     return tempSpec;
 }
 
-float BeatDetector::calculateFluxAndSmoothing(float *currentSpectrum) {
+float SoundController::calculateFluxAndSmoothing(float *currentSpectrum) {
     specFlux = 0.0;
 
     for (int i = 0; i < sampleSize / 2; i++) {
@@ -136,7 +138,7 @@ float BeatDetector::calculateFluxAndSmoothing(float *currentSpectrum) {
     return thresholdSmoother + median;
 }
 
-void BeatDetector::update() {
+void SoundController::update() {
 
     if (started) {
         float *specStereo;
@@ -173,7 +175,7 @@ void BeatDetector::update() {
     }
 }
 
-FMOD_SYSTEM *BeatDetector::fmodSetup() {
+FMOD_SYSTEM *SoundController::fmodSetup() {
     FMOD_SYSTEM *system;
     FMOD_RESULT result;
     unsigned int version;
@@ -229,32 +231,32 @@ FMOD_SYSTEM *BeatDetector::fmodSetup() {
     return system;
 }
 
-void BeatDetector::FMODErrorCheck(FMOD_RESULT result) {
+void SoundController::FMODErrorCheck(FMOD_RESULT result) {
     if (result != FMOD_OK) {
         debug::print("FMOD ERROR:", result, FMOD_ErrorString(result));
         exit(-1);
     }
 }
 
-void BeatDetector::setStarted(FMOD_BOOL areWeStarted) {
+void SoundController::setStarted(FMOD_BOOL areWeStarted) {
     started = areWeStarted;
 
     FMOD_Channel_SetPaused(songChannel1, !started);
 }
 
-char *BeatDetector::getLastBeat() {
+char *SoundController::getLastBeat() {
     return lastBeatRegistered;
 }
 
-bool BeatDetector::isPlaying() {
+bool SoundController::isPlaying() {
     return (bool) areWePlaying;
 }
 
-float BeatDetector::getFreq() {
+float SoundController::getFreq() {
     return freq;
 }
 
-void BeatDetector::setPaused(FMOD_BOOL pause) {
+void SoundController::setPaused(FMOD_BOOL pause) {
     FMOD_Channel_SetPaused(songChannel1, pause);
 }
 

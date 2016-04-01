@@ -25,6 +25,8 @@
 #include "TextureManager.h"
 #include "Bullet.h"
 #include "ShootingPaterns.h"
+#include "music/Sound.h"
+#include <SFML/Audio.hpp>
 
 class Player : public sf::Drawable {
 public:
@@ -100,6 +102,8 @@ private:
     sf::Clock abilitiesCooldown;
 
     sf::Clock timer;
+
+    Sound *shootingSound = new Sound();
 
     std::vector<Bullet> bullets;
 };

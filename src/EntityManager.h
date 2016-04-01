@@ -76,6 +76,8 @@ private:
 
     int maxSpawnNumber;
 
+    Sound *explosionSound = new Sound();
+
     TextureManager *texture;
 };
 

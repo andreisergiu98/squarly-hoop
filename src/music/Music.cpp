@@ -22,7 +22,7 @@
 #include "Music.h"
 
 Music::Music() {
-    BeatDetector::Instance()->loadSystem();
+    SoundController::Instance()->loadSystem();
     currentSong = 0;
 }
 
@@ -31,7 +31,7 @@ void Music::start() {
 }
 
 void Music::update() {
-    BeatDetector::Instance()->update();
+    SoundController::Instance()->update();
 
     if (!beat->isPlaying()) {
         next();
@@ -39,8 +39,8 @@ void Music::update() {
 }
 
 bool Music::getBeat() {
-    if (localLastBeatOccured != BeatDetector::Instance()->getLastBeat()) {
-        localLastBeatOccured = BeatDetector::Instance()->getLastBeat();
+    if (localLastBeatOccured != SoundController::Instance()->getLastBeat()) {
+        localLastBeatOccured = SoundController::Instance()->getLastBeat();
         return true;
     }
     return false;
@@ -76,14 +76,14 @@ void Music::next() {
         currentSong = 0;
     std::string location = std::string("../res/music/" + playlist[currentSong]);
     char *cstr = &location[0u];
-    BeatDetector::Instance()->loadSong(1024, cstr);
+    SoundController::Instance()->loadSong(1024, cstr);
     start();
 }
 
 void Music::restart() {
     std::string location = std::string("../res/music/" + playlist[0]);
     char *cstr = &location[0u];
-    BeatDetector::Instance()->loadSong(1024, cstr);
+    SoundController::Instance()->loadSong(1024, cstr);
     start();
 }
 

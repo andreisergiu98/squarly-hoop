@@ -30,9 +30,9 @@
 #include "fmod_errors.h"
 #include "../DebugHelper.h"
 
-class BeatDetector {
+class SoundController {
 public:
-    ~BeatDetector();
+    ~SoundController();
 
     void loadSystem();
 
@@ -50,15 +50,15 @@ public:
 
     float getFreq();
 
-    static BeatDetector *Instance() {
+    static SoundController *Instance() {
         if (instance == 0) {
-            instance = new BeatDetector();
+            instance = new SoundController();
         }
         return instance;
     }
 
 private:
-    BeatDetector() { };
+    SoundController() { };
 
     FMOD_SYSTEM *fmodSetup();
 
@@ -68,7 +68,7 @@ private:
 
     void FMODErrorCheck(FMOD_RESULT);
 
-    static BeatDetector *instance;
+    static SoundController *instance;
     FMOD_SYSTEM *system;
     int sampleSize;
     float sampleRate;

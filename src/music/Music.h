@@ -22,7 +22,7 @@
 #define SFMLGAME_MUSIC_H
 
 #include <SFML/System/Clock.hpp>
-#include "BeatDetector.h"
+#include "SoundController.h"
 
 class Music {
 
@@ -48,7 +48,7 @@ public:
     void loadPlaylist(std::string location);
 
 private:
-    BeatDetector *beat = BeatDetector::Instance();
+    SoundController *beat = SoundController::Instance();
 
     char *localLastBeatOccured;
 

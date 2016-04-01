@@ -47,6 +47,11 @@ Menu::Menu(sf::FloatRect windowBounds, TextureManager *textureManager) {
     background.setSize(sf::Vector2f(windowBounds.width, windowBounds.height));
     background.setPosition(0, 0);
     background.setFillColor(sf::Color(0, 0, 0, 150));
+
+    beep = new Sound();
+
+    beep->loadSound("../res/sounds/select.wav");
+    beeped = NONE;
 }
 
 void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -80,22 +85,23 @@ void Menu::update() {
     retry.update();
     resume.update();
     menu.update();
+    playBeep();
 }
 
 bool Menu::isPressed(Buttons button) {
-    if (button == PLAY) {
+    if (button == Buttons::PLAY) {
         return play.isPressed();
     }
-    else if (button == EXIT) {
+    else if (button == Buttons::EXIT) {
         return exit.isPressed();
     }
-    else if (button == RETRY) {
+    else if (button == Buttons::RETRY) {
         return retry.isPressed();
     }
-    else if (button == MENU) {
+    else if (button == Buttons::MENU) {
         return menu.isPressed();
     }
-    else if (button == RESUME) {
+    else if (button == Buttons::RESUME) {
         return resume.isPressed();
     }
 }
@@ -103,6 +109,46 @@ bool Menu::isPressed(Buttons button) {
 void Menu::setState(Status status) {
     this->status = status;
 }
+
+void Menu::playBeep() {
+    if (status != Status::NONE) {
+        if (play.getStatus() == ButtonStatus::MOUSEOVER) {
+            if (beeped != Beeped::PLAY) {
+                beep->play();
+            }
+            beeped = Beeped::PLAY;
+        }
+        else if (exit.getStatus() == ButtonStatus::MOUSEOVER) {
+            if (beeped != Beeped::EXIT) {
+                beep->play();
+            }
+            beeped = Beeped::EXIT;
+        }
+        else if (resume.getStatus() == ButtonStatus::MOUSEOVER) {
+            if (beeped != Beeped::RESUME) {
+                beep->play();
+            }
+            beeped = Beeped::RESUME;
+        }
+        else if (retry.getStatus() == ButtonStatus::MOUSEOVER) {
+            if (beeped != Beeped::RETRY) {
+                beep->play();
+            }
+            beeped = Beeped::RETRY;
+        }
+        else if (menu.getStatus() == ButtonStatus::MOUSEOVER) {
+            if (beeped != Beeped::MENU) {
+                beep->play();
+            }
+            beeped = Beeped::MENU;
+        }
+        else {
+            beeped = Beeped::NONE;
+        }
+    }
+}
+
+
 
 
 

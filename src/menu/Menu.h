@@ -23,6 +23,7 @@
 
 #include "Button.h"
 #include "../TextureManager.h"
+#include "../music/Sound.h"
 #include <SFML/Graphics.hpp>
 
 enum Buttons {
@@ -30,14 +31,14 @@ enum Buttons {
 };
 
 enum Status {
-    INMAINMENU, INRETRYMENU, INPAUSEMENU
+    INMAINMENU, INRETRYMENU, INPAUSEMENU, NONE
 };
 
 class Menu : public sf::Drawable {
 public:
     Menu();
 
-    Menu(sf::FloatRect windowBOunds, TextureManager *textureManager);
+    Menu(sf::FloatRect windowBounds, TextureManager *textureManager);
 
     void updateMousePosition(sf::FloatRect mouse);
 
@@ -48,6 +49,8 @@ public:
     void setState(Status status);
 
 private:
+    void playBeep();
+
     Button play;
     Button exit;
     Button retry;
@@ -58,6 +61,14 @@ private:
 
     sf::RectangleShape background;
     Status status;
+
+    Sound *beep;
+
+    enum Beeped {
+        PLAY, EXIT, RETRY, MENU, RESUME, NONE
+    };
+
+    Beeped beeped;
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };
