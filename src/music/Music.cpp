@@ -53,7 +53,7 @@ float Music::getFreq() {
 
 void Music::loadPlaylist(std::string location) {
     if (!std::ifstream("playlist")) {
-        Debug::print("error playlist not found");
+        debug::print("error playlist not found");
         return;
     }
 
@@ -66,7 +66,7 @@ void Music::loadPlaylist(std::string location) {
     }
 
     if (!playlist.size()) {
-        Debug::print("error empty playlist");
+        debug::print("error empty playlist");
     }
 }
 

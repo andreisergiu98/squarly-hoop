@@ -66,12 +66,12 @@ void Background::colorUpdate() {
     int b = distribution(gen);
 
     //sf::Color color(16, 218, 116);
-    sf::Color color(r, g, b);
+    //sf::Color color(r, g, b);
 
-    first.setFillColor(color);
-    second.setFillColor(color);
+    //first.setFillColor(color);
+    //second.setFillColor(color);
 
-    Debug::print(r, g, b);
+    //debug::print(r, g, b);
 }
 
 

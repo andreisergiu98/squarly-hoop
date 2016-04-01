@@ -62,8 +62,6 @@ private:
 
     FMOD_SYSTEM *fmodSetup();
 
-    void updateTime();
-
     float *getCurrentSpectrum();
 
     float calculateFluxAndSmoothing(float *);
@@ -73,10 +71,8 @@ private:
     static BeatDetector *instance;
     FMOD_SYSTEM *system;
     int sampleSize;
-    int test;
     float sampleRate;
     unsigned int seconds;
-    unsigned int minutes;
     FMOD_BOOL areWePlaying;
     float *previousFFT;
     float specFlux;
@@ -91,14 +87,6 @@ private:
     FMOD_CHANNEL *songChannel1;
     FMOD_CHANNEL *songChannel2;
     bool delayedSong = false;
-    int timeToDelay;
-
-    int initialTime;
-    int currentTime;
-    int currentMillis;
-    int currentSeconds;
-    int lastSeconds;
-    int currentMinutes;
 
     std::vector<float> spectrumFluxes;
     std::vector<float> smootherValues;

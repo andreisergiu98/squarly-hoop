@@ -65,6 +65,8 @@ private:
 
     sf::RectangleShape form;
 
+    sf::RectangleShape core;
+
     std::vector<sf::RectangleShape> hpBar;
 
     TextureManager *texture;
@@ -77,7 +79,7 @@ private:
 
     sf::Time frameTime;
 
-    PlayerPatterns::Pattern pattern;
+    playerPatterns::Pattern pattern;
 
     sf::Text *coolDownSec;
 

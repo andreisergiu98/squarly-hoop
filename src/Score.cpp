@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Score.h"
-#include "Utils.h"
+#include "Utilities.h"
 
 Score::Score(sf::FloatRect windowBounds) {
 
@@ -37,7 +37,7 @@ Score::Score(sf::FloatRect windowBounds) {
 
 void Score::setScore(unsigned  int score) {
     if (this->score != 0)
-        text->setString("Score: " + intToStr(score) + "00");
+        text->setString("Score: " + utilities::intToStr(score) + "00");
     this->score = score;
 }
 

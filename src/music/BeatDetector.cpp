@@ -40,19 +40,12 @@ void BeatDetector::loadSong(int sSize, char *audioString) {
     areWePlaying = true;
     specFlux = 0.0f;
     timeBetween = 0;
-    initialTime = (int) clock();
-    currentTime = 0;
-    currentSeconds = 0;
-    lastSeconds = 0;
-    currentMillis = 0;
-    currentMinutes = 0;
     median = 0.0f;
     smoothMedian = 0.0f;
     beatThreshold = 0.6f;
     thresholdSmoother = 0.6f;
     started = false;
     lastBeatRegistered = new char;
-    timeToDelay = 0;
 
     previousFFT = new float[sampleSize / 2 + 1];
     for (int i = 0; i < sampleSize / 2; i++) {
@@ -61,9 +54,6 @@ void BeatDetector::loadSong(int sSize, char *audioString) {
 
     FMOD_Sound_GetLength(audio, &seconds, FMOD_TIMEUNIT_MS);
     FMOD_Sound_GetDefaults(audio, &sampleRate, 0, 0, 0);
-    seconds = ((seconds + 500) / 1000);
-    minutes = seconds / 60;
-    seconds = seconds - (minutes * 60);
 
     FMOD_Sound_Release(audio);
 
@@ -74,35 +64,7 @@ void BeatDetector::loadSong(int sSize, char *audioString) {
     FMOD_Channel_SetChannelGroup(songChannel1, channelMusic);
     FMOD_Channel_SetPaused(songChannel1, true);
 
-    Debug::print("loading sound:", audioString);
-}
-
-void BeatDetector::updateTime() {
-    currentTime = (int) clock();
-    currentTime = currentTime - initialTime;
-
-
-    if (currentMinutes > 0)
-        currentSeconds = ((currentTime / 1000) - (60 * currentMinutes));
-    else
-        currentSeconds = (currentTime / 1000);
-
-    if (currentSeconds != lastSeconds) {
-        currentMillis = 0;
-        lastSeconds = currentSeconds;
-    }
-    else {
-        currentMillis++;
-    }
-
-    currentMinutes = ((currentTime / 1000) / 60);
-
-    if (timeToDelay != 0) {
-        if (currentTime > timeToDelay) {
-            FMOD_Channel_SetPaused(songChannel2, false);
-            timeToDelay = 0;
-        }
-    }
+    debug::print("loading sound", audioString);
 }
 
 float *BeatDetector::getCurrentSpectrum() {
@@ -179,8 +141,6 @@ void BeatDetector::update() {
     if (started) {
         float *specStereo;
 
-        updateTime();
-
         specStereo = getCurrentSpectrum();
 
         beatThreshold = calculateFluxAndSmoothing(specStereo);
@@ -211,13 +171,6 @@ void BeatDetector::update() {
 
         delete[] specStereo;
     }
-    else {
-        std::cin >> test;
-
-        if (test == 1)
-            setStarted(true);
-    }
-
 }
 
 FMOD_SYSTEM *BeatDetector::fmodSetup() {
@@ -278,7 +231,7 @@ FMOD_SYSTEM *BeatDetector::fmodSetup() {
 
 void BeatDetector::FMODErrorCheck(FMOD_RESULT result) {
     if (result != FMOD_OK) {
-        Debug::print("FMOD ERROR:", result, FMOD_ErrorString(result));
+        debug::print("FMOD ERROR:", result, FMOD_ErrorString(result));
         exit(-1);
     }
 }

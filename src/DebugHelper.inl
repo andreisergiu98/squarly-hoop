@@ -21,7 +21,7 @@
 #include "DebugHelper.h"
 
 template<typename T>
-void Debug::print(T data) {
+void debug::print(T data) {
     if (showMessage) {
         cout << "DEBUG_MESSAGE: ";
     }
@@ -32,7 +32,7 @@ void Debug::print(T data) {
 }
 
 template<typename T, typename... Args>
-void Debug::print(T t, Args... args) {
+void debug::print(T t, Args... args) {
     solo = false;
     print(t);
     showMessage = false;

@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Highscore.h"
-#include "Utils.h"
+#include "Utilities.h"
 
 Highscore::Highscore() {
     text = new sf::Text;
@@ -37,7 +37,7 @@ Highscore::Highscore() {
     else{
         std::ifstream readFile(".highscore");
         readFile >> highscore;
-        text->setString("Highscore: " + intToStr(highscore) + "00");
+        text->setString("Highscore: " + utilities::intToStr(highscore) + "00");
         readFile.close();
     }
 }
@@ -45,7 +45,7 @@ Highscore::Highscore() {
 void Highscore::update(unsigned int score) {
     if(score > highscore){
         highscore = score;
-        text->setString("Highscore: " + intToStr(highscore) + "00");
+        text->setString("Highscore: " + utilities::intToStr(highscore) + "00");
         std::ofstream writeToFile(".highscore");
         writeToFile << highscore;
         writeToFile.close();

@@ -23,7 +23,7 @@
 
 #include "Bullet.h"
 
-namespace EnemyPatterns {
+namespace enemyPatterns {
     enum Pattern {
         SPREAD, SPREADMAX, CIRCLE, SIMPLE
     };
@@ -45,7 +45,7 @@ namespace EnemyPatterns {
 
 }
 
-namespace PlayerPatterns {
+namespace playerPatterns {
     enum Pattern {
         SIMPLE, SPREAD, SPREADMAX
     };

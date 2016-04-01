@@ -21,7 +21,7 @@
 #include <SFML/System/Vector2.hpp>
 #include "ShootingPaterns.h"
 
-namespace EnemyPatterns {
+namespace enemyPatterns {
 
     std::vector<Bullet> getBullets(Pattern pattern, sf::Vector2f position, sf::Vector2f destination,
                                    float speed, sf::Texture &texture, int color) {
@@ -138,7 +138,7 @@ namespace EnemyPatterns {
     }
 }
 
-namespace PlayerPatterns {
+namespace playerPatterns {
     std::vector<Bullet> getBullets(Pattern pattern, sf::Vector2f position, float speed, sf::Texture &texture,
                                    int color) {
         if (pattern == SIMPLE) {

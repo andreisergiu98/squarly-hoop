@@ -19,14 +19,14 @@
 ////////////////////////////////////////////////////////////
 
 #include "Bullet.h"
-#include "Utils.h"
+#include "Utilities.h"
 
 Bullet::Bullet(sf::Vector2f position, sf::Vector2f destination, float speed, sf::Texture &texture, int color) {
     form.setPosition(position);
     form.setSize(sf::Vector2f(11, 11));
     form.setTexture(&texture);
 
-    velocity = calcVelocity(position, destination);
+    velocity = utilities::calcVelocity(position, destination);
 
     velocity *= speed;
 

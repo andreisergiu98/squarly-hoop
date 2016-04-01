@@ -75,13 +75,7 @@ void Game::updateGame() {
     background.update(frameTime);
     music.update();
 
-    bool beat = music.getBeat();
-
-    entities.updateBeat(beat, music.getFreq());
-
-    //if(beat){
-    background.colorUpdate();
-    //}
+    entities.updateBeat(music.getBeat(), music.getFreq());
 
     score.setScore(score.getScore() + entities.getDestroyedEnemies());
 
@@ -99,8 +93,8 @@ void Game::updateGame() {
     }
 
     if (screenShaking) {
-        sf::View view(sf::FloatRect(rand() % 13, rand() % 13, window->getSize().x + rand() % 13,
-                                    window->getSize().y + rand() % 13));
+        sf::View view(sf::FloatRect(rand() % 6, rand() % 6, window->getSize().x + rand() % 6,
+                                    window->getSize().y + rand() % 6));
 
         window->setView(view);
     }

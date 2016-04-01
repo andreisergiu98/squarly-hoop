@@ -20,7 +20,7 @@
 
 #include <sstream>
 #include "Player.h"
-#include "Utils.h"
+#include "Utilities.h"
 
 Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
     texture = textureManager;
@@ -29,6 +29,10 @@ Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
     form.setPosition(480, windowBounds.height - 40);
     form.setSize(sf::Vector2f(31, 31));
     form.setOrigin(sf::Vector2f(15.5, 15.5));
+    core.setTexture(&texture->getTexture("../res/textures/player-core.png"));
+    core.setPosition(form.getPosition());
+    core.setSize(sf::Vector2f(12, 12));
+    core.setOrigin(6, 6);
 
     shield.setSize(sf::Vector2f(600, 600));
     shield.setTexture(&texture->getTexture("../res/textures/shield.png"));
@@ -45,7 +49,7 @@ Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
         hpBar.push_back(rect);
     }
 
-    pattern = PlayerPatterns::Pattern::SIMPLE;
+    pattern = playerPatterns::Pattern::SIMPLE;
     charged = true;
 
     coolDownSec = new sf::Text;
@@ -95,7 +99,7 @@ void Player::process() {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
         if (charged) {
-            pattern = PlayerPatterns::SPREAD;
+            pattern = playerPatterns::SPREAD;
             charged = false;
             coolDown = 36;
             timer.restart();
@@ -104,7 +108,7 @@ void Player::process() {
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
         if (charged) {
-            pattern = PlayerPatterns::SPREADMAX;
+            pattern = playerPatterns::SPREADMAX;
             charged = false;
             coolDown = 51;
             timer.restart();
@@ -115,11 +119,11 @@ void Player::process() {
     if (!charged) {
         coolDownSec->setPosition(windowBounds.width - 90, windowBounds.height - 20);
         coolDownSec->setString(
-                "Cooldown : " + intToStr((int) (coolDown - abilitiesCooldown.getElapsedTime().asSeconds())));
+                "Cooldown : " + utilities::intToStr((int) (coolDown - abilitiesCooldown.getElapsedTime().asSeconds())));
     }
 
     if (timer.getElapsedTime().asSeconds() >= 10) {
-        pattern = PlayerPatterns::Pattern::SIMPLE;
+        pattern = playerPatterns::Pattern::SIMPLE;
     }
 
     if (abilitiesCooldown.getElapsedTime().asSeconds() >= coolDown) {
@@ -128,7 +132,7 @@ void Player::process() {
         charged = true;
     }
 
-    if (clock.getElapsedTime().asMilliseconds() >= 200 && hp > 0) {
+    if (clock.getElapsedTime().asMilliseconds() >= 100 && hp > 0) {
         if (!shielded) {
             shoot();
         }
@@ -170,17 +174,19 @@ void Player::process() {
         shielded = false;
     }
 
-    shield.setPosition(form.getPosition().x, form.getPosition().y);
+    core.setPosition(form.getPosition());
+    shield.setPosition(form.getPosition());
 
     form.rotate(20);
     shield.rotate(5);
+    core.rotate(-20);
 }
 
 void Player::shoot() {
     int t = rand() % 6 + 1;
 
-    bullets = PlayerPatterns::getBullets(pattern, form.getPosition(), 400.f, texture->getTexture(
-            std::string("../res/textures/bullet1" + intToStr(t) + ".png")), t);
+    bullets = playerPatterns::getBullets(pattern, form.getPosition(), 400.f, texture->getTexture(
+            std::string("../res/textures/bullet1" + utilities::intToStr(t) + ".png")), t);
 }
 
 std::vector<Bullet> Player::getBullets() {
@@ -198,13 +204,7 @@ sf::FloatRect Player::getGlobalBounds() {
         return boundingBox;
     }
 
-    sf::FloatRect boundingBox = form.getGlobalBounds();
-    boundingBox.top += 15;
-    boundingBox.left += 15;
-    boundingBox.height -= 30;
-    boundingBox.width -= 30;
-
-    return boundingBox;
+    return core.getGlobalBounds();
 }
 
 int Player::getHp() {
@@ -235,7 +235,6 @@ void Player::gotDamage() {
         shielded = true;
         shieldCooldown.restart();
     }
-
     damaged = true;
     damageClock.restart();
 }
@@ -250,6 +249,7 @@ void Player::setPosition(sf::Vector2f pos) {
 
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     target.draw(form);
+    target.draw(core);
     for (int i = 0; i < hp; i++) {
         target.draw(hpBar[i]);
     }

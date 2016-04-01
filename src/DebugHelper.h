@@ -25,7 +25,7 @@
 
 using namespace std;
 
-namespace Debug {
+namespace debug {
 
     template<typename T, typename... Args>
     void print(T t, Args... args);
