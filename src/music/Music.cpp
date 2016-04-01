@@ -27,13 +27,13 @@ Music::Music() {
 }
 
 void Music::start() {
-    beat->setStarted(true);
+    sound->setStarted(true);
 }
 
 void Music::update() {
     SoundController::Instance()->update();
 
-    if (!beat->isPlaying()) {
+    if (!sound->isPlaying()) {
         next();
     }
 }
@@ -47,7 +47,7 @@ bool Music::getBeat() {
 }
 
 float Music::getFreq() {
-    return beat->getFreq();
+    return sound->getFreq();
 }
 
 
@@ -88,11 +88,11 @@ void Music::restart() {
 }
 
 void Music::pause() {
-    beat->setPaused(true);
+    sound->setPaused(true);
 }
 
 void Music::resume() {
-    beat->setPaused(false);
+    sound->setPaused(false);
 }
 
 

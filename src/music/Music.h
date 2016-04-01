@@ -48,7 +48,7 @@ public:
     void loadPlaylist(std::string location);
 
 private:
-    SoundController *beat = SoundController::Instance();
+    SoundController *sound = SoundController::Instance();
 
     char *localLastBeatOccured;
 
