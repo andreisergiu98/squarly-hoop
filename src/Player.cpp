@@ -73,10 +73,10 @@ void Player::update(sf::Time frameTime) {
         it->update(frameTime);
     }
 
-    if (damageClock.getElapsedTime().asMilliseconds() > 300) {
+    if (damageClock.getElapsedTime().asMilliseconds() > 200) {
         damaged = false;
     }
-    if (shieldCooldown.getElapsedTime().asMilliseconds() > 3000) {
+    if (shieldCooldown.getElapsedTime().asSeconds() > 3) {
         shielded = false;
     }
 
@@ -99,9 +99,6 @@ void Player::update(sf::Time frameTime) {
 
 void Player::process() {
     sf::Vector2f velocity;
-
-    bullets.clear();
-
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         velocity.y -= speed;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
@@ -169,6 +166,8 @@ void Player::process() {
             }
         }
     }
+
+    bullets.clear();
 
     if (clock.getElapsedTime().asMilliseconds() >= 200 && hp > 0) {
         if (!shielded) {

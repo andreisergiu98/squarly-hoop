@@ -54,6 +54,7 @@ Game::Game() {
     music.loadPlaylist("playlist");
 
     screenShaking = false;
+    miniScreenShaking = false;
 }
 
 void Game::process() {
@@ -79,28 +80,44 @@ void Game::updateGame() {
 
     score.setScore(score.getScore() + entities.getDestroyedEnemies());
 
+    if (entities.getDestroyedEnemies()) {
+        miniScreenShaking = true;
+        miniScreenShakingTime.restart();
+    }
+
     if (player.isDamaged()) {
         screenShaking = true;
         screenShackingTime.restart();
     }
 
-    if (screenShackingTime.getElapsedTime().asMilliseconds() >= 500) {
+    if (screenShackingTime.getElapsedTime().asMilliseconds() >= 200) {
         screenShaking = false;
     }
 
-    if(gameState == PAUSED){
+    if (miniScreenShakingTime.getElapsedTime().asMilliseconds() >= 150) {
+        miniScreenShaking = false;
+    }
+
+    if (gameState == PAUSED) {
         screenShaking = false;
     }
 
     if (screenShaking) {
-        sf::View view(sf::FloatRect(rand() % 6, rand() % 6, window->getSize().x + rand() % 6,
-                                    window->getSize().y + rand() % 6));
+        sf::View view(sf::FloatRect(rand() % 10, rand() % 10, window->getSize().x + rand() % 10,
+                                    window->getSize().y + rand() % 10));
+
+        window->setView(view);
+    }
+    else if (miniScreenShaking) {
+        sf::View view(sf::FloatRect(rand() % 5, rand() % 5, window->getSize().x + rand() % 5,
+                                    window->getSize().y + rand() % 5));
 
         window->setView(view);
     }
     else {
         window->setView(sf::View(sf::FloatRect(0, 0, window->getSize().x, window->getSize().y)));
     }
+
 }
 
 void Game::renderGame() {
@@ -186,7 +203,7 @@ void Game::inputProcess() {
 
         if (event.type == sf::Event::KeyReleased) {
             if (event.key.code == sf::Keyboard::Escape) {
-                if(gameState == INMENU){
+                if (gameState == INMENU) {
                     window->close();
                 }
 

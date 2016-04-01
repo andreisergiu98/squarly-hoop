@@ -92,6 +92,10 @@ private:
 
     bool screenShaking;
 
+    bool miniScreenShaking;
+
+    sf::Clock miniScreenShakingTime;
+
     sf::Clock screenShackingTime;
 
     sf::Clock clickSleep;
