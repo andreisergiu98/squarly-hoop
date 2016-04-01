@@ -170,10 +170,8 @@ void Player::process() {
     bullets.clear();
 
     if (clock.getElapsedTime().asMilliseconds() >= 200 && hp > 0) {
-        if (!shielded) {
-            shoot();
-            shootingSound->play();
-        }
+        shoot();
+        shootingSound->play();
         clock.restart();
     }
 
