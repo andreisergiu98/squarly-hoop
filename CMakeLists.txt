@@ -3,7 +3,7 @@ project(sfmlGame)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "/home/andrei/Documents/Clion/sfmlGame/bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "/home/andrei/Documents/Clion/squarly-hoop/bin")
 
 set(SOURCE_FILES src/Game.cpp src/Game.h src/LoadSettings.cpp src/LoadSettings.h src/Player.cpp src/Player.h src/TextureManager.cpp src/TextureManager.h
         src/Bullet.cpp src/Bullet.h src/Enemy.cpp src/Enemy.h src/EntityManager.cpp src/EntityManager.h src/Explosion.cpp src/Explosion.h src/Utilities.h
