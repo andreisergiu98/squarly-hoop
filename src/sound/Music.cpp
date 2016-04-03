@@ -53,7 +53,7 @@ float Music::getFreq() {
 
 void Music::loadPlaylist(std::string location) {
     if (!boost::filesystem::exists("playlist")) {
-        debug::print("custom playlist not found, loading all files from music/");
+        debug::print("custom playlist not found, loading all files from sound/");
         playlist = getSongList();
     }
     else {

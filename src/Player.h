@@ -25,7 +25,7 @@
 #include "TextureManager.h"
 #include "Bullet.h"
 #include "ShootingPaterns.h"
-#include "music/Sound.h"
+#include "sound/Sound.h"
 #include <SFML/Audio.hpp>
 
 class Player : public sf::Drawable {

@@ -26,7 +26,7 @@
 #include "Player.h"
 #include "EntityManager.h"
 #include "menu/Menu.h"
-#include "music/Music.h"
+#include "sound/Music.h"
 #include "Score.h"
 #include "Mouse.h"
 #include "Background.h"

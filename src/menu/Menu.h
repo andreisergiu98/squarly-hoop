@@ -23,7 +23,7 @@
 
 #include "Button.h"
 #include "../TextureManager.h"
-#include "../music/Sound.h"
+#include "../sound/Sound.h"
 #include <SFML/Graphics.hpp>
 
 enum Buttons {
