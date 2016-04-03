@@ -30,13 +30,6 @@ Sound::Sound() {
     mode = FMOD_LOOP_OFF;
 }
 
-void Sound::FMODErrorCheck(FMOD_RESULT result) {
-    if (result != FMOD_OK) {
-        debug::print("FMOD ERROR:", result, FMOD_ErrorString(result));
-        exit(-1);
-    }
-}
-
 void Sound::play() {
     load();
     FMOD_System_PlaySound(system, FMOD_CHANNEL_FREE, audio, false, &channel);
@@ -89,6 +82,14 @@ Sound::~Sound() {
     FMOD_Sound_Release(audio);
     FMOD_ChannelGroup_Release(channelGroup);
 }
+
+void Sound::FMODErrorCheck(FMOD_RESULT result) {
+    if (result != FMOD_OK) {
+        debug::print("FMOD ERROR:", result, FMOD_ErrorString(result));
+        exit(-1);
+    }
+}
+
 
 FMOD_SYSTEM *Sound::fmodSetup() {
     FMOD_SYSTEM *system;

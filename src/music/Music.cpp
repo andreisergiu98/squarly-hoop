@@ -52,21 +52,17 @@ float Music::getFreq() {
 
 
 void Music::loadPlaylist(std::string location) {
-    if (!std::ifstream("playlist")) {
-        debug::print("error playlist not found");
-        return;
+    if (!boost::filesystem::exists("playlist")) {
+        debug::print("custom playlist not found, loading all files from music/");
+        playlist = getSongList();
     }
-
-    std::ifstream fin(location);
-
-    while (fin) {
-        std::string a;
-        getline(fin, a);
-        playlist.push_back(a);
+    else {
+        debug::print("found custom playlist, loading your list");
+        playlist = getCustomSongList(location);
     }
-
     if (!playlist.size()) {
-        debug::print("error empty playlist");
+        debug::print("ERROR no songs found... exiting");
+        exit(-1);
     }
 }
 
@@ -74,16 +70,17 @@ void Music::next() {
     currentSong++;
     if (currentSong >= playlist.size() - 1)
         currentSong = 0;
-    std::string location = std::string("../res/music/" + playlist[currentSong]);
-    char *cstr = &location[0u];
-    SoundController::Instance()->loadSong(1024, cstr);
+
+    std::string location = std::string(playlist[currentSong]);
+    char *c_str = &location[0u];
+    SoundController::Instance()->loadSong(1024, c_str);
     start();
 }
 
 void Music::restart() {
-    std::string location = std::string("../res/music/" + playlist[0]);
-    char *cstr = &location[0u];
-    SoundController::Instance()->loadSong(1024, cstr);
+    std::string location = std::string(playlist[0]);
+    char *c_str = &location[0u];
+    SoundController::Instance()->loadSong(1024, c_str);
     start();
 }
 
@@ -94,6 +91,50 @@ void Music::pause() {
 void Music::resume() {
     sound->setPaused(false);
 }
+
+std::vector<std::string> Music::getSongList() {
+    boost::filesystem::directory_iterator end_it;
+    boost::filesystem::path path("../res/music/");
+    std::vector<std::string> list;
+
+    for (boost::filesystem::directory_iterator it(path); it != end_it; ++it) {
+        if (is_regular_file(it->path())) {
+            std::string currentFile = it->path().string();
+            list.push_back(currentFile);
+            debug::print("found", currentFile);
+        }
+    }
+
+    return list;
+}
+
+std::vector<std::string> Music::getCustomSongList(std::string location) {
+    std::ifstream fin(location);
+    std::vector<std::string> list;
+
+    while (!fin.eof()) {
+        std::string file;
+        getline(fin, file);
+        file = "../res/music/" + file;
+
+        boost::filesystem::path path(file);
+
+        if (is_regular_file(path)) {
+            debug::print("found", file);
+            list.push_back(file);
+        }
+        else {
+            if (file != "../res/music/")
+                debug::print("ERROR song", file, "not found");
+        }
+    }
+
+    return list;
+}
+
+
+
+
 
 
 

@@ -23,6 +23,7 @@
 
 #include <SFML/System/Clock.hpp>
 #include "SoundController.h"
+#include "boost/filesystem.hpp"
 
 class Music {
 
@@ -49,6 +50,10 @@ public:
 
 private:
     SoundController *sound = SoundController::Instance();
+
+    std::vector<std::string> getSongList();
+
+    std::vector<std::string> getCustomSongList(std::string location);
 
     char *localLastBeatOccured;
 
