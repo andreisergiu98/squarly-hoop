@@ -60,8 +60,9 @@ void Sound::pause() {
     FMOD_Channel_SetPaused(channel, true);
 }
 
-void Sound::loadSound(string location) {
+void Sound::loadSound(std::string location) {
     this->location = location;
+    debug::print("loading sound", location);
 }
 
 void Sound::resume() {

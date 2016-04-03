@@ -66,7 +66,7 @@ void SoundController::loadSong(int sSize, char *audioString) {
     FMOD_Channel_SetChannelGroup(songChannel1, channelMusic);
     FMOD_Channel_SetPaused(songChannel1, true);
 
-    debug::print("loading sound", audioString);
+    debug::print("loading music", audioString);
 }
 
 float *SoundController::getCurrentSpectrum() {

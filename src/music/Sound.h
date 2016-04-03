@@ -40,7 +40,7 @@ public:
 
     void setVolume(float volume);
 
-    void loadSound(string  location);
+    void loadSound(std::string location);
 
 private:
     FMOD_SYSTEM *system;
@@ -50,7 +50,7 @@ private:
 
     float volume;
 
-    string location;
+    std::string location;
 
     void load();
 
