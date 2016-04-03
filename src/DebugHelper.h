@@ -23,18 +23,9 @@
 
 #include <iostream>
 
-using namespace std;
-
 namespace debug {
-
-    template<typename T, typename... Args>
-    void print(T t, Args... args);
-
-    template<typename T>
-    void print(T data);
-
-    static bool showMessage = true;
-    static bool solo = true;
+    template<typename... Args>
+    void print(Args... args);
 };
 
 #include "DebugHelper.inl"

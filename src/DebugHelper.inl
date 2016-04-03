@@ -20,28 +20,12 @@
 
 #include "DebugHelper.h"
 
-template<typename T>
-void debug::print(T data) {
-    if (showMessage) {
-        cout << "DEBUG_MESSAGE: ";
-    }
-    cout << data << ' ';
-    if (solo) {
-        cout << endl;
-    }
-}
+template<typename... Args>
+void debug::print(Args... args) {
+    std::cout << "DEBUG_MESSAGE:";
 
-template<typename T, typename... Args>
-void debug::print(T t, Args... args) {
-    solo = false;
-    print(t);
-    showMessage = false;
+    using expander = int[];
+    (void)expander{0, (void(std::cout << ' ' << std::forward<Args>(args)),0)...};
 
-    print(args...);
-
-    if (!showMessage) {
-        cout << endl;
-        showMessage = true;
-        solo = true;
-    }
+    std::cout << std::endl;
 }
