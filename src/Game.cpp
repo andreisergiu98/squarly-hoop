@@ -272,6 +272,7 @@ void Game::loadTextures() {
                                    "../res/textures/menu.png", "../res/textures/menu-hover.png",
                                    "../res/textures/heart.png", "../res/textures/background.png",
                                    "../res/textures/background1.png", "../res/textures/player.png",
+                                   "../res/textures/player-core.png", "../res/textures/shield.png",
                                    "../res/textures/bullet11.png", "../res/textures/bullet12.png",
                                    "../res/textures/bullet13.png", "../res/textures/bullet14.png",
                                    "../res/textures/bullet15.png", "../res/textures/bullet16.png",
