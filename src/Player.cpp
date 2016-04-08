@@ -176,11 +176,13 @@ void Player::process() {
     }
 
     core.setPosition(form.getPosition());
-    shield.setPosition(form.getPosition());
 
     form.rotate(20);
-    shield.rotate(5);
     core.rotate(-20);
+    if (shielded) {
+        shield.setPosition(form.getPosition());
+        shield.rotate(5);
+    }
 }
 
 void Player::shoot() {

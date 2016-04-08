@@ -112,11 +112,13 @@ void EntityManager::update(sf::Time frameTime) {
 
 void EntityManager::update(Player &player) {
     push_player_bullets(player.getBullets());
+
     if (isPlayerHit) {
         player.gotDamage();
         isPlayerHit = !isPlayerHit;
     }
     playerBounds = player.getGlobalBounds();
+
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
         it->updateTarget(player.getPosition());
     }
