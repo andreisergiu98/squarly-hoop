@@ -38,8 +38,6 @@ Enemy::Enemy(sf::Vector2f position, sf::Vector2f destination, TextureManager *te
 
     velocity = utilities::calcVelocity(position, destination);
     velocity *= speed;
-
-    this->speed = speed;
 }
 
 void Enemy::update(sf::Time frameTime) {

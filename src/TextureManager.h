@@ -31,10 +31,6 @@ public:
 
     sf::Texture &getTexture(const std::string &texLocation);
 
-    void deleteTexture(sf::Texture &texture);
-
-    void deleteTexture(std::string texLocation);
-
     void setSmoothTextures(bool smth);
 private:
     std::map<std::string, sf::Texture> textures;

@@ -41,23 +41,6 @@ sf::Texture &TextureManager::getTexture(const std::string &texLocation) {
     return textures[texLocation];
 }
 
-void TextureManager::deleteTexture(sf::Texture &texture) {
-    for (auto it = textures.begin(); it != textures.end(); ++it) {
-        if (&texture == &it->second) {
-            debug::print("deleting image", it->first);
-            textures.erase(it);
-        }
-    }
-}
-
-void TextureManager::deleteTexture(std::string texLocation) {
-    auto it = textures.find(texLocation);
-    if (it != textures.end()) {
-        debug::print("deleting image", texLocation);
-        textures.erase(it);
-    }
-}
-
 void TextureManager::setSmoothTextures(bool smth) {
     smoothTextures = smth;
 

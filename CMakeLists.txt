@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.5)
 
 project(squarly-hoop)
 
@@ -18,7 +18,6 @@ add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 
 include_directories(/usr/include/SFML/)
 include_directories(/usr/include/fmodex/)
-include_directories(/usr/include/SFML/)
 include_directories(/usr/include/boost/)
 link_directories(/usr/lib/)
 
