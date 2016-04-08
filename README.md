@@ -1,6 +1,6 @@
 # squarly-hoop
 
-Simple bullet hell rhythm game
+Simple bullet hell rhythm game.
 
 ## Getting Started
 
@@ -27,7 +27,7 @@ If you're comfortable getting up and running from a `git clone`, this method is 
 
 ### Error
 If the app is not opening it should display the error in the terminal, though the only
-reason for it not to open is having the music folder empty
+reason for it not to open is having the music folder empty.
 
 ## Screenshots
 
