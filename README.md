@@ -8,12 +8,12 @@ If you're comfortable getting up and running from a `git clone`, this method is 
 
 ### Requirements
 
-1. You must have git installed
-2. You must have gcc installed
-3. You must have cmake installed
-4. You must have sfml installed
-5. You must have boost installed
-6. You must have [fmodex api](http://www.fmod.org/download-previous-products/) installed
+* You must have git installed
+* You must have gcc installed
+* You must have cmake installed
+* You must have sfml installed
+* You must have boost installed
+* You must have [fmodex api](http://www.fmod.org/download-previous-products/) installed
 
 ### Building
 1. `git clone https://github.com/andreisergiu98/squarly-hoop.git`
