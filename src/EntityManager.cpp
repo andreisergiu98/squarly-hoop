@@ -36,10 +36,9 @@ EntityManager::EntityManager(sf::FloatRect windowBounds, TextureManager *texture
 void EntityManager::spawn() {
     updateSpawnLocations();
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> distribution(50, (int) (windowBounds.width / 3.f - 50));
-    int val = distribution(gen);
+    boost::uniform_int<> distribution(50, (int) (windowBounds.width / 3.f - 50));
+    boost::variate_generator<boost::mt19937 &, boost::uniform_int<> > random(generator, distribution);
+    int val = (int) random();
 
     if (spawnLeft) {
         float x = val;

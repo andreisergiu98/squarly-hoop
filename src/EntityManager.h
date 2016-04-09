@@ -21,6 +21,7 @@
 #ifndef SFMLGAME_ENTITIESMANAGER_H
 #define SFMLGAME_ENTITIESMANAGER_H
 
+#include <random.hpp>
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Player.h"
@@ -67,6 +68,8 @@ private:
 
     sf::FloatRect windowBounds;
     sf::FloatRect playerBounds;
+
+    boost::mt19937 generator;
 
     bool isPlayerHit;
 
