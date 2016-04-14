@@ -100,6 +100,7 @@ void Game::updateGame() {
 
     if (gameState == PAUSED) {
         screenShaking = false;
+        miniScreenShaking = false;
     }
 
     if (screenShaking) {
@@ -117,7 +118,6 @@ void Game::updateGame() {
     else {
         window->setView(sf::View(sf::FloatRect(0, 0, window->getSize().x, window->getSize().y)));
     }
-
 }
 
 void Game::renderGame() {
