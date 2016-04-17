@@ -121,7 +121,6 @@ void Game::updateGame() {
 }
 
 void Game::renderGame() {
-    window->draw(background);
     window->draw(entities);
     window->draw(player);
     window->draw(score);
@@ -141,6 +140,7 @@ void Game::menuHandler() {
                 window->close();
             }
         }
+        background.process();
     }
     else if (gameState == GAMEOVER) {
         menu.setState(Status::INRETRYMENU);
@@ -178,6 +178,7 @@ void Game::menuHandler() {
 
 void Game::updateMenu() {
     mouse.update(sf::Mouse::getPosition(*window));
+    background.update(frameTime);
     menu.updateMousePosition(mouse.getGlobalBounds());
     menu.update();
 }
@@ -226,6 +227,7 @@ void Game::loop() {
         inputProcess();
 
         window->clear();
+        window->draw(background);
 
         if (gameState == INGAME) {
             process();
