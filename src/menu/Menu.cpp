@@ -26,19 +26,24 @@ Menu::Menu() {
 Menu::Menu(sf::FloatRect windowBounds, TextureManager *textureManager) {
     texture = textureManager;
 
-    play = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 250), sf::Vector2f(200, 80),
+    play = Button(sf::Vector2f(windowBounds.width / 2.f - 100, (windowBounds.height + 100) / 4.f),
+                  sf::Vector2f(200, 80),
                   texture->getTexture("../res/textures/play.png"),
                   texture->getTexture("../res/textures/play-hover.png"));
-    exit = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 500), sf::Vector2f(200, 80),
+    exit = Button(sf::Vector2f(windowBounds.width / 2.f - 100, (windowBounds.height + 100) / 2.f),
+                  sf::Vector2f(200, 80),
                   texture->getTexture("../res/textures/exit.png"),
                   texture->getTexture("../res/textures/exit-hover.png"));
-    retry = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 250), sf::Vector2f(200, 80),
+    retry = Button(sf::Vector2f(windowBounds.width / 2.f - 100, (windowBounds.height + 100) / 4.f),
+                   sf::Vector2f(200, 80),
                    texture->getTexture("../res/textures/retry.png"),
                    texture->getTexture("../res/textures/retry-hover.png"));
-    resume = Button(sf::Vector2f(windowBounds.width / 2.f - 105, 250), sf::Vector2f(220, 80),
+    resume = Button(sf::Vector2f(windowBounds.width / 2.f - 105, (windowBounds.height + 100) / 4.f),
+                    sf::Vector2f(220, 80),
                     texture->getTexture("../res/textures/resume.png"),
                     texture->getTexture("../res/textures/resume-hover.png"));
-    menu = Button(sf::Vector2f(windowBounds.width / 2.f - 100, 500), sf::Vector2f(200, 80),
+    menu = Button(sf::Vector2f(windowBounds.width / 2.f - 100, (windowBounds.height + 100) / 2.f),
+                  sf::Vector2f(200, 80),
                   texture->getTexture("../res/textures/menu.png"),
                   texture->getTexture("../res/textures/menu-hover.png"));
 
