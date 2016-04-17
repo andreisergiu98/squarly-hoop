@@ -26,7 +26,7 @@ Player::Player(sf::FloatRect windowBounds, TextureManager *textureManager) {
     texture = textureManager;
 
     form.setTexture(&texture->getTexture("../res/textures/player.png"));
-    form.setPosition(480, windowBounds.height - 40);
+    form.setPosition(windowBounds.width / 2.f, windowBounds.height - 40);
     form.setSize(sf::Vector2f(31, 31));
     form.setOrigin(sf::Vector2f(15.5, 15.5));
     core.setTexture(&texture->getTexture("../res/textures/player-core.png"));
@@ -223,7 +223,7 @@ sf::Vector2f Player::getPosition() {
 }
 
 void Player::reset() {
-    form.setPosition(windowBounds.width / 2.f - 20, windowBounds.height - 40);
+    form.setPosition(windowBounds.width / 2.f, windowBounds.height - 40);
     abilitiesCooldown.restart();
     timer.restart();
     coolDown = 0;
