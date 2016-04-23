@@ -27,6 +27,7 @@
 #include "Player.h"
 #include "TextureManager.h"
 #include "Explosion.h"
+#include "Particle.h"
 
 class EntityManager : public sf::Drawable {
 public:
@@ -70,6 +71,8 @@ private:
     sf::FloatRect playerBounds;
 
     boost::mt19937 generator;
+
+    ParticleSystem *particle;
 
     bool isPlayerHit;
 

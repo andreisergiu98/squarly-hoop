@@ -40,6 +40,8 @@ public:
 
     int getColor();
 
+    sf::Color getColorCode();
+
     sf::FloatRect getGlobalBounds();
 
 private:

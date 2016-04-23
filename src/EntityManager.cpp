@@ -31,6 +31,11 @@ EntityManager::EntityManager(sf::FloatRect windowBounds, TextureManager *texture
 
     explosionSound->loadSound("../res/sounds/explosion.wav");
     explosionSound->setVolume(1.f);
+    particle = new ParticleSystem(sf::Vector2u((unsigned int) windowBounds.width, (unsigned int) windowBounds.height));
+    particle->setDissolve();
+    particle->setDissolutionRate(8);
+    particle->setShape(Shape::CIRCLE);
+    particle->setParticleSpeed(200.0f);
 }
 
 void EntityManager::spawn() {
@@ -107,6 +112,8 @@ void EntityManager::update(sf::Time frameTime) {
     for (auto it = explosions.begin(); it != explosions.end(); ++it) {
         it->update();
     }
+
+    particle->update(frameTime.asSeconds());
 }
 
 void EntityManager::update(Player &player) {
@@ -173,6 +180,7 @@ void EntityManager::draw(sf::RenderTarget &target, sf::RenderStates states) cons
     for (auto it = explosions.begin(); it != explosions.end(); ++it) {
         target.draw(*it);
     }
+    target.draw(*particle);
 }
 
 void EntityManager::process() {
@@ -198,9 +206,12 @@ void EntityManager::collision() {
             if (it2->getGlobalBounds().intersects(it1->getGlobalBounds())) {
                 int t = rand() % 3 + 1;
                 Explosion expl(it2->getPosition(), it2->getSize(), texture->getTexture(
-                        "../res/textures/explosion" + utilities::intToStr(it2->getColor()) + utilities::intToStr(t) + ".png"));
+                        "../res/textures/explosion" + utilities::intToStr(it2->getColor()) + utilities::intToStr(t) +
+                        ".png"));
                 explosions.push_back(expl);
-
+                particle->setPosition(it2->getPosition());
+                particle->setColor(it2->getColorCode());
+                particle->fuel(20);
                 it2 = playerBullets.erase(it2);
                 it1->setHp(it1->getHp() - 1);
             }
@@ -215,10 +226,13 @@ void EntityManager::collision() {
         if (it->getHp() <= 0) {
             int t = rand() % 3 + 1;
             Explosion expl(it->getPosition(), it->getSize(), texture->getTexture(
-                    "../res/textures/explosion" + utilities::intToStr(it->getColor()) + utilities::intToStr(t) + ".png"));
+                    "../res/textures/explosion" + utilities::intToStr(it->getColor()) + utilities::intToStr(t) +
+                    ".png"));
             explosions.push_back(expl);
+            particle->setPosition(it->getPosition());
+            particle->setColor(it->getColorCode());
+            particle->fuel(500);
             it = enemies.erase(it);
-
             explosionSound->play();
             destroyedEnemies++;
         }
@@ -231,9 +245,12 @@ void EntityManager::collision() {
         if (playerBounds.intersects(it->getGlobalBounds())) {
             int t = rand() % 3 + 1;
             Explosion expl(it->getPosition(), it->getSize(), texture->getTexture(
-                    "../res/textures/explosion" + utilities::intToStr(it->getColor()) + utilities::intToStr(t) + ".png"));
+                    "../res/textures/explosion" + utilities::intToStr(it->getColor()) + utilities::intToStr(t) +
+                    ".png"));
             explosions.push_back(expl);
-
+            particle->setPosition(it->getPosition());
+            particle->setColor(it->getColorCode());
+            particle->fuel(20);
             it = enemyBullets.erase(it);
             isPlayerHit = true;
         }
@@ -258,6 +275,13 @@ void EntityManager::clear() {
     enemyBullets.clear();
     playerBullets.clear();
     explosions.clear();
+
+    delete particle;
+    particle = new ParticleSystem(sf::Vector2u(windowBounds.width, windowBounds.height));
+    particle->setDissolve();
+    particle->setDissolutionRate(0.5);
+    particle->setShape(Shape::CIRCLE);
+    particle->setParticleSpeed(80.0f);
 }
 
 int EntityManager::getDestroyedEnemies() {

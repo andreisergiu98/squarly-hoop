@@ -66,19 +66,22 @@ void Enemy::shoot() {
     if (freq < 4.f)
         bullets = enemyPatterns::getBullets(enemyPatterns::Pattern::SIMPLE, getPosition(), target, 200.f,
                                             texture->getTexture(
-                                                    std::string("../res/textures/bullet2" + utilities::intToStr(color) + ".png")),
+                                                    std::string("../res/textures/bullet2" + utilities::intToStr(color) +
+                                                                ".png")),
                                             color);
 
     if (freq > 4.f && freq < 6.f) {
         bullets = enemyPatterns::getBullets(enemyPatterns::Pattern::SPREAD, getPosition(), target, 200.f,
                                             texture->getTexture(
-                                                    std::string("../res/textures/bullet2" + utilities::intToStr(color) + ".png")),
+                                                    std::string("../res/textures/bullet2" + utilities::intToStr(color) +
+                                                                ".png")),
                                             color);
     }
     if (freq > 6.f) {
         bullets = enemyPatterns::getBullets(enemyPatterns::Pattern::CIRCLE, getPosition(), target, 200.f,
                                             texture->getTexture(
-                                                    std::string("../res/textures/bullet2" + utilities::intToStr(color) + ".png")),
+                                                    std::string("../res/textures/bullet2" + utilities::intToStr(color) +
+                                                                ".png")),
                                             color);
     }
 }
@@ -123,3 +126,26 @@ void Enemy::updateBeat(bool beat, float freq) {
     this->beat = beat;
     this->freq = freq;
 }
+
+sf::Color Enemy::getColorCode() {
+    if (color == 1) {
+        return sf::Color::Blue;
+    }
+    if (color == 2) {
+        return sf::Color::Cyan;
+    }
+    if (color == 3) {
+        return sf::Color::Green;
+    }
+    if (color == 4) {
+        return sf::Color::Red;
+    }
+    if (color == 5) {
+        return sf::Color::Magenta;
+    }
+    if (color == 6) {
+        return sf::Color::Yellow;
+    }
+}
+
+

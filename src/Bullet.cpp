@@ -69,3 +69,27 @@ sf::Vector2f Bullet::getPosition() {
 sf::Vector2f Bullet::getSize() {
     return form.getSize();
 }
+
+sf::Color Bullet::getColorCode() {
+    if (color == 1) {
+        return sf::Color::Blue;
+    }
+    if (color == 2) {
+        return sf::Color::Cyan;
+    }
+    if (color == 3) {
+        return sf::Color::Green;
+    }
+    if (color == 4) {
+        return sf::Color::Red;
+    }
+    if (color == 5) {
+        return sf::Color::Magenta;
+    }
+    if (color == 6) {
+        return sf::Color::Yellow;
+    }
+}
+
+
+
