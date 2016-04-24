@@ -76,7 +76,7 @@ void Player::update(sf::Time frameTime) {
     if (damageClock.getElapsedTime().asMilliseconds() > 200) {
         damaged = false;
     }
-    if (shieldCooldown.getElapsedTime().asSeconds() > 3) {
+    if (shieldCooldown.getElapsedTime().asMilliseconds() > 500) {
         shielded = false;
     }
 
@@ -179,6 +179,7 @@ void Player::process() {
 
     form.rotate(20);
     core.rotate(-20);
+
     if (shielded) {
         shield.setPosition(form.getPosition());
         shield.rotate(5);
@@ -194,20 +195,6 @@ void Player::shoot() {
 
 std::vector<Bullet> Player::getBullets() {
     return bullets;
-}
-
-sf::FloatRect Player::getGlobalBounds() {
-    if (shielded) {
-        sf::FloatRect boundingBox = shield.getGlobalBounds();
-        boundingBox.top += 200;
-        boundingBox.left += 200;
-        boundingBox.height -= 400;
-        boundingBox.width -= 400;
-
-        return boundingBox;
-    }
-
-    return core.getGlobalBounds();
 }
 
 int Player::getHp() {
@@ -230,6 +217,20 @@ void Player::reset() {
     charged = true;
     shielded = false;
     hp = 10;
+}
+
+sf::FloatRect Player::getGlobalBounds() {
+    if (shielded) {
+        sf::FloatRect boundingBox = shield.getGlobalBounds();
+        boundingBox.top += 200;
+        boundingBox.left += 200;
+        boundingBox.height -= 400;
+        boundingBox.width -= 400;
+
+        return boundingBox;
+    }
+
+    return core.getGlobalBounds();
 }
 
 void Player::gotDamage() {

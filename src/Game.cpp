@@ -70,9 +70,9 @@ void Game::process() {
 }
 
 void Game::updateGame() {
-    player.update(frameTime);
-    entities.update(frameTime);
     entities.update(player);
+    entities.update(frameTime);
+    player.update(frameTime);
     background.update(frameTime);
     music.update();
 

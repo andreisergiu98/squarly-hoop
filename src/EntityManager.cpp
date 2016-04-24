@@ -31,11 +31,13 @@ EntityManager::EntityManager(sf::FloatRect windowBounds, TextureManager *texture
 
     explosionSound->loadSound("../res/sounds/explosion.wav");
     explosionSound->setVolume(1.f);
+
     particle = new ParticleSystem(sf::Vector2u((unsigned int) windowBounds.width, (unsigned int) windowBounds.height));
     particle->setDissolve();
-    particle->setDissolutionRate(8);
+    particle->setDissolutionRate((sf::Uint8) 0.7f);
     particle->setShape(Shape::CIRCLE);
-    particle->setParticleSpeed(200.0f);
+    particle->setGravity(0, 1);
+    particle->setParticleSpeed(100.0f);
 }
 
 void EntityManager::spawn() {
@@ -131,7 +133,6 @@ void EntityManager::update(Player &player) {
 }
 
 void EntityManager::clean() {
-
     for (auto it = enemies.begin(); it != enemies.end();) {
         if (it->getPosition().y > windowBounds.height + 31)
             it = enemies.erase(it);
@@ -277,11 +278,12 @@ void EntityManager::clear() {
     explosions.clear();
 
     delete particle;
-    particle = new ParticleSystem(sf::Vector2u(windowBounds.width, windowBounds.height));
+    particle = new ParticleSystem(sf::Vector2u((unsigned int) windowBounds.width, (unsigned int) windowBounds.height));
     particle->setDissolve();
-    particle->setDissolutionRate(0.5);
+    particle->setDissolutionRate((sf::Uint8) 0.7f);
     particle->setShape(Shape::CIRCLE);
-    particle->setParticleSpeed(80.0f);
+    particle->setGravity(0, 1);
+    particle->setParticleSpeed(100.0f);
 }
 
 int EntityManager::getDestroyedEnemies() {

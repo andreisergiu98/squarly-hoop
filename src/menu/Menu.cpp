@@ -109,6 +109,8 @@ bool Menu::isPressed(Buttons button) {
     else if (button == Buttons::RESUME) {
         return resume.isPressed();
     }
+
+    return false;
 }
 
 void Menu::setState(Status status) {

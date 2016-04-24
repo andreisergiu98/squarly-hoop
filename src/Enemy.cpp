@@ -146,6 +146,7 @@ sf::Color Enemy::getColorCode() {
     if (color == 6) {
         return sf::Color::Yellow;
     }
+    return sf::Color::Transparent;
 }
 
 
