@@ -21,7 +21,7 @@
 #ifndef SFMLGAME_ENTITIESMANAGER_H
 #define SFMLGAME_ENTITIESMANAGER_H
 
-#include <random.hpp>
+#include "boost/random.hpp"
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Player.h"
