@@ -26,7 +26,7 @@
 #include "Bullet.h"
 #include "ShootingPaterns.h"
 #include "sound/Sound.h"
-#include <SFML/Audio.hpp>
+#include <math.h>
 
 class Player : public sf::Drawable {
 public:

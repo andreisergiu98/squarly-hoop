@@ -21,8 +21,8 @@
 #ifndef SFMLGAME_SOUND_H
 #define SFMLGAME_SOUND_H
 
-#include "fmodex/fmod.hpp"
-#include "fmodex/fmod_errors.h"
+#include <fmodex/fmod.hpp>
+#include <fmodex/fmod_errors.h>
 #include "../DebugHelper.h"
 
 class Sound {

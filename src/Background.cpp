@@ -57,13 +57,13 @@ void Background::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 }
 
 void Background::colorUpdate() {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> distribution(0, 255);
+    //std::random_device rd;
+    //std::mt19937 gen(rd());
+    //std::uniform_int_distribution<int> distribution(0, 255);
 
-    int r = distribution(gen);
-    int g = distribution(gen);
-    int b = distribution(gen);
+    //int r = distribution(gen);
+    //int g = distribution(gen);
+    //int b = distribution(gen);
 
     //sf::Color color(16, 218, 116);
     //sf::Color color(r, g, b);

@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <sstream>
+#include <stdlib.h>
 #include "EntityManager.h"
 #include "Utilities.h"
 
