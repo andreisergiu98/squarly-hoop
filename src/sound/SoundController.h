@@ -26,8 +26,8 @@
 #include <time.h>
 #include <array>
 #include <math.h>
-#include "fmod.hpp"
-#include "fmod_errors.h"
+#include "fmodex/fmod.hpp"
+#include "fmodex/fmod_errors.h"
 #include "../DebugHelper.h"
 
 class SoundController {
